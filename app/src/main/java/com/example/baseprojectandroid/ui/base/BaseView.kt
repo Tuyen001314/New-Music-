@@ -8,4 +8,6 @@ interface BaseView {
     fun registerListeners()
 
     fun initializeData()
+
+    fun registerObservers() {}
 }

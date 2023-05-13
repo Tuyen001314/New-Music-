@@ -40,6 +40,7 @@ abstract class BaseFragment : BaseView, Fragment() {
         super.onViewCreated(view, savedInstanceState)
         Log.d(javaClass.name, "onViewCreated()...")
         initializeViews()
+        registerObservers()
         initializeData()
         registerListeners()
     }
