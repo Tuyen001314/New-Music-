@@ -3,11 +3,11 @@ package com.example.baseprojectandroid.ui.base
 interface BaseView {
     fun getContentViewId(): Int
 
-    fun initializeViews()
+    fun initializeViews() {}
 
-    fun registerListeners()
+    fun registerListeners() {}
 
-    fun initializeData()
+    fun initializeData() {}
 
     fun registerObservers() {}
 }
