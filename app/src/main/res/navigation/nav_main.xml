@@ -2,6 +2,12 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/navMain">
+    android:id="@+id/navMain"
+    app:startDestination="@id/nowPlayingFragment">
 
+    <fragment
+        android:id="@+id/nowPlayingFragment"
+        tools:layout="@layout/fragment_now_playing"
+        android:name="com.example.baseprojectandroid.ui.nowplaying.NowPlayingFragment"
+        android:label="NowPlayingFragment" />
 </navigation>

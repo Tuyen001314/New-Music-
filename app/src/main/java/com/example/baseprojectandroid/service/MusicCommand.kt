@@ -1,11 +1,9 @@
 package com.example.baseprojectandroid.service
 
 object MusicCommand {
-    val ACTION_PAUSE = "ACTION_PAUSE"
+    val ACTION_RESUME_PAUSE = 2
 
-    val ACTION_RESUME = "ACTION_RESUME"
+    val ACTION_NEXT = 3
 
-    val ACTION_NEXT = "ACTION_NEXT"
-
-    val ACTION_PREV = "ACTION_PREV"
+    val ACTION_PREV = 4
 }

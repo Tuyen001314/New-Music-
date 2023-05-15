@@ -11,7 +11,6 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val apiClient: ApiClient,
     private val localStorage: LocalStorage,
-    private val database: AppDatabase
 ) : BaseViewModel() {
 
 }
