@@ -5,7 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
+import com.example.baseprojectandroid.model.Song
 import com.example.baseprojectandroid.model.SongState
+import com.example.baseprojectandroid.repository.SongRepository
 import com.example.baseprojectandroid.service.MusicService
 import com.example.baseprojectandroid.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,7 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NowPlayingViewModel @Inject constructor(
-    @ApplicationContext context: Context
+    @ApplicationContext context: Context,
+    private val songRepository: SongRepository
 ): BaseViewModel() {
     private var service: MusicService? = null
     private var isBound = false
@@ -66,5 +69,9 @@ class NowPlayingViewModel @Inject constructor(
 
     fun pauseOrPlay() {
         service!!.pauseOrPlay()
+    }
+
+    fun play(song: Song) {
+        service!!.play(song)
     }
 }

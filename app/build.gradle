@@ -83,6 +83,11 @@ dependencies {
     kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hilt_version"
 
     implementation "androidx.media3:media3-exoplayer:1.1.0-alpha01"
+
+    implementation "com.github.lisawray.groupie:groupie:$groupie_version"
+    implementation "com.github.lisawray.groupie:groupie-viewbinding:$groupie_version"
+    implementation 'com.github.bumptech.glide:glide:4.15.1'
+
 }
 kapt {
     correctErrorTypes true
