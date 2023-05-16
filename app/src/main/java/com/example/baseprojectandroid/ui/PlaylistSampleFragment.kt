@@ -30,9 +30,6 @@ class PlaylistSampleFragment : BaseFragmentBinding<FragmentPlaylistSampleBinding
 
     override fun initializeViews() {
         super.initializeViews()
-        nowPlayingViewModel.onServiceConnected = {
-            Toast.makeText(requireContext(), "Player ready", Toast.LENGTH_SHORT).show()
-        }
         dataBinding.musicRv.adapter = songAdapter
     }
 
@@ -51,7 +48,7 @@ class PlaylistSampleFragment : BaseFragmentBinding<FragmentPlaylistSampleBinding
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 playlistSampleViewModel.allSongs.collect {
                     withContext(Dispatchers.Main) {
-                        songAdapter.addAll(it.map { SongStateItem(it) })
+                        songAdapter.updateAsync(it.map { SongStateItem(it) })
                     }
                 }
             }

@@ -30,24 +30,24 @@ class NowPlayingFragment : BaseFragmentBinding<FragmentNowPlayingBinding, BaseVi
 
     override fun registerObservers() {
         super.registerObservers()
-        nowPlayingViewModel.onServiceConnected = {
-            lifecycleScope.launch(Dispatchers.Default) {
-                repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    nowPlayingViewModel.currentSongState?.collect {
-                        withContext(Dispatchers.Main) {
-                            when (it.state) {
-                                SongState.STATE_PLAYING -> dataBinding.btPauseResume.setImageResource(
-                                    R.drawable.ic_pause
-                                )
-                                SongState.STATE_PAUSE -> dataBinding.btPauseResume.setImageResource(
-                                    R.drawable.ic_triangle
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-        }
+//        nowPlayingViewModel.onServiceConnected = {
+//            lifecycleScope.launch(Dispatchers.Default) {
+//                repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                    nowPlayingViewModel.currentSongState?.collect {
+//                        withContext(Dispatchers.Main) {
+//                            when (it.state) {
+//                                SongState.STATE_PLAYING -> dataBinding.btPauseResume.setImageResource(
+//                                    R.drawable.ic_pause
+//                                )
+//                                SongState.STATE_PAUSE -> dataBinding.btPauseResume.setImageResource(
+//                                    R.drawable.ic_triangle
+//                                )
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
     }
 
     override fun registerListeners() {
