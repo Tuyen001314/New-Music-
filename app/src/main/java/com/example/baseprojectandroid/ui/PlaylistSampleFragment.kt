@@ -1,6 +1,5 @@
 package com.example.baseprojectandroid.ui
 
-import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -10,6 +9,7 @@ import com.example.baseprojectandroid.databinding.FragmentPlaylistSampleBinding
 import com.example.baseprojectandroid.ui.base.BaseFragmentBinding
 import com.example.baseprojectandroid.ui.base.BaseViewModel
 import com.example.baseprojectandroid.ui.common.SongStateItem
+import com.example.baseprojectandroid.ui.nowplaying.NowPlayingFragment
 import com.example.baseprojectandroid.viewmodel.NowPlayingViewModel
 import com.xwray.groupie.GroupieAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,13 +31,16 @@ class PlaylistSampleFragment : BaseFragmentBinding<FragmentPlaylistSampleBinding
     override fun initializeViews() {
         super.initializeViews()
         dataBinding.musicRv.adapter = songAdapter
+//        childFragmentManager.beginTransaction()
+//            .add(R.id.container, NowPlayingFragment(), null)
+//            .commit()
     }
 
     override fun registerListeners() {
         super.registerListeners()
-        songAdapter.setOnItemClickListener {item, v ->
+        songAdapter.setOnItemClickListener { item, v ->
             nowPlayingViewModel.play(
-            (item as SongStateItem).songState.song
+                (item as SongStateItem).songState.song
             )
         }
     }

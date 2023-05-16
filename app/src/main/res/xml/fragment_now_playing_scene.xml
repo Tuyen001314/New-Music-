@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:motion="http://schemas.android.com/tools">
+
+    <ConstraintSet android:id="@+id/start">
+        <Constraint android:id="@+id/bt_collap" />
+        <Constraint
+            android:id="@+id/song_progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_state"
+            app:layout_constraintVertical_bias="0.65999997" />
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/end">
+        <Constraint android:id="@+id/root"
+
+            android:layout_width="67dp"
+            android:layout_height="67dp"/>
+        <Constraint android:id="@id/bt_collap" />
+        <Constraint
+            android:id="@+id/bt_pause_resume"
+            android:layout_width="67dp"
+            android:layout_height="67dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.877"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.956" />
+        <Constraint
+            android:id="@+id/song_progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:alpha="0"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_state"
+            app:layout_constraintVertical_bias="1.0"
+            app:pathMotionArc="none"
+            app:transitionEasing="cubic(0.13,0.7,0.2,0.95)"
+            motion:layout_constraintBottom_toBottomOf="parent" />
+        <Constraint
+            android:id="@+id/tv_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/bt_pause_resume"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.116"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/bt_pause_resume"
+            app:layout_constraintVertical_bias="0.5" />
+    </ConstraintSet>
+
+    <Transition
+        app:constraintSetEnd="@id/end"
+        app:constraintSetStart="@+id/start"
+        app:duration="1006"
+        app:motionInterpolator="linear">
+        <OnSwipe
+            app:dragDirection="dragDown"
+            app:touchAnchorId="@id/bt_pause_resume"
+            app:touchRegionId="@id/bt_pause_resume"
+            app:maxAcceleration="6.96"
+            app:maxVelocity="9.59"/>
+
+        <OnClick app:targetId="@id/bt_pause_resume"
+            app:clickAction="transitionToEnd" />
+        <OnSwipe />
+    </Transition>
+</MotionScene>

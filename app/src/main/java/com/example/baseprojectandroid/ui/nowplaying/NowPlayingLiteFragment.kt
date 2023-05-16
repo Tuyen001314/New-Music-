@@ -1,14 +1,14 @@
 package com.example.baseprojectandroid.ui.nowplaying
 
-import androidx.constraintlayout.motion.widget.MotionLayout
-import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.baseprojectandroid.R
-import com.example.baseprojectandroid.databinding.FragmentNowPlayingBinding
-import com.example.baseprojectandroid.model.Position
+import com.example.baseprojectandroid.databinding.NowPlayingLiteFragmentBinding
 import com.example.baseprojectandroid.model.SongState
 import com.example.baseprojectandroid.ui.base.BaseFragmentBinding
 import com.example.baseprojectandroid.ui.base.BaseViewModel
@@ -16,18 +16,12 @@ import com.example.baseprojectandroid.viewmodel.NowPlayingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
-class NowPlayingFragment : BaseFragmentBinding<FragmentNowPlayingBinding, BaseViewModel>(), MotionLayout.TransitionListener {
+class NowPlayingLiteFragment: BaseFragmentBinding<NowPlayingLiteFragmentBinding, BaseViewModel>() {
     private val nowPlayingViewModel by activityViewModels<NowPlayingViewModel>()
-
     override fun getContentViewId(): Int {
-        return R.layout.fragment_now_playing
-    }
-
-    override fun initializeViews() {
-
+        return R.layout.now_playing_lite_fragment
     }
 
     override fun registerObservers() {
@@ -38,8 +32,6 @@ class NowPlayingFragment : BaseFragmentBinding<FragmentNowPlayingBinding, BaseVi
                     uiState.songState.getValueIfNotHandle(viewLifecycleOwner) { songState ->
                         updateNowPlayingSong(songState)
                     }
-
-                    updatePosition(uiState.currentPosition)
                 }
             }
         }
@@ -47,47 +39,27 @@ class NowPlayingFragment : BaseFragmentBinding<FragmentNowPlayingBinding, BaseVi
 
     private fun updateNowPlayingSong(songState: SongState) {
         lifecycleScope.launch(Dispatchers.Main) {
-            dataBinding.tvState.text = songState.song.name
+            dataBinding.tvSongName.text = songState.song.name
+            dataBinding.btPauseResume.setImageResource(
+                when(songState.state) {
+                    SongState.STATE_PLAYING -> R.drawable.ic_pause
+                    else -> R.drawable.ic_triangle
+                }
+            )
+            dataBinding.ivThumb.apply {
+                Glide.with(this)
+                    .load(songState.song.thumbnailUrl)
+                    .override(100, 100)
+                    .transform(CenterCrop(), RoundedCorners(20))
+                    .into(this)
+            }
         }
     }
 
-    private fun updatePosition(position: Position) {
-        dataBinding.songProgress.progress = ((position.currentIndex.toFloat() / position.duration) * 100).toInt()
-    }
-
     override fun registerListeners() {
+        super.registerListeners()
         dataBinding.btPauseResume.setOnClickListener {
             nowPlayingViewModel.pauseOrPlay()
         }
     }
-
-    override fun initializeData() {
-    }
-
-    override fun onTransitionStarted(motionLayout: MotionLayout?, startId: Int, endId: Int) {
-
-    }
-
-    override fun onTransitionChange(
-        motionLayout: MotionLayout?,
-        startId: Int,
-        endId: Int,
-        progress: Float
-    ) {
-//        requireView().updateLayoutParams {
-//            height = (1000* (1 - progress)).toInt() + 100
-//        }
-    }
-
-    override fun onTransitionCompleted(motionLayout: MotionLayout?, currentId: Int) {
-    }
-
-    override fun onTransitionTrigger(
-        motionLayout: MotionLayout?,
-        triggerId: Int,
-        positive: Boolean,
-        progress: Float
-    ) {
-    }
 }
-

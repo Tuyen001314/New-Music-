@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import android.util.Log
+import com.example.baseprojectandroid.model.Position
 import com.example.baseprojectandroid.model.Song
 import com.example.baseprojectandroid.model.SongState
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -19,7 +20,8 @@ class MusicServiceConnector constructor(
     private var service: MusicService? = null
     private var isBound = false
 
-    var currentSongState: StateFlow<SongState>? = null
+    val currentSongState: StateFlow<SongState>? get() = service?.currentState
+    val currentSongPosition: StateFlow<Position>? get() = service?.currentSongPosition
 
     var onServiceConnected: () -> Unit = {}
 
@@ -37,8 +39,7 @@ class MusicServiceConnector constructor(
             // service using a Messenger, so here we get a client-side
             // representation of that from the raw IBinder object.
             this@MusicServiceConnector.service = (service as MusicService.MusicBinder).getService()
-            currentSongState = this@MusicServiceConnector.service!!.currentState
-            onServiceConnected()
+            listOnServiceConnectedCallback.forEach { it.onConnected() }
             Log.d("fdsfa", "onServiceConnected: ")
             isBound = true
         }
@@ -49,7 +50,6 @@ class MusicServiceConnector constructor(
             service = null
             isBound = false
             Log.d("fdsfa", "onServiceDisconnected: ")
-            currentSongState = null
         }
     }
 
@@ -84,9 +84,9 @@ class MusicServiceConnector constructor(
         listOnServiceConnectedCallback.remove(listener)
     }
 
+    fun updateCurrentPosition() = service!!.updateCurrentPosition()
+
     interface OnServiceConnected {
         fun onConnected()
     }
-
-    fun makeSureInit(){}
 }
