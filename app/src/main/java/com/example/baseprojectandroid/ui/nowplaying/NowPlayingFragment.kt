@@ -52,7 +52,10 @@ class NowPlayingFragment : BaseFragmentBinding<FragmentNowPlayingBinding, BaseVi
     }
 
     private fun updatePosition(position: Position) {
-        dataBinding.songProgress.progress = ((position.currentIndex.toFloat() / position.duration) * 100).toInt()
+        lifecycleScope.launch(Dispatchers.Main) {
+            dataBinding.songProgress.progress =
+                ((position.currentIndex.toFloat() / position.duration) * 100).toInt()
+        }
     }
 
     override fun registerListeners() {

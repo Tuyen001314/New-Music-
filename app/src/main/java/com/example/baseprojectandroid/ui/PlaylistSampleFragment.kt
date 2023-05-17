@@ -1,21 +1,14 @@
 package com.example.baseprojectandroid.ui
 
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.example.baseprojectandroid.R
 import com.example.baseprojectandroid.databinding.FragmentPlaylistSampleBinding
 import com.example.baseprojectandroid.ui.base.BaseFragmentBinding
 import com.example.baseprojectandroid.ui.base.BaseViewModel
 import com.example.baseprojectandroid.ui.common.SongStateItem
-import com.example.baseprojectandroid.ui.nowplaying.NowPlayingFragment
 import com.example.baseprojectandroid.viewmodel.NowPlayingViewModel
 import com.xwray.groupie.GroupieAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class PlaylistSampleFragment : BaseFragmentBinding<FragmentPlaylistSampleBinding, BaseViewModel>() {
@@ -30,7 +23,10 @@ class PlaylistSampleFragment : BaseFragmentBinding<FragmentPlaylistSampleBinding
 
     override fun initializeViews() {
         super.initializeViews()
-        dataBinding.musicRv.adapter = songAdapter
+        dataBinding.musicRv.apply {
+            adapter = songAdapter
+            itemAnimator = null
+        }
 //        childFragmentManager.beginTransaction()
 //            .add(R.id.container, NowPlayingFragment(), null)
 //            .commit()
@@ -47,14 +43,8 @@ class PlaylistSampleFragment : BaseFragmentBinding<FragmentPlaylistSampleBinding
 
     override fun registerObservers() {
         super.registerObservers()
-        lifecycleScope.launch(Dispatchers.Default) {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                playlistSampleViewModel.allSongs.collect {
-                    withContext(Dispatchers.Main) {
-                        songAdapter.updateAsync(it.map { SongStateItem(it) })
-                    }
-                }
-            }
+        playlistSampleViewModel.allSongs.observe(viewLifecycleOwner) {
+            songAdapter.update(it.map { SongStateItem(it.copy()) })
         }
     }
 
