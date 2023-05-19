@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.baseprojectandroid">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission
+        android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
 
     <application
         android:name=".App"
@@ -14,8 +20,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BaseProjectAndroid">
         <activity
-            android:name=".ui.component.MainActivity"
-            android:exported="true">
+            android:name=".ui.component.splash.SplashActivity"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,7 +29,12 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".service.MusicService"/>
+        <activity
+            android:name=".ui.component.MainActivity"
+            android:exported="false">
+        </activity>
+
+        <service android:name=".service.MusicService" />
     </application>
 
 </manifest>

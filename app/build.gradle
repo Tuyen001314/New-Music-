@@ -88,6 +88,9 @@ dependencies {
     implementation "com.github.lisawray.groupie:groupie-viewbinding:$groupie_version"
     implementation 'com.github.bumptech.glide:glide:4.15.1'
 
+    implementation "androidx.core:core-splashscreen:1.0.1"
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
+
 }
 kapt {
     correctErrorTypes true

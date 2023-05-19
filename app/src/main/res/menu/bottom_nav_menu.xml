@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_recent"
+        android:icon="@drawable/vector_home"
+        android:title="Home" />
+
+    <item
+        android:id="@+id/navigation_files"
+        android:icon="@drawable/vector_search"
+        android:title="Search" />
+
+    <item
+        android:id="@+id/navigation_tools"
+        android:icon="@drawable/vector_library"
+        android:title="Your Library" />
+
+</menu>
