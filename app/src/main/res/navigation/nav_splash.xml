@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_splash"
+    app:startDestination="@id/gettingFragment">
+
+    <fragment
+        android:id="@+id/gettingFragment"
+        android:name="com.example.baseprojectandroid.ui.component.getting.GettingFragment"
+        android:label="GettingFragment"
+        tools:layout="@layout/fragment_getting">
+
+        <action
+            android:id="@+id/action_gettingFragment_to_signInFragment"
+            app:destination="@id/signInFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
+        <action
+            android:id="@+id/action_gettingFragment_to_signUpFragment"
+            app:destination="@id/signUpFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="com.example.baseprojectandroid.ui.component.getting.signin.SignInFragment"
+        tools:layout="@layout/fragment_sign_in"
+        android:label="SignInFragment" >
+    </fragment>
+
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.example.baseprojectandroid.ui.component.getting.signup.SignUpFragment"
+        tools:layout="@layout/fragment_sign_up"
+        android:label="SignUpFragment" >
+        <action
+            android:id="@+id/action_signUpFragment_to_passwordFragment"
+            app:destination="@id/passwordFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/passwordFragment"
+        android:name="com.example.baseprojectandroid.ui.component.splash.PasswordFragment"
+        android:label="PasswordFragment"
+        tools:layout="@layout/fragment_password">
+        <action
+            android:id="@+id/action_passwordFragment_to_genderFragment"
+            app:destination="@id/genderFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/genderFragment"
+        android:name="com.example.baseprojectandroid.ui.component.splash.GenderFragment"
+        android:label="GenderFragment"
+        tools:layout="@layout/fragment_gender">
+        <action
+            android:id="@+id/action_genderFragment_to_nameFragment"
+            app:destination="@id/nameFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/nameFragment"
+        android:name="com.example.baseprojectandroid.ui.component.splash.NameFragment"
+        android:label="NameFragment"
+        tools:layout="@layout/fragment_name"/>
+
+</navigation>

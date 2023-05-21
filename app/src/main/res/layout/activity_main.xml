@@ -9,7 +9,7 @@
         android:orientation="vertical"
         tools:ignore="UselessParent">
 
-        <androidx.fragment.app.FragmentContainerView
+        <!--<androidx.fragment.app.FragmentContainerView
             android:id="@+id/nav_host_fragment"
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="0dp"
@@ -19,7 +19,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:defaultNavHost="true"
-            app:navGraph="@navigation/nav_main" />
+            app:navGraph="@navigation/nav_main" />-->
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/viewPager"

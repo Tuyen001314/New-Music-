@@ -23,15 +23,5 @@ class SplashActivity : AppCompatActivity() {
             WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
 
-        Handler(Looper.getMainLooper()).postDelayed({
-            val newFragment = GettingFragment()
-            val fragmentManager = supportFragmentManager
-            val transaction = fragmentManager.beginTransaction()
-            transaction.replace(R.id.containerSplash, newFragment)
-            transaction.addToBackStack(null)
-            transaction.commit()
-            //finish()
-        }, 1500)
-
     }
 }

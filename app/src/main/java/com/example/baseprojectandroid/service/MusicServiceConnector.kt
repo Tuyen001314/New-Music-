@@ -30,6 +30,8 @@ class MusicServiceConnector constructor(
     /**
      * Class for interacting with the main interface of the service.
      */
+
+    // tạo kết nối đến service
     private val mConnection = object : ServiceConnection {
 
         override fun onServiceConnected(className: ComponentName, service: IBinder) {

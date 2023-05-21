@@ -7,6 +7,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.view.WindowManager
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import com.example.baseprojectandroid.R
 import com.example.baseprojectandroid.databinding.FragmentGettingBinding
@@ -15,7 +16,10 @@ import com.example.baseprojectandroid.ui.base.BaseFragment
 import com.example.baseprojectandroid.ui.base.BaseFragmentBinding
 import com.example.baseprojectandroid.ui.base.BaseViewModel
 import com.example.baseprojectandroid.ui.component.MainActivity
+import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class GettingFragment : BaseFragmentBinding<FragmentGettingBinding, GettingViewModel>()   {
@@ -26,9 +30,6 @@ class GettingFragment : BaseFragmentBinding<FragmentGettingBinding, GettingViewM
     }
 
     override fun initializeViews() {
-        dataBinding.button2.setOnClickListener {
-            startActivity(Intent(context, MainActivity::class.java))
-        }
     }
 
     override fun registerListeners() {
@@ -49,10 +50,10 @@ class GettingFragment : BaseFragmentBinding<FragmentGettingBinding, GettingViewM
     }
 
     private fun goToSignInFragment() {
-//        findNavController().navigate(R.id.action_gettingFragment_to_signInFragment)
+        findNavController().navigate(R.id.action_gettingFragment_to_signInFragment)
     }
 
     private fun goToSignUpFragment() {
-//        findNavController().navigate(R.id.action_gettingFragment_to_signUpFragment)
+        findNavController().navigate(R.id.action_gettingFragment_to_signUpFragment)
     }
 }
