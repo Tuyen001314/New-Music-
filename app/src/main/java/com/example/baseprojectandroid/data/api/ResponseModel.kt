@@ -1,5 +1,6 @@
 package com.example.baseprojectandroid.data.api
 
+import com.example.baseprojectandroid.model.User
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 
@@ -12,5 +13,5 @@ class ResponseModel {
     var status: String? = null
 
     @SerializedName("data")
-    var data: String? = null
+    var data: List<User>? = null
 }

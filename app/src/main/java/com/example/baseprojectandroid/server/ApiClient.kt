@@ -12,7 +12,7 @@ interface ApiClient {
     @POST("")
     suspend fun login()
 
-    @GET("/api/Users/checkUserName")
-    suspend fun getUser(@Query("username") userName: String): Call<ResponseModel>
+    @GET("api/Users/checkUserName")
+    suspend fun getUser(@Query("username") userName: String): ResponseModel
 
 }
