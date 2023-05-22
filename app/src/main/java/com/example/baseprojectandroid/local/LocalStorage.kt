@@ -9,9 +9,11 @@ interface LocalStorage {
     fun remove(key: String)
 
     fun <T : Any> putData(key: String, t: T?)
-
     fun <T : Any> getData(key: String): T?
-
     fun <T : Any> getData(key: String, clazz: KClass<T>): T?
 
+    var username: String
+    var password: String
+    var nameUser: String
+    var isFirstTime: Boolean
 }

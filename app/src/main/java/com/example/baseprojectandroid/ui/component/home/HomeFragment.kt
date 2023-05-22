@@ -5,12 +5,9 @@ import android.os.Bundle
 import android.os.Environment
 import android.widget.Toast
 import com.example.baseprojectandroid.R
-import com.example.baseprojectandroid.databinding.FragmentGettingBinding
 import com.example.baseprojectandroid.databinding.FragmentHomeBinding
 import com.example.baseprojectandroid.model.DownloadState
-import com.example.baseprojectandroid.ui.base.BaseFragment
 import com.example.baseprojectandroid.ui.base.BaseFragmentBinding
-import com.example.baseprojectandroid.ui.component.getting.GettingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
