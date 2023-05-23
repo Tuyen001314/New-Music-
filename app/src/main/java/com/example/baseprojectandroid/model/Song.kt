@@ -31,6 +31,7 @@ data class Song(
     fun defaultState() = SongState(this, SongState.STATE_PAUSE)
 
     fun toMediaItem() = MediaItem.fromUri(url)
+
     fun toSinglePlaylist() = Playlist(
         songs = listOf(this)
     )

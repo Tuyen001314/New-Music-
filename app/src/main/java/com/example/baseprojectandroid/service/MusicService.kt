@@ -26,10 +26,7 @@ class MusicService : Service(), CoroutineScope {
         get() = Dispatchers.Default
     private lateinit var exoPlayer: ExoPlayer
 
-    private var currentSong = Song(
-        name = "Ung qua chung",
-        url = "https://firebasestorage.googleapis.com/v0/b/music-8fef0.appspot.com/o/music%2F%C6%AFng%20Qu%C3%A1%20Ch%E1%BB%ABng%20-%20AMEE.mp3?alt=media&token=3201a2c5-fbd4-4924-940e-dbadb6c91bb0"
-    )
+    private var currentSong = Song.EMPTY
 
     private val _currentState = MutableStateFlow(
         SongState(
