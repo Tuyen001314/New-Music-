@@ -6,13 +6,11 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import android.util.Log
+import com.example.baseprojectandroid.model.Playlist
 import com.example.baseprojectandroid.model.Position
 import com.example.baseprojectandroid.model.Song
 import com.example.baseprojectandroid.model.SongState
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.StateFlow
-import javax.inject.Inject
-import javax.xml.transform.ErrorListener
 
 class MusicServiceConnector constructor(
     context: Context
@@ -22,6 +20,7 @@ class MusicServiceConnector constructor(
 
     val currentSongState: StateFlow<SongState>? get() = service?.currentState
     val currentSongPosition: StateFlow<Position>? get() = service?.currentSongPosition
+    val currentPlaylist: StateFlow<Playlist>? get() = service?.currentPlaylist
 
     var onServiceConnected: () -> Unit = {}
 
@@ -41,6 +40,7 @@ class MusicServiceConnector constructor(
             this@MusicServiceConnector.service = (service as MusicService.MusicBinder).getService()
             listOnServiceConnectedCallback.forEach { it.onConnected() }
             Log.d("fdsfa", "onServiceConnected: ")
+
             isBound = true
         }
 
@@ -71,6 +71,8 @@ class MusicServiceConnector constructor(
         service!!.play(song)
     }
 
+    fun play(playlist: Playlist, startSongIndex: Int = 0) = service!!.play(playlist, startSongIndex)
+
     fun isConnected() = isBound
 
     fun addOnConnectedListener(listener: OnServiceConnected) {
@@ -85,6 +87,12 @@ class MusicServiceConnector constructor(
     }
 
     fun updateCurrentPosition() = service!!.updateCurrentPosition()
+
+    fun updateCurrentSongOfPlaylist(index: Int) = service!!.updateCurrentSongOfPlaylist(index)
+
+    fun updateCurrentPlaylist() {
+
+    }
 
     interface OnServiceConnected {
         fun onConnected()
