@@ -8,6 +8,7 @@ import com.example.baseprojectandroid.service.MusicServiceConnector
 import com.example.baseprojectandroid.ui.base.BaseFragmentPagerAdapter
 import com.example.baseprojectandroid.ui.component.home.HomeFragment
 import com.example.baseprojectandroid.ui.component.library.YourLibraryFragment
+import com.example.baseprojectandroid.ui.component.library.profile.ProfileFragment
 import com.example.baseprojectandroid.ui.component.search.SearchFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -31,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         adapter = BaseFragmentPagerAdapter(supportFragmentManager, lifecycle)
         adapter.add(HomeFragment::class)
             .add(SearchFragment::class)
-            .add(YourLibraryFragment::class)
+            .add(ProfileFragment::class)
         binding.viewPager.isUserInputEnabled = false
         binding.viewPager.adapter = adapter
         binding.bottomBarView.setWithViewPager(binding.viewPager)

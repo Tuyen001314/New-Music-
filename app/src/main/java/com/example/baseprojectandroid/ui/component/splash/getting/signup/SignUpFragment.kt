@@ -19,7 +19,12 @@ class SignUpFragment : BaseFragmentBinding<FragmentSignUpBinding, SignUpViewMode
 
     override fun registerListeners() {
         dataBinding.btnNextSignUp.setOnClickListener {
-            checkInfoUserFromServer(dataBinding.textUserName.text.toString())
+            if (dataBinding.textUserName.text.length >= 8) {
+                checkInfoUserFromServer(dataBinding.textUserName.text.toString())
+            }
+            else {
+                showToast("ten dang nhap tu 8 ky tu tro len")
+            }
         }
     }
 

@@ -18,6 +18,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.File
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -34,10 +36,8 @@ class NameFragment : BaseFragmentBinding<FragmentNameBinding, NameViewModel>() {
 
     override fun registerListeners() {
         dataBinding.btnCreateAccount.setOnClickListener {
-            //callApiRegister()
             if (dataBinding.edtNameUser.text.isNotEmpty()) {
-                saveDataUser(viewModel.username, viewModel.password, dataBinding.edtNameUser.text.toString())
-                startActivity(Intent(context, MainActivity::class.java))
+                callApiRegister(dataBinding.edtNameUser.text.toString(), viewModel.username, viewModel.password)
             }
         }
     }
@@ -49,19 +49,26 @@ class NameFragment : BaseFragmentBinding<FragmentNameBinding, NameViewModel>() {
         localStorage.isFirstTime = false
     }
 
-    private fun callApiRegister() {
+    private fun callApiRegister(nameUser: String, username: String, password: String, image: File? = null) {
         viewModel.viewModelScope.launch(Dispatchers.IO) {
-            viewModel.callApiRegister().collect { state ->
+            viewModel.callApiRegister(username, password, nameUser, image).collect { state ->
                 when (state) {
                     is AccountState.Loading -> {
-                        showToast("Đang chờ xử lý. Vui lòng đợi trong giây lát")
+                        withContext(Dispatchers.Main) {
+                            showToast("Đang chờ xử lý. Vui lòng đợi trong giây lát")
+                        }
                     }
                     is AccountState.Finished -> {
-                        showToast("Đăng ký thành công")
+                        withContext(Dispatchers.Main) {
+                            showToast("Đăng ký thành công")
+                        }
+                        saveDataUser(viewModel.username, viewModel.password, dataBinding.edtNameUser.text.toString())
                         startActivity(Intent(context, MainActivity::class.java))
                     }
                     is AccountState.Failed -> {
-                        showToast("Đăng ký thất bại")
+                        withContext(Dispatchers.Main) {
+                            showToast("Đăng ký thất bại")
+                        }
                     }
                 }
             }
