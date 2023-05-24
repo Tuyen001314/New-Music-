@@ -1,23 +1,16 @@
 package com.example.baseprojectandroid.ui.nowplaying
 
 import android.content.res.ColorStateList
-import android.graphics.Bitmap
-import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.util.Log
-import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.palette.graphics.Palette
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
 import com.example.baseprojectandroid.R
 import com.example.baseprojectandroid.databinding.NowPlayingLiteFragmentBinding
 import com.example.baseprojectandroid.model.Position
@@ -49,23 +42,31 @@ class NowPlayingLiteFragment : BaseFragmentBinding<NowPlayingLiteFragmentBinding
         super.registerObservers()
         lifecycleScope.launch(Dispatchers.Default) {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                nowPlayingViewModel.uiState.collect { uiState ->
-                    lifecycleScope.launch(Dispatchers.Main) {
-                        uiState.songState.getValueIfNotHandle(viewLifecycleOwner) { songState ->
-                            updateNowPlayingSong(songState)
-                            dataBinding.vp2CurrentSong.currentItem =
-                                uiState.currentSongIndexInPlayingPlaylist
-                        }
+                launch {
+                    nowPlayingViewModel.uiState.collect { uiState ->
+                        launch(Dispatchers.Main) {
+                            uiState.songState.getValueIfNotHandle(viewLifecycleOwner) { songState ->
+                                updateNowPlayingSong(songState)
+                                dataBinding.vp2CurrentSong.currentItem =
+                                    uiState.currentSongIndexInPlayingPlaylist
+                            }
 
-                        uiState.currentPlaylist.getValueIfNotHandle(viewLifecycleOwner) { playlist ->
-                            currentPlaylistAdapter.update(
-                                playlist.songs.map {
-                                    SongInNowPlayingViewPagerItem(it.copy())
-                                }
-                            )
-                        }
+                            uiState.currentPlaylist.getValueIfNotHandle(viewLifecycleOwner) { playlist ->
+                                currentPlaylistAdapter.update(
+                                    playlist.songs.map {
+                                        SongInNowPlayingViewPagerItem(it.copy())
+                                    }
+                                )
+                            }
 
-                        updatePosition(uiState.currentPosition)
+                            updatePosition(uiState.currentPosition)
+                        }
+                    }
+                }
+
+                launch {
+                    nowPlayingViewModel.thumbVibrantColor.collect {
+                        dataBinding.root.backgroundTintList = ColorStateList.valueOf(it)
                     }
                 }
             }
@@ -100,32 +101,14 @@ class NowPlayingLiteFragment : BaseFragmentBinding<NowPlayingLiteFragmentBinding
     }
 
     private fun updateNowPlayingSong(songState: SongState) {
-//        dataBinding.tvSongName.text = songState.song.name
         changePlayPauseSmooth(songState.state)
 
         dataBinding.ivThumb.apply {
             Glide.with(this)
-                .asBitmap()
                 .load(songState.song.thumbnailUrl)
                 .override(100, 100)
                 .transform(CenterCrop(), RoundedCorners(20))
-                .into(object : CustomTarget<Bitmap>() {
-                    override fun onResourceReady(
-                        resource: Bitmap,
-                        transition: Transition<in Bitmap>?
-                    ) {
-                        setImageBitmap(resource)
-                        Palette.from(resource).generate {
-                            it?.getVibrantColor(Color.parseColor("#86929A"))?.let {
-                                dataBinding.root.backgroundTintList = ColorStateList.valueOf(it)
-                            }
-                        }
-                    }
-
-                    override fun onLoadCleared(placeholder: Drawable?) {
-                    }
-
-                })
+                .into(this)
         }
     }
 

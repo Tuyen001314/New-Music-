@@ -1,5 +1,6 @@
 package com.example.baseprojectandroid.ui.nowplaying
 
+import android.content.res.ColorStateList
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.activityViewModels
@@ -34,12 +35,20 @@ class NowPlayingFragment : BaseFragmentBinding<FragmentNowPlayingBinding, BaseVi
         super.registerObservers()
         lifecycleScope.launch(Dispatchers.Default) {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                nowPlayingViewModel.uiState.collect { uiState ->
-                    uiState.songState.getValueIfNotHandle(viewLifecycleOwner) { songState ->
-                        updateNowPlayingSong(songState)
-                    }
+                launch {
+                    nowPlayingViewModel.uiState.collect { uiState ->
+                        uiState.songState.getValueIfNotHandle(viewLifecycleOwner) { songState ->
+                            updateNowPlayingSong(songState)
+                        }
 
-                    updatePosition(uiState.currentPosition)
+                        updatePosition(uiState.currentPosition)
+                    }
+                }
+
+                launch {
+                    nowPlayingViewModel.thumbVibrantColor.collect {
+                        dataBinding.root.backgroundTintList = ColorStateList.valueOf(it)
+                    }
                 }
             }
         }
