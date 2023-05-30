@@ -27,7 +27,7 @@
             android:id="@+id/buttonDown"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="252dp"
+            android:layout_marginTop="76dp"
             android:text="Download"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
@@ -43,6 +43,30 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/buttonDown" />
+
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageUpload"
+            android:layout_width="200dp"
+            android:scaleType="centerCrop"
+            android:layout_height="250dp"
+            android:layout_marginTop="50dp"
+            android:src="@drawable/ic_launcher_background"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/processTxt">
+
+        </androidx.appcompat.widget.AppCompatImageView>
+
+        <Button
+            android:id="@+id/postToServer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Post"
+            android:layout_marginTop="30dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageUpload" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
