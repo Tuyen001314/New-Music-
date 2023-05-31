@@ -4,7 +4,7 @@ package com.example.baseprojectandroid.model
 import com.google.gson.annotations.SerializedName
 
 data class Playlists(
-    @SerializedName("created_at")
+    @SerializedName("createdAt")
     var createdAt: String,
     @SerializedName("creatorId")
     var creatorId: Int,
@@ -15,5 +15,5 @@ data class Playlists(
     @SerializedName("name")
     var name: String,
     @SerializedName("songs")
-    var songs: List<Any>
+    var songs: List<SongResponse>
 )

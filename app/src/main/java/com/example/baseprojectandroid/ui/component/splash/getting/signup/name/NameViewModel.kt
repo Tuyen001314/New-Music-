@@ -1,6 +1,7 @@
 package com.example.baseprojectandroid.ui.component.splash.getting.signup.name
 
 import android.os.Bundle
+import android.util.Log
 import com.example.baseprojectandroid.data.api.ResponseModel
 import com.example.baseprojectandroid.model.AccountState
 import com.example.baseprojectandroid.model.RegisterBody
@@ -38,6 +39,7 @@ class NameViewModel @Inject constructor(
         )
         val response = apiClient.insertUser(nameUser, username = username, password = password, image = imagePart)
 //        val response = apiClient.insertUser(nameUser, username, password, image)
+        Log.d("buituyen", response.message + " " + response.status + " " + response.data)
         if (response.data.isNullOrEmpty()) {
             emit(AccountState.Failed)
         } else {

@@ -3,7 +3,7 @@ package com.example.baseprojectandroid.model
 
 import com.google.gson.annotations.SerializedName
 
-data class User(
+data class CreatorId(
     @SerializedName("avatarUrl")
     var avatarUrl: Any,
     @SerializedName("createdAt")

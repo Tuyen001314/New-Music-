@@ -53,7 +53,7 @@ class NameFragment : BaseFragmentBinding<FragmentNameBinding, NameViewModel>() {
             throwable.printStackTrace()
         }
 
-        viewModel.viewModelScope.launch(handler) {
+        viewModel.viewModelScope.launch(Dispatchers.IO) {
             viewModel.callApiRegister(username, password, nameUser, image).collect { state ->
                 when (state) {
                     is AccountState.Loading -> {
