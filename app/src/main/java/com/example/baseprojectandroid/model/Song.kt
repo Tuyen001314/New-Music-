@@ -1,18 +1,38 @@
 package com.example.baseprojectandroid.model
 
+
 import androidx.media3.common.MediaItem
+import com.google.gson.annotations.SerializedName
 
 data class Song(
-    val id: String = "1",
-    val name: String,
-    val url: String,
-    val thumbnailUrl: String? = null
+    @SerializedName("category")
+    var category: Any = Any(),
+    @SerializedName("createdAt")
+    var createdAt: String = "",
+    @SerializedName("creatorId")
+    var creator: User = User.DEFAULT,
+    @SerializedName("downloadCount")
+    var downloadCount: Int = 0,
+    @SerializedName("id")
+    var id: Int = 0,
+    @SerializedName("listenedCount")
+    var listenedCount: Int = 0,
+    @SerializedName("name")
+    var name: String = "",
+    @SerializedName("thumbnailUrl")
+    var thumbnailUrl: String = "",
+    @SerializedName("url")
+    var url: String = ""
 ) {
     companion object {
-        val EMPTY = Song("", "", "")
+        val EMPTY = Song(creator = User.DEFAULT)
     }
 
-    fun toDefaultState() = SongState(this, SongState.STATE_PAUSE)
+    fun defaultState() = SongState(this, SongState.STATE_PAUSE)
 
     fun toMediaItem() = MediaItem.fromUri(url)
+
+    fun toSinglePlaylist() = Playlist(
+        songs = listOf(this)
+    )
 }

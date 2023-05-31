@@ -7,6 +7,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
@@ -24,12 +25,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/tv_song_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/vp2_current_song"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_marginStart="10dp"
-            android:text="Waiting for you"
+            app:layout_constraintBottom_toTopOf="@+id/song_progress"
+            app:layout_constraintEnd_toStartOf="@+id/bt_pause_resume"
             app:layout_constraintStart_toEndOf="@+id/iv_thumb"
             app:layout_constraintTop_toTopOf="@+id/iv_thumb" />
 
@@ -37,10 +39,10 @@
             android:id="@+id/bt_pause_resume"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:layout_marginBottom="8dp"
             android:padding="10dp"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_pause"
-            android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.95"
@@ -49,9 +51,9 @@
             app:tint="@color/white" />
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/song_progress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/song_progress"
             android:layout_marginHorizontal="2dp"
             android:progress="40"
             app:indicatorColor="#B2B2B2"

@@ -20,7 +20,7 @@ class SongStateItem(
     override fun bind(viewBinding: LayoutMusicItemBinding, position: Int) {
         viewBinding.tvSongName.text = songState.song.name
         if (songState.state == SongState.STATE_PLAYING) {
-            viewBinding.tvSongName.setTextColor(Color.RED)
+            viewBinding.tvSongName.setTextColor(Color.parseColor("#1ED760"))
         } else {
             viewBinding.tvSongName.setTextColor(Color.BLACK)
         }
@@ -30,7 +30,7 @@ class SongStateItem(
                 .override(100, 100)
                 .transform(CenterCrop(), RoundedCorners(20))
                 .dontAnimate()
-                .into(object :SimpleTarget<Drawable>() {
+                .into(object : SimpleTarget<Drawable>() {
                     override fun onResourceReady(
                         resource: Drawable,
                         transition: Transition<in Drawable>?
@@ -57,7 +57,7 @@ class SongStateItem(
 
     override fun hasSameContentAs(other: Item<*>): Boolean {
         other as SongStateItem
-        return  songState.state == other.songState.state
+        return songState.state == other.songState.state
     }
 
 }

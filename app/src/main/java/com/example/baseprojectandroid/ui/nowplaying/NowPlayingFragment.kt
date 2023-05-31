@@ -1,5 +1,6 @@
 package com.example.baseprojectandroid.ui.nowplaying
 
+import android.content.res.ColorStateList
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.activityViewModels
@@ -19,7 +20,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
-class NowPlayingFragment : BaseFragmentBinding<FragmentNowPlayingBinding, BaseViewModel>(), MotionLayout.TransitionListener {
+class NowPlayingFragment : BaseFragmentBinding<FragmentNowPlayingBinding, BaseViewModel>() {
     private val nowPlayingViewModel by activityViewModels<NowPlayingViewModel>()
 
     override fun getContentViewId(): Int {
@@ -34,12 +35,20 @@ class NowPlayingFragment : BaseFragmentBinding<FragmentNowPlayingBinding, BaseVi
         super.registerObservers()
         lifecycleScope.launch(Dispatchers.Default) {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                nowPlayingViewModel.uiState.collect { uiState ->
-                    uiState.songState.getValueIfNotHandle(viewLifecycleOwner) { songState ->
-                        updateNowPlayingSong(songState)
-                    }
+                launch {
+                    nowPlayingViewModel.uiState.collect { uiState ->
+                        uiState.songState.getValueIfNotHandle(viewLifecycleOwner) { songState ->
+                            updateNowPlayingSong(songState)
+                        }
 
-                    updatePosition(uiState.currentPosition)
+                        updatePosition(uiState.currentPosition)
+                    }
+                }
+
+                launch {
+                    nowPlayingViewModel.thumbVibrantColor.collect {
+                        dataBinding.root.backgroundTintList = ColorStateList.valueOf(it)
+                    }
                 }
             }
         }
@@ -67,30 +76,6 @@ class NowPlayingFragment : BaseFragmentBinding<FragmentNowPlayingBinding, BaseVi
     override fun initializeData() {
     }
 
-    override fun onTransitionStarted(motionLayout: MotionLayout?, startId: Int, endId: Int) {
 
-    }
-
-    override fun onTransitionChange(
-        motionLayout: MotionLayout?,
-        startId: Int,
-        endId: Int,
-        progress: Float
-    ) {
-//        requireView().updateLayoutParams {
-//            height = (1000* (1 - progress)).toInt() + 100
-//        }
-    }
-
-    override fun onTransitionCompleted(motionLayout: MotionLayout?, currentId: Int) {
-    }
-
-    override fun onTransitionTrigger(
-        motionLayout: MotionLayout?,
-        triggerId: Int,
-        positive: Boolean,
-        progress: Float
-    ) {
-    }
 }
 

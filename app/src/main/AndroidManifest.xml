@@ -35,7 +35,10 @@
             android:exported="false">
         </activity>
 
-        <service android:name=".service.MusicService" />
+        <service android:name=".service.MusicService"/>
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

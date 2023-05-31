@@ -1,6 +1,7 @@
 package com.example.baseprojectandroid.di
 
 import android.content.Context
+import com.bumptech.glide.Glide
 import com.example.baseprojectandroid.local.LocalData
 import com.example.baseprojectandroid.local.LocalStorage
 import com.example.baseprojectandroid.service.MusicServiceConnector
@@ -34,4 +35,8 @@ class AppModule {
     @Provides
     @Singleton
     fun provideMusicServiceConnector(@ApplicationContext context: Context) = MusicServiceConnector(context)
+
+    @Provides
+    @Singleton
+    fun provideGlide(@ApplicationContext context: Context) = Glide.with(context)
 }

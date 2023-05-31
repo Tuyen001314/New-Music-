@@ -5,21 +5,25 @@ import com.google.gson.annotations.SerializedName
 
 data class User(
     @SerializedName("avatarUrl")
-    var avatarUrl: Any,
+    var avatarUrl: Any = Any(),
     @SerializedName("createdAt")
-    var createdAt: String,
+    var createdAt: String = "",
     @SerializedName("followers")
-    var followers: List<User>,
+    var followers: List<Any> = listOf(),
     @SerializedName("followersCount")
-    var followersCount: Int,
+    var followersCount: Int = 0,
     @SerializedName("id")
-    var id: Int,
+    var id: Int = 0,
     @SerializedName("name")
-    var name: String,
+    var name: String = "",
     @SerializedName("password")
-    var password: String,
+    var password: String = "",
     @SerializedName("playlists")
-    var playlists: List<Playlists>,
+    var playlists: List<Playlist> = listOf(),
     @SerializedName("userName")
-    var userName: String
-)
+    var userName: String = ""
+) {
+    companion object {
+        val DEFAULT = User()
+    }
+}

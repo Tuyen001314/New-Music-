@@ -23,7 +23,7 @@ class PlaylistSampleViewModel @Inject constructor(
     init {
         viewModelScope.launch(Dispatchers.Default) {
             songRepository.getSongs().collect {
-                _allSongs.postValue(it.map { song -> song.toDefaultState() })
+                _allSongs.postValue(it.map { song -> song.defaultState() })
             }
         }
 

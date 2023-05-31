@@ -2,39 +2,30 @@ package com.example.baseprojectandroid.ui.component
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.commit
 import com.example.baseprojectandroid.R
 import com.example.baseprojectandroid.databinding.ActivityMainBinding
 import com.example.baseprojectandroid.service.MusicServiceConnector
-import com.example.baseprojectandroid.ui.base.BaseFragmentPagerAdapter
-import com.example.baseprojectandroid.ui.component.home.HomeFragment
-import com.example.baseprojectandroid.ui.component.library.YourLibraryFragment
-import com.example.baseprojectandroid.ui.component.library.profile.ProfileFragment
-import com.example.baseprojectandroid.ui.component.search.SearchFragment
+import com.example.baseprojectandroid.ui.base.BaseActivityBinding
+import com.example.baseprojectandroid.ui.base.BaseViewModel
+import com.example.baseprojectandroid.ui.nowplaying.NowPlayingFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivityBinding<ActivityMainBinding, BaseViewModel>() {
     @Inject
     lateinit var musicServiceConnector: MusicServiceConnector
-    private lateinit var adapter: BaseFragmentPagerAdapter
-    private lateinit var binding: ActivityMainBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        setupViewPager()
+    override fun initializeViews() {
+        super.initializeViews()
         musicServiceConnector.bindToService(this)
+        supportFragmentManager.commit {
+            add(dataBinding.nowPlayingContainer.id, NowPlayingFragment(), null)
+        }
     }
 
-    private fun setupViewPager() {
-        adapter = BaseFragmentPagerAdapter(supportFragmentManager, lifecycle)
-        adapter.add(HomeFragment::class)
-            .add(SearchFragment::class)
-            .add(ProfileFragment::class)
-        binding.viewPager.isUserInputEnabled = false
-        binding.viewPager.adapter = adapter
-        binding.bottomBarView.setWithViewPager(binding.viewPager)
+    override fun getContentViewId(): Int {
+        return R.layout.activity_main
     }
 }

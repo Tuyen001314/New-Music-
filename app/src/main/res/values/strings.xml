@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">BaseProjectAndroid</string>
+    <string name="app_name">Music</string>
+    <string name="notification_channel_description">Music Notification Description</string>
 </resources>
