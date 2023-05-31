@@ -9,7 +9,7 @@ data class SongResponse(
     @SerializedName("createdAt")
     var createdAt: String,
     @SerializedName("creatorId")
-    var creatorId: CreatorId,
+    var creatorId: User,
     @SerializedName("downloadCount")
     var downloadCount: Int,
     @SerializedName("id")
@@ -19,7 +19,7 @@ data class SongResponse(
     @SerializedName("name")
     var name: String,
     @SerializedName("thumbnailUrl")
-    var thumbnailUrl: Any,
+    var thumbnailUrl: String?,
     @SerializedName("url")
     var url: String
 )
