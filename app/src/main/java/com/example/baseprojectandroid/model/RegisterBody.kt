@@ -5,11 +5,11 @@ import java.io.File
 
 data class RegisterBody(
     @SerializedName("name")
-    var name: String,
+    var name: String = "",
     @SerializedName("password")
-    var password: String,
+    var password: String = "",
     @SerializedName("username")
-    var username: String,
+    var username: String ="",
     @SerializedName("image")
-    var image: File?
+    var image: String? = null
 )

@@ -5,17 +5,8 @@ import com.example.baseprojectandroid.model.RegisterBody
 import com.example.baseprojectandroid.model.UploadResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import okhttp3.ResponseBody
 import retrofit2.Call
-import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.Field
-import retrofit2.http.GET
-import retrofit2.http.Multipart
-import retrofit2.http.POST
-import retrofit2.http.Part
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 import java.io.File
 
 interface ApiClient {
@@ -26,13 +17,19 @@ interface ApiClient {
     @GET("api/Users/checkUserName")
     suspend fun getUser(@Query("username") userName: String): ResponseModel
 
-    @POST("/api/Users/insert")
-    suspend fun insertUser(@Body registerBody: RegisterBody): ResponseModel
+//    @POST("/api/Users/insert")
 
-/*
+//    @FormUrlEncoded
+//    suspend fun insertUser(
+//        @Header("Content-Type: multipart/form-data") @Body registerBody: RegisterBody,
+////        @Query("name") name: String
+//    ): ResponseModel
+
+
     @POST("/api/Users/insert")
-    suspend fun insertUser(@Field("name") name: String, @Field("username") username: String, @Field("password") password: String, @Field("image") image: File?): ResponseModel
-*/
+    @Multipart
+    suspend fun insertUser(@Part("name") name: String, @Part("username") username: String, @Part("password") password: String, @Part image: MultipartBody.Part): ResponseModel
+
 
     @Multipart
     @POST("")

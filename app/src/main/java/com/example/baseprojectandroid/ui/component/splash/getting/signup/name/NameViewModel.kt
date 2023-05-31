@@ -6,10 +6,14 @@ import com.example.baseprojectandroid.model.AccountState
 import com.example.baseprojectandroid.model.RegisterBody
 import com.example.baseprojectandroid.server.ApiClient
 import com.example.baseprojectandroid.ui.base.BaseViewModel
+import com.example.baseprojectandroid.upload.UploadRequestBody
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 import javax.inject.Inject
 
@@ -29,7 +33,10 @@ class NameViewModel @Inject constructor(
 
     fun callApiRegister(username: String, password: String, nameUser: String, image: File? = null): Flow<AccountState> = flow {
         emit(AccountState.Loading)
-        val response = apiClient.insertUser(RegisterBody(nameUser, username = username, password = password, image = image))
+        val imagePart = MultipartBody.Part.createFormData("image", "",
+            "".toRequestBody(MultipartBody.FORM)
+        )
+        val response = apiClient.insertUser(nameUser, username = username, password = password, image = imagePart)
 //        val response = apiClient.insertUser(nameUser, username, password, image)
         if (response.data.isNullOrEmpty()) {
             emit(AccountState.Failed)

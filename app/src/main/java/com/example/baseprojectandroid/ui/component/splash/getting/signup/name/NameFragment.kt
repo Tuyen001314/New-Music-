@@ -15,10 +15,8 @@ import com.example.baseprojectandroid.model.AccountState
 import com.example.baseprojectandroid.ui.base.BaseFragmentBinding
 import com.example.baseprojectandroid.ui.component.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.File
 import javax.inject.Inject
 
@@ -48,9 +46,14 @@ class NameFragment : BaseFragmentBinding<FragmentNameBinding, NameViewModel>() {
         localStorage.nameUser = nameUser
         localStorage.isFirstTime = false
     }
+    private  val   scope = SupervisorJob() + Dispatchers.IO
 
     private fun callApiRegister(nameUser: String, username: String, password: String, image: File? = null) {
-        viewModel.viewModelScope.launch(Dispatchers.IO) {
+        val handler = CoroutineExceptionHandler { coroutineContext, throwable ->
+            throwable.printStackTrace()
+        }
+
+        viewModel.viewModelScope.launch(handler) {
             viewModel.callApiRegister(username, password, nameUser, image).collect { state ->
                 when (state) {
                     is AccountState.Loading -> {
