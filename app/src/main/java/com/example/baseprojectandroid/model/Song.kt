@@ -20,7 +20,7 @@ data class Song(
     @SerializedName("name")
     var name: String = "",
     @SerializedName("thumbnailUrl")
-    var thumbnailUrl: Any = Any(),
+    var thumbnailUrl: String = "",
     @SerializedName("url")
     var url: String = ""
 ) {
