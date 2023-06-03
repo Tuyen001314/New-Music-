@@ -20,16 +20,20 @@
         <!--            app:layout_constraintRight_toRightOf="parent"-->
         <!--            app:layout_constraintTop_toTopOf="parent"-->
         <!--            app:navGraph="@navigation/nav_main" />-->
-
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/fragmentContainerView"
-            android:name="com.example.baseprojectandroid.ui.nowplaying.NowPlayingLiteFragment"
+        <FrameLayout
+            android:id="@+id/now_playing_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="8dp"
-            app:layout_constraintBottom_toTopOf="@id/bottom_nav"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:layout="@layout/now_playing_lite_fragment" />
+            android:layout_height="match_parent" />
+
+<!--        <androidx.fragment.app.FragmentContainerView-->
+<!--            android:id="@+id/fragmentContainerView"-->
+<!--            android:name="com.example.baseprojectandroid.ui.nowplaying.NowPlayingLiteFragment"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginHorizontal="8dp"-->
+<!--            app:layout_constraintBottom_toTopOf="@id/bottom_nav"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            tools:layout="@layout/now_playing_lite_fragment" />-->
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_nav"
@@ -37,12 +41,6 @@
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:menu="@menu/home_bottom_nav_menu" />
-
-        <FrameLayout
-            android:id="@+id/now_playing_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

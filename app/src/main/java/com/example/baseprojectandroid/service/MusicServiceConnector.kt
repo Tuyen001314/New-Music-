@@ -61,6 +61,13 @@ class MusicServiceConnector constructor(
         Intent(context, MusicService::class.java).also {
             context.bindService(it, mConnection, Context.BIND_AUTO_CREATE)
         }
+
+//        val sessionToken = SessionToken(context, ComponentName(context,  MusicService::class.java))
+//         MediaController.Builder(context, sessionToken)
+//            .buildAsync()
+//            .addListener({
+//                listOnServiceConnectedCallback.forEach { it.onConnected() }
+//            }, Executors.newFixedThreadPool(4))
     }
 
     fun pauseOrPlay() {
@@ -94,6 +101,9 @@ class MusicServiceConnector constructor(
 
     }
 
+    fun updatePosition(process: Int) {
+        service!!.updatePosition(process)
+    }
     interface OnServiceConnected {
         fun onConnected()
     }

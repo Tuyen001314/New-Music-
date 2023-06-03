@@ -11,6 +11,7 @@
         android:id="@+id/root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/bg_now_playing_lite"
         android:paddingHorizontal="24dp">
 
         <ImageView

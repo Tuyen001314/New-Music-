@@ -6,6 +6,7 @@ import androidx.fragment.app.commit
 import com.example.baseprojectandroid.R
 import com.example.baseprojectandroid.databinding.ActivityMainBinding
 import com.example.baseprojectandroid.service.MusicServiceConnector
+import com.example.baseprojectandroid.ui.PlaylistSampleFragment
 import com.example.baseprojectandroid.ui.base.BaseActivityBinding
 import com.example.baseprojectandroid.ui.base.BaseViewModel
 import com.example.baseprojectandroid.ui.nowplaying.NowPlayingFragment
@@ -14,12 +15,8 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : BaseActivityBinding<ActivityMainBinding, BaseViewModel>() {
-    @Inject
-    lateinit var musicServiceConnector: MusicServiceConnector
-
-    override fun initializeViews() {
-        super.initializeViews()
-        musicServiceConnector.bindToService(this)
+    override fun onViewCreated(savedInstanceState: Bundle?) {
+        super.onViewCreated(savedInstanceState)
         supportFragmentManager.commit {
             add(dataBinding.nowPlayingContainer.id, NowPlayingFragment(), null)
         }

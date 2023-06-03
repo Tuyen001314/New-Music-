@@ -1,20 +1,15 @@
 package com.example.baseprojectandroid.service
 
-import android.app.Notification
-import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
+import android.media.MediaScannerConnection
+import android.media.session.MediaSession
 import android.os.Binder
 import android.os.IBinder
 import android.support.v4.media.session.MediaSessionCompat
-import androidx.core.content.ContextCompat
-import androidx.media.MediaSessionManager
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.session.MediaSession
-import androidx.media3.session.MediaSessionService
-import androidx.media3.ui.PlayerNotificationManager
 import com.example.baseprojectandroid.model.Playlist
 import com.example.baseprojectandroid.model.Position
 import com.example.baseprojectandroid.model.Song
@@ -28,7 +23,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
-class MusicService : MediaSessionService(), CoroutineScope {
+class MusicService : Service(), CoroutineScope {
     private var needUpdateCurrentSongPosition = false
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Default
@@ -50,7 +45,6 @@ class MusicService : MediaSessionService(), CoroutineScope {
     val currentSongPosition: StateFlow<Position> get() = _currentPosition
     val currentPlaylist: StateFlow<Playlist> get() = _currentPlaylist
 
-    private lateinit var mediaSession: MediaSession
     private lateinit var musicNotificationManager: MusicNotificationManager
 
     private val binder = MusicBinder()
@@ -60,20 +54,8 @@ class MusicService : MediaSessionService(), CoroutineScope {
     }
 
     override fun onBind(intent: Intent?): IBinder? {
-//        mediaSession = MediaSessionCompat(this, "MusicService").apply {
-//            val sessionActivityPendingIntent =
-//                packageManager?.getLaunchIntentForPackage(packageName)?.let { sessionIntent ->
-//                    PendingIntent.getActivity(this@MusicService, 0, sessionIntent, PendingIntent.FLAG_IMMUTABLE)
-//                }
-//            setSessionActivity(sessionActivityPendingIntent)
-//            isActive = true
-//        }
-        val player = ExoPlayer.Builder(this).build()
-        val mediaSession = MediaSession.Builder(this, player)
-            .build()
-
-
-        musicNotificationManager = MusicNotificationManager(this, mediaSession.sessionCompatToken)
+        val mediaSession = MediaSessionCompat(this, "fkdlsaj")
+        musicNotificationManager = MusicNotificationManager(this, mediaSession.sessionToken)
 
 
         exoPlayer = ExoPlayer.Builder(this).build().apply {
@@ -84,7 +66,7 @@ class MusicService : MediaSessionService(), CoroutineScope {
             override fun onPlaybackStateChanged(playbackState: Int) {
                 super.onPlaybackStateChanged(playbackState)
                 if (playbackState == ExoPlayer.STATE_READY) {
-                    musicNotificationManager.showNotificationForPlayer(exoPlayer)
+//                    musicNotificationManager.showNotificationForPlayer(exoPlayer)
                     launch(Dispatchers.Main) {
                         _currentPosition.update {
                             it.copy(
@@ -113,10 +95,6 @@ class MusicService : MediaSessionService(), CoroutineScope {
             }
         })
         return binder
-    }
-
-    override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaSession? {
-        TODO("Not yet implemented")
     }
 
     fun pauseOrPlay() {
@@ -184,7 +162,10 @@ class MusicService : MediaSessionService(), CoroutineScope {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
 
+    fun updatePosition(process: Int) {
+        exoPlayer.seekTo((exoPlayer.duration * (process.toFloat() /100)).toLong())
     }
 
 
@@ -196,13 +177,13 @@ class MusicService : MediaSessionService(), CoroutineScope {
                         currentIndex = exoPlayer.currentPosition
                     )
                 }
-                delay(200)
+                delay(500)
             }
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        musicNotificationManager.hideNotification()
+//        musicNotificationManager.hideNotification()
     }
 }

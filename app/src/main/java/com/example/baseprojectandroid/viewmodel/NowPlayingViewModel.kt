@@ -72,6 +72,10 @@ class NowPlayingViewModel @Inject constructor(
         musicServiceConnector.play(song)
     }
 
+    fun updatePosition(process: Int) {
+        musicServiceConnector.updatePosition(process)
+    }
+
     fun updateCurrentSongOfPlaylist(index: Int) = musicServiceConnector.updateCurrentSongOfPlaylist(index)
 
     //Collect all changes of MusicService, and update into uiState

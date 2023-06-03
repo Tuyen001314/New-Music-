@@ -1,12 +1,15 @@
 package com.example.baseprojectandroid.ui.nowplaying
 
 import android.content.res.ColorStateList
+import android.widget.SeekBar
+import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.bumptech.glide.Glide
 import com.example.baseprojectandroid.R
 import com.example.baseprojectandroid.databinding.FragmentNowPlayingBinding
 import com.example.baseprojectandroid.model.Position
@@ -18,10 +21,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.concurrent.atomic.AtomicBoolean
 
 @AndroidEntryPoint
 class NowPlayingFragment : BaseFragmentBinding<FragmentNowPlayingBinding, BaseViewModel>() {
     private val nowPlayingViewModel by activityViewModels<NowPlayingViewModel>()
+    private var isSeekbarTracking = AtomicBoolean(false)
 
     override fun getContentViewId(): Int {
         return R.layout.fragment_now_playing
@@ -56,14 +61,23 @@ class NowPlayingFragment : BaseFragmentBinding<FragmentNowPlayingBinding, BaseVi
 
     private fun updateNowPlayingSong(songState: SongState) {
         lifecycleScope.launch(Dispatchers.Main) {
-            dataBinding.tvState.text = songState.song.name
+            dataBinding.apply {
+                tvSongName.text = songState.song.name
+                tvSongNameMain.text = songState.song.name
+                tvSongCreatorName.text = songState.song.creator.name
+                Glide.with(ivTrackThumb)
+                    .load(songState.song.thumbnailUrl)
+                    .into(ivTrackThumb)
+            }
         }
     }
 
     private fun updatePosition(position: Position) {
         lifecycleScope.launch(Dispatchers.Main) {
-            dataBinding.songProgress.progress =
-                ((position.currentIndex.toFloat() / position.duration) * 100).toInt()
+            if (!isSeekbarTracking.get()) {
+                dataBinding.songProgress.progress =
+                    ((position.currentIndex.toFloat() / position.duration) * 100).toInt()
+            }
         }
     }
 
@@ -71,11 +85,26 @@ class NowPlayingFragment : BaseFragmentBinding<FragmentNowPlayingBinding, BaseVi
         dataBinding.btPauseResume.setOnClickListener {
             nowPlayingViewModel.pauseOrPlay()
         }
+
+        dataBinding.songProgress.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    nowPlayingViewModel.updatePosition(dataBinding.songProgress.progress)
+                }
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                isSeekbarTracking.set(true)
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                isSeekbarTracking.set(false)
+            }
+        })
     }
 
     override fun initializeData() {
     }
-
 
 }
 
