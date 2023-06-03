@@ -1,10 +1,10 @@
 package com.example.baseprojectandroid.ui.nowplaying
 
 import android.content.res.ColorStateList
+import android.os.Handler
+import android.os.Looper
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
-import androidx.constraintlayout.motion.widget.MotionLayout
-import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -20,13 +20,14 @@ import com.example.baseprojectandroid.viewmodel.NowPlayingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.concurrent.atomic.AtomicBoolean
 
 @AndroidEntryPoint
 class NowPlayingFragment : BaseFragmentBinding<FragmentNowPlayingBinding, BaseViewModel>() {
     private val nowPlayingViewModel by activityViewModels<NowPlayingViewModel>()
     private var isSeekbarTracking = AtomicBoolean(false)
+
+    private var wordHandler = Handler(Looper.getMainLooper())
 
     override fun getContentViewId(): Int {
         return R.layout.fragment_now_playing
@@ -88,9 +89,6 @@ class NowPlayingFragment : BaseFragmentBinding<FragmentNowPlayingBinding, BaseVi
 
         dataBinding.songProgress.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if (fromUser) {
-                    nowPlayingViewModel.updatePosition(dataBinding.songProgress.progress)
-                }
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -98,7 +96,11 @@ class NowPlayingFragment : BaseFragmentBinding<FragmentNowPlayingBinding, BaseVi
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                isSeekbarTracking.set(false)
+                //prevent update position instantly, when player hasn't sought to right process yet.
+                wordHandler.postDelayed({
+                    isSeekbarTracking.set(false)
+                }, 1000L)
+                nowPlayingViewModel.updatePosition(dataBinding.songProgress.progress)
             }
         })
     }
