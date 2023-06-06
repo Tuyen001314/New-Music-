@@ -7,6 +7,7 @@ import android.media.session.MediaSession
 import android.os.Binder
 import android.os.IBinder
 import android.support.v4.media.session.MediaSessionCompat
+import android.util.Log
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
@@ -23,7 +24,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
-class MusicService : Service(), CoroutineScope {
+class MusicService : Service(), CoroutineScope, MusicController {
+    private val TAG = javaClass.name
     private var needUpdateCurrentSongPosition = false
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Default
@@ -63,6 +65,19 @@ class MusicService : Service(), CoroutineScope {
             prepare()
         }
         exoPlayer.addListener(object : Player.Listener {
+            override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                super.onMediaItemTransition(mediaItem, reason)
+                when(reason) {
+                    Player.MEDIA_ITEM_TRANSITION_REASON_AUTO, Player.MEDIA_ITEM_TRANSITION_REASON_SEEK ->
+                        launch {
+                            val song = mediaItem!!.mediaMetadata.extras!!.get("song") as Song
+                            _currentState.emit(song.defaultState())
+                        }
+                }
+                Log.d(TAG, "onMediaItemTransition: ${mediaItem?.mediaMetadata?.title}  reason = $reason")
+            }
+
+
             override fun onPlaybackStateChanged(playbackState: Int) {
                 super.onPlaybackStateChanged(playbackState)
                 if (playbackState == ExoPlayer.STATE_READY) {
@@ -97,7 +112,7 @@ class MusicService : Service(), CoroutineScope {
         return binder
     }
 
-    fun pauseOrPlay() {
+    override fun pauseOrPlay() {
         if (exoPlayer.isPlaying) {
             exoPlayer.pause()
         } else {
@@ -106,7 +121,7 @@ class MusicService : Service(), CoroutineScope {
         }
     }
 
-    fun play(song: Song) {
+    override fun play(song: Song) {
         //release current song
         exoPlayer.stop()
 
@@ -124,37 +139,29 @@ class MusicService : Service(), CoroutineScope {
     private lateinit var playlistExoPlayerListener: Player.Listener
     private var currentSongIndexInPlayingPlaylist = 0
 
-    fun play(playlist: Playlist, startSongIndex: Int = 0) {
+    override fun play(playlist: Playlist, startSongIndex: Int) {
         launch {
             _currentPlaylist.emit(playlist)
         }
-        val startSong = playlist.songs[startSongIndex]
-        currentSongIndexInPlayingPlaylist = 0
-        try {
-            exoPlayer.removeListener(playlistExoPlayerListener)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        play(startSong)
-        playlistExoPlayerListener = object : Player.Listener {
-            override fun onPlaybackStateChanged(playbackState: Int) {
-                super.onPlaybackStateChanged(playbackState)
-                when (playbackState) {
-                    ExoPlayer.STATE_ENDED -> {
-                        currentSongIndexInPlayingPlaylist++
-                        try {
-                            val song = playlist.songs[currentSongIndexInPlayingPlaylist]
-                            play(song)
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
-                    }
-                }
-            }
-        }
+        exoPlayer.clearMediaItems()
+        exoPlayer.addMediaItems(playlist.songs.map { it.toMediaItem() })
+        exoPlayer.seekTo(startSongIndex, 0)
+        exoPlayer.repeatMode = Player.REPEAT_MODE_ALL
+        exoPlayer.prepare()
+        exoPlayer.playWhenReady = true
     }
 
-    fun updateCurrentSongOfPlaylist(index: Int) {
+    override fun nextSong() {
+        exoPlayer.seekToNextMediaItem()
+    }
+
+    override fun prevSong() {
+        exoPlayer.seekToPreviousMediaItem()
+//        exoPlayer.previous()
+//        if (_currentPlaylist.value)
+    }
+
+    override fun updateCurrentSongOfPlaylist(index: Int) {
         try {
             val song = _currentPlaylist.value.songs[index]
             currentSongIndexInPlayingPlaylist = index
@@ -164,12 +171,16 @@ class MusicService : Service(), CoroutineScope {
         }
     }
 
-    fun updatePosition(process: Int) {
+    override fun updateCurrentPlaylist() {
+
+    }
+
+    override fun updatePosition(process: Int) {
         exoPlayer.seekTo((exoPlayer.duration * (process.toFloat() /100)).toLong())
     }
 
 
-    fun updateCurrentPosition() {
+    override fun updateCurrentPosition() {
         launch(Dispatchers.Main) {
             while (needUpdateCurrentSongPosition) {
                 _currentPosition.update {

@@ -2,10 +2,10 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-android'
-    id 'kotlin-android-extensions'
     id 'kotlin-kapt'
     id 'kotlin-platform-android'
     id 'dagger.hilt.android.plugin'
+    id 'kotlin-parcelize'
 }
 
 android {
@@ -93,6 +93,7 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.15.1'
     implementation 'androidx.palette:palette-ktx:1.0.0'
     implementation 'com.github.florent37:viewanimator:1.1.2'
+    implementation "com.github.skydoves:rainbow:1.0.4"
 
 }
 kapt {

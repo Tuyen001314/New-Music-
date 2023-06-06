@@ -87,6 +87,14 @@ class NowPlayingFragment : BaseFragmentBinding<FragmentNowPlayingBinding, BaseVi
             nowPlayingViewModel.pauseOrPlay()
         }
 
+        dataBinding.btNext.setOnClickListener {
+            nowPlayingViewModel.nextSong()
+        }
+
+        dataBinding.btPrev.setOnClickListener {
+            nowPlayingViewModel.prevSong()
+        }
+
         dataBinding.songProgress.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
             }
@@ -106,6 +114,7 @@ class NowPlayingFragment : BaseFragmentBinding<FragmentNowPlayingBinding, BaseVi
     }
 
     override fun initializeData() {
+
     }
 
 }

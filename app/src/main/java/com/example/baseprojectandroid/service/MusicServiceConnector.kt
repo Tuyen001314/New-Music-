@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 class MusicServiceConnector constructor(
     context: Context
-) {
+): MusicController {
     private var service: MusicService? = null
     private var isBound = false
 
@@ -70,15 +70,22 @@ class MusicServiceConnector constructor(
 //            }, Executors.newFixedThreadPool(4))
     }
 
-    fun pauseOrPlay() {
+    override fun pauseOrPlay() {
         service!!.pauseOrPlay()
     }
 
-    fun play(song: Song) {
+    override fun play(song: Song) {
         service!!.play(song)
     }
 
-    fun play(playlist: Playlist, startSongIndex: Int = 0) = service!!.play(playlist, startSongIndex)
+    override fun play(playlist: Playlist, startSongIndex: Int) = service!!.play(playlist, startSongIndex)
+    override fun nextSong() {
+        service!!.nextSong()
+    }
+
+    override fun prevSong() {
+        service!!.prevSong()
+    }
 
     fun isConnected() = isBound
 
@@ -93,15 +100,15 @@ class MusicServiceConnector constructor(
         listOnServiceConnectedCallback.remove(listener)
     }
 
-    fun updateCurrentPosition() = service!!.updateCurrentPosition()
+    override fun updateCurrentPosition() = service!!.updateCurrentPosition()
 
-    fun updateCurrentSongOfPlaylist(index: Int) = service!!.updateCurrentSongOfPlaylist(index)
+    override fun updateCurrentSongOfPlaylist(index: Int) = service!!.updateCurrentSongOfPlaylist(index)
 
-    fun updateCurrentPlaylist() {
+    override fun updateCurrentPlaylist() {
 
     }
 
-    fun updatePosition(process: Int) {
+    override fun updatePosition(process: Int) {
         service!!.updatePosition(process)
     }
     interface OnServiceConnected {

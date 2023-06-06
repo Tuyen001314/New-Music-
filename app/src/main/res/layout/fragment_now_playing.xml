@@ -73,7 +73,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/muli"
             android:text="Ung qua chung"
-            android:textColor="@color/white"
+            android:textColor="#B3B3B3"
             android:textSize="16sp"
             app:layout_constraintTop_toBottomOf="@id/tv_song_name_main" />
 
@@ -90,6 +90,26 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/song_progress" />
 
+        <ImageView
+            android:id="@+id/bt_prev"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_prev"
+            app:layout_constraintBottom_toBottomOf="@+id/bt_pause_resume"
+            app:layout_constraintEnd_toStartOf="@+id/bt_pause_resume"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/bt_pause_resume" />
+
+        <ImageView
+            android:id="@+id/bt_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_next"
+            app:layout_constraintBottom_toBottomOf="@+id/bt_pause_resume"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/bt_pause_resume"
+            app:layout_constraintTop_toTopOf="@+id/bt_pause_resume" />
+
         <androidx.appcompat.widget.AppCompatSeekBar
             android:id="@+id/song_progress"
             android:layout_width="match_parent"
@@ -99,16 +119,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_song_creator_name" />
-
-        <TextView
-            android:id="@+id/tv_state"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="state"
-            android:textColor="@color/black"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/bt_pause_resume" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

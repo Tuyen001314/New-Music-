@@ -1,8 +1,11 @@
 package com.example.baseprojectandroid.model
 
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class Playlist(
     @SerializedName("createdAt")
     var createdAt: String = "",
@@ -16,6 +19,6 @@ data class Playlist(
     var name: String = "",
     @SerializedName("songs")
     var songs: List<Song> = listOf()
-) {
+): Parcelable {
 
 }

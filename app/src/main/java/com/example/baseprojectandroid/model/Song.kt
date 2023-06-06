@@ -1,12 +1,17 @@
 package com.example.baseprojectandroid.model
 
 
+import android.os.Parcelable
+import androidx.core.os.bundleOf
 import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class Song(
     @SerializedName("category")
-    var category: Any = Any(),
+    var category: String = "",
     @SerializedName("createdAt")
     var createdAt: String = "",
     @SerializedName("creatorId")
@@ -23,7 +28,7 @@ data class Song(
     var thumbnailUrl: String = "",
     @SerializedName("url")
     var url: String = ""
-) {
+): Parcelable {
     companion object {
         val EMPTY = Song(creator = User.DEFAULT)
     }
@@ -31,6 +36,18 @@ data class Song(
     fun defaultState() = SongState(this, SongState.STATE_PAUSE)
 
     fun toMediaItem() = MediaItem.fromUri(url)
+        .buildUpon()
+        .setMediaId(id.toString())
+        .setMediaMetadata(
+            MediaMetadata.Builder()
+                .setTitle(name)
+                .setArtist(creator.name)
+                .setExtras(
+                    bundleOf("song" to this )
+                )
+                .build()
+        )
+        .build()
 
     fun toSinglePlaylist() = Playlist(
         songs = listOf(this)

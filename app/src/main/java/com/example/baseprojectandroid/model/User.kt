@@ -1,15 +1,18 @@
 package com.example.baseprojectandroid.model
 
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class User(
     @SerializedName("avatarUrl")
-    var avatarUrl: Any = Any(),
+    var avatarUrl: String = "",
     @SerializedName("createdAt")
     var createdAt: String = "",
     @SerializedName("followers")
-    var followers: List<Any> = listOf(),
+    var followers: List<User> = listOf(),
     @SerializedName("followersCount")
     var followersCount: Int = 0,
     @SerializedName("id")
@@ -22,7 +25,7 @@ data class User(
     var playlists: List<Playlist> = listOf(),
     @SerializedName("userName")
     var userName: String = ""
-) {
+): Parcelable {
     companion object {
         val DEFAULT = User()
     }
