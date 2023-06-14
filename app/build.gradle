@@ -73,6 +73,10 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxjava:2.2.10"
     implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
 
+    //lottie
+    def lottieVersion = "3.4.0"
+    implementation "com.airbnb.android:lottie:$lottieVersion"
+
     //Gson
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
 
@@ -94,6 +98,9 @@ dependencies {
     implementation 'androidx.palette:palette-ktx:1.0.0'
     implementation 'com.github.florent37:viewanimator:1.1.2'
     implementation "com.github.skydoves:rainbow:1.0.4"
+
+    implementation "androidx.core:core-splashscreen:1.0.1"
+    implementation 'androidx.palette:palette-ktx:1.0.0'
 
 }
 kapt {

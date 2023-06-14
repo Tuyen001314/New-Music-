@@ -36,9 +36,7 @@ object NetworkModule {
     fun provideRetrofitInterface(httpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder().client(httpClient)
             .baseUrl(BASE_URL)
-            .addConverterFactory(MoshiConverterFactory.create(getMoshi()).asLenient())
             .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
             .build()
     }
 

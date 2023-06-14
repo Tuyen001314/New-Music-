@@ -2,27 +2,35 @@ package com.example.baseprojectandroid.ui.component
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.commit
 import com.example.baseprojectandroid.R
-import com.example.baseprojectandroid.databinding.ActivityMainBinding
 import com.example.baseprojectandroid.service.MusicServiceConnector
-import com.example.baseprojectandroid.ui.PlaylistSampleFragment
-import com.example.baseprojectandroid.ui.base.BaseActivityBinding
-import com.example.baseprojectandroid.ui.base.BaseViewModel
-import com.example.baseprojectandroid.ui.nowplaying.NowPlayingFragment
+import com.example.baseprojectandroid.ui.base.BaseFragmentPagerAdapter
+import com.example.baseprojectandroid.ui.component.home.HomeFragment
+import com.example.baseprojectandroid.ui.component.library.YourLibraryFragment
+import com.example.baseprojectandroid.ui.component.library.profile.ProfileFragment
+import com.example.baseprojectandroid.ui.component.search.SearchFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : BaseActivityBinding<ActivityMainBinding, BaseViewModel>() {
-    override fun onViewCreated(savedInstanceState: Bundle?) {
-        super.onViewCreated(savedInstanceState)
-        supportFragmentManager.commit {
-            add(dataBinding.nowPlayingContainer.id, NowPlayingFragment(), null)
-        }
+class MainActivity : AppCompatActivity() {
+    private lateinit var adapter: BaseFragmentPagerAdapter
+    private lateinit var binding: ActivityMainBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        setupViewPager()
     }
 
-    override fun getContentViewId(): Int {
-        return R.layout.activity_main
+    private fun setupViewPager() {
+        adapter = BaseFragmentPagerAdapter(supportFragmentManager, lifecycle)
+        adapter.add(HomeFragment::class)
+            .add(SearchFragment::class)
+            .add(YourLibraryFragment::class)
+        binding.viewPager.isUserInputEnabled = false
+        binding.viewPager.adapter = adapter
+        binding.bottomBarView.setWithViewPager(binding.viewPager)
     }
 }
