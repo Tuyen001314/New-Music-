@@ -13,5 +13,5 @@ class ResponseModel {
     var status: String? = null
 
     @SerializedName("data")
-    var data: List<User>? = null
+    var data: User? = null
 }

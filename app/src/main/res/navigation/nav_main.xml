@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_main"
+    app:startDestination="@id/settingFragment">
+
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="com.example.baseprojectandroid.ui.component.setting.SettingFragment"
+        android:label="SettingFragment"
+        tools:layout="@layout/fragment_setting">
+        <action
+            android:id="@+id/action_settingFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/yourLibraryFragment"
+        android:name="com.example.baseprojectandroid.ui.component.library.YourLibraryFragment"
+        android:label="YourLibraryFragment"
+        tools:layout="@layout/fragment_your_library">
+        <action
+            android:id="@+id/action_yourLibraryFragment_to_settingFragment"
+            app:destination="@id/settingFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.baseprojectandroid.ui.component.library.profile.ProfileFragment"
+        android:label="ProfileFragment"
+        tools:layout="@layout/fragment_profile"/>
+
+</navigation>

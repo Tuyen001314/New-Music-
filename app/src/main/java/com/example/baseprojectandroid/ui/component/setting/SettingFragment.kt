@@ -1,13 +1,12 @@
-package com.example.baseprojectandroid.ui.component.library
+package com.example.baseprojectandroid.ui.component.setting
 
 import android.util.Log
 import android.widget.LinearLayout
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.baseprojectandroid.R
-import com.example.baseprojectandroid.databinding.FragmentGettingBinding
+import com.example.baseprojectandroid.databinding.FragmentSettingBinding
 import com.example.baseprojectandroid.databinding.FragmentYourLibraryBinding
-import com.example.baseprojectandroid.dialog.CreatePlaylistBottomSheet
 import com.example.baseprojectandroid.model.Music
 import com.example.baseprojectandroid.model.Song
 import com.example.baseprojectandroid.ui.base.BaseFragment
@@ -20,15 +19,13 @@ import java.util.logging.Logger
 
 
 @AndroidEntryPoint
-class YourLibraryFragment: BaseFragmentBinding<FragmentYourLibraryBinding, YourLibraryViewModel>() {
+class SettingFragment: BaseFragmentBinding<FragmentSettingBinding, SettingViewModel>() {
 
-    override fun getContentViewId(): Int = R.layout.fragment_your_library
-    private lateinit var adapter: YourLibraryAdapter
-    private lateinit var adapterPlaylist: YourLibraryPlaylistAdapter
+    override fun getContentViewId(): Int = R.layout.fragment_setting
+    private lateinit var adapter: SettingAdapter
 
     override fun initializeViews() {
-        adapter = YourLibraryAdapter(requireContext())
-        adapterPlaylist = YourLibraryPlaylistAdapter(requireContext())
+        adapter = SettingAdapter(requireContext())
         var list = ArrayList<Music>()
         list.add(Music("bo"))
         list.add(Music("ung qua chung"))
@@ -36,20 +33,17 @@ class YourLibraryFragment: BaseFragmentBinding<FragmentYourLibraryBinding, YourL
         list.add(Music("Tha thứ lỗi lầm"))
         list.add(Music("Lần cuối"))
         Log.d("buituyen", list.size.toString())
+
         adapter.submitList(list,true)
-        adapterPlaylist.submitList(list, true)
+
         dataBinding.recyclerViewUpload.adapter = adapter
-        dataBinding.recyclerViewDownload.adapter = adapter
-        dataBinding.recyclerRecentPlay.adapter = adapter
-        dataBinding.recyclerPlaylist.adapter = adapterPlaylist
-        dataBinding.recyclerPlaylist.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
     }
 
     override fun registerListeners() {
         super.registerListeners()
 
-        dataBinding.add.setOnClickListener {
-            CreatePlaylistBottomSheet().show(childFragmentManager, "")
+        dataBinding.titleYourLibrary.setOnClickListener {
+
         }
     }
 

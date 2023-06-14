@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         adapter = BaseFragmentPagerAdapter(supportFragmentManager, lifecycle)
         adapter.add(HomeFragment::class)
             .add(SearchFragment::class)
-            .add(ProfileFragment::class)
+            .add(YourLibraryFragment::class)
         binding.viewPager.isUserInputEnabled = false
         binding.viewPager.adapter = adapter
         binding.bottomBarView.setWithViewPager(binding.viewPager)

@@ -23,7 +23,7 @@ class SignInViewModel
     fun fetchUser(userName: String): Flow<AccountState> = flow {
         emit(AccountState.Loading)
         val response = api.getUser(userName)
-        if (response.data.isNullOrEmpty()) {
+        if (response.data != null) {
             emit(AccountState.Finished)
         } else {
             emit(AccountState.Failed)
