@@ -1,6 +1,5 @@
 package com.example.baseprojectandroid.viewmodel
 
-import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.Drawable
@@ -13,17 +12,17 @@ import com.bumptech.glide.request.transition.Transition
 import com.example.baseprojectandroid.model.Playlist
 import com.example.baseprojectandroid.model.Position
 import com.example.baseprojectandroid.model.Song
-import com.example.baseprojectandroid.model.SongState
 import com.example.baseprojectandroid.repository.SongRepository
 import com.example.baseprojectandroid.service.MusicServiceConnector
+import com.example.baseprojectandroid.service.PlayerState
 import com.example.baseprojectandroid.ui.base.BaseViewModel
 import com.example.baseprojectandroid.utils.Event
 import com.example.baseprojectandroid.utils.eventOf
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -38,17 +37,22 @@ class NowPlayingViewModel @Inject constructor(
     private var needUpdateCurrentSongPosition = true
     private lateinit var workHandler: Handler
 
-    val currentSongState: StateFlow<SongState>?
+    val currentSong: StateFlow<Song>?
         get() = musicServiceConnector.currentSongState
 
     private val currentSongPosition: StateFlow<Position>?
         get() = musicServiceConnector.currentSongPosition
-    private val currentPlaylist: StateFlow<Playlist>? get() = musicServiceConnector.currentPlaylist
+
+    val currentPlaylist: StateFlow<Playlist>?
+        get() = musicServiceConnector.currentPlaylist
+
+    val currentPlayerState: StateFlow<PlayerState>?
+        get() = musicServiceConnector.currentPlayerState
 
     private val _uiState = MutableStateFlow(
         NowPlayingUiState(
-            eventOf(Song.EMPTY.defaultState()),
-            eventOf(Song.EMPTY.toSinglePlaylist())
+            eventOf(Song.EMPTY),
+            eventOf(Song.EMPTY.toSinglePlaylist()),
         )
     )
 
@@ -84,6 +88,14 @@ class NowPlayingViewModel @Inject constructor(
         musicServiceConnector.prevSong()
     }
 
+    fun onClickRepeat() {
+        musicServiceConnector.toggleRepeat()
+    }
+
+    fun onClickShuffle() {
+        musicServiceConnector.toggleRepeat()
+    }
+
     fun updateCurrentSongOfPlaylist(index: Int) = musicServiceConnector.updateCurrentSongOfPlaylist(index)
 
     //Collect all changes of MusicService, and update into uiState
@@ -107,14 +119,14 @@ class NowPlayingViewModel @Inject constructor(
             }
 
             launch {
-                currentSongState!!.collect { songState ->
+                currentSong!!.collect { song ->
                     _uiState.update {
                         it.copy(
-                            songState = eventOf(songState)
+                            song = eventOf(song)
                         )
                     }
                     glide.asBitmap()
-                        .load(songState.song.thumbnailUrl)
+                        .load(song.thumbnailUrl)
                         .override(100, 100)
                         .into(object : CustomTarget<Bitmap>() {
                             override fun onResourceReady(
@@ -145,6 +157,16 @@ class NowPlayingViewModel @Inject constructor(
                     }
                 }
             }
+
+            launch {
+                currentPlayerState!!.collect { playerState ->
+                    _uiState.update {
+                        it.copy(
+                            currentState = eventOf(playerState)
+                        )
+                    }
+                }
+            }
         }
     }
 
@@ -156,12 +178,13 @@ class NowPlayingViewModel @Inject constructor(
 }
 
 data class NowPlayingUiState(
-    var songState: Event<SongState>,
+    var song: Event<Song>,
     var currentPlaylist: Event<Playlist>,
     var currentPosition: Position = Position.NOTHING,
+    var currentState: Event<PlayerState> = eventOf(PlayerState.DEFAULT)
 ) {
     val currentSongIndexInPlayingPlaylist: Int get() =
         currentPlaylist.getValue().songs.run {
-            indexOf(find { it.url == songState.getValue().song.url })
+            indexOf(find { it.url == song.getValue().url })
         }
 }

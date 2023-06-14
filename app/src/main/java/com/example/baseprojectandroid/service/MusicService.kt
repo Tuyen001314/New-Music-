@@ -2,8 +2,6 @@ package com.example.baseprojectandroid.service
 
 import android.app.Service
 import android.content.Intent
-import android.media.MediaScannerConnection
-import android.media.session.MediaSession
 import android.os.Binder
 import android.os.IBinder
 import android.support.v4.media.session.MediaSessionCompat
@@ -14,7 +12,6 @@ import androidx.media3.exoplayer.ExoPlayer
 import com.example.baseprojectandroid.model.Playlist
 import com.example.baseprojectandroid.model.Position
 import com.example.baseprojectandroid.model.Song
-import com.example.baseprojectandroid.model.SongState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -33,17 +30,13 @@ class MusicService : Service(), CoroutineScope, MusicController {
 
     private var currentSong = Song.EMPTY
 
-    private val _currentState = MutableStateFlow(
-        SongState(
-            currentSong,
-            SongState.STATE_PAUSE
-        )
-    )
+    private val _currentPlayerState = MutableStateFlow(PlayerState.DEFAULT)
+    private val _currentSong = MutableStateFlow(currentSong)
     private val _currentPosition = MutableStateFlow(Position.NOTHING)
-
     private val _currentPlaylist = MutableStateFlow(Playlist())
 
-    val currentState: StateFlow<SongState> get() = _currentState
+    val currentPlayerState: StateFlow<PlayerState> get() = _currentPlayerState
+    val currentSongFlow: StateFlow<Song> get() = _currentSong
     val currentSongPosition: StateFlow<Position> get() = _currentPosition
     val currentPlaylist: StateFlow<Playlist> get() = _currentPlaylist
 
@@ -55,7 +48,7 @@ class MusicService : Service(), CoroutineScope, MusicController {
         fun getService() = this@MusicService
     }
 
-    override fun onBind(intent: Intent?): IBinder? {
+    override fun onBind(intent: Intent?): IBinder {
         val mediaSession = MediaSessionCompat(this, "fkdlsaj")
         musicNotificationManager = MusicNotificationManager(this, mediaSession.sessionToken)
 
@@ -71,7 +64,7 @@ class MusicService : Service(), CoroutineScope, MusicController {
                     Player.MEDIA_ITEM_TRANSITION_REASON_AUTO, Player.MEDIA_ITEM_TRANSITION_REASON_SEEK ->
                         launch {
                             val song = mediaItem!!.mediaMetadata.extras!!.get("song") as Song
-                            _currentState.emit(song.defaultState())
+                            _currentSong.emit(song)
                         }
                 }
                 Log.d(TAG, "onMediaItemTransition: ${mediaItem?.mediaMetadata?.title}  reason = $reason")
@@ -81,7 +74,6 @@ class MusicService : Service(), CoroutineScope, MusicController {
             override fun onPlaybackStateChanged(playbackState: Int) {
                 super.onPlaybackStateChanged(playbackState)
                 if (playbackState == ExoPlayer.STATE_READY) {
-//                    musicNotificationManager.showNotificationForPlayer(exoPlayer)
                     launch(Dispatchers.Main) {
                         _currentPosition.update {
                             it.copy(
@@ -101,11 +93,30 @@ class MusicService : Service(), CoroutineScope, MusicController {
                 }
                 super.onIsPlayingChanged(isPlaying)
                 launch(Dispatchers.Main) {
-                    _currentState.update {
+                    _currentPlayerState.update {
                         it.copy(
-                            state = if (isPlaying) SongState.STATE_PLAYING else SongState.STATE_PAUSE
+                            isPlaying = isPlaying
                         )
                     }
+//                    _currentState.update {
+//                        it.copy(
+//                            state = if (isPlaying) SongState.STATE_PLAYING else SongState.STATE_PAUSE
+//                        )
+//                    }
+                }
+            }
+
+            override fun onRepeatModeChanged(repeatMode: Int) {
+                super.onRepeatModeChanged(repeatMode)
+                _currentPlayerState.update {
+                    it.copy(repeatMode = repeatMode)
+                }
+            }
+
+            override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
+                super.onShuffleModeEnabledChanged(shuffleModeEnabled)
+                _currentPlayerState.update {
+                    it.copy(isShuffle = shuffleModeEnabled)
                 }
             }
         })
@@ -127,7 +138,7 @@ class MusicService : Service(), CoroutineScope, MusicController {
 
         currentSong = song
         launch {
-            _currentState.emit(currentSong.defaultState())
+            _currentSong.emit(currentSong)
             _currentPosition.emit(Position.NOTHING)
         }
         //prepare now song
@@ -142,6 +153,7 @@ class MusicService : Service(), CoroutineScope, MusicController {
     override fun play(playlist: Playlist, startSongIndex: Int) {
         launch {
             _currentPlaylist.emit(playlist)
+            _currentSong.emit(playlist.songs[startSongIndex])
         }
         exoPlayer.clearMediaItems()
         exoPlayer.addMediaItems(playlist.songs.map { it.toMediaItem() })
@@ -157,8 +169,6 @@ class MusicService : Service(), CoroutineScope, MusicController {
 
     override fun prevSong() {
         exoPlayer.seekToPreviousMediaItem()
-//        exoPlayer.previous()
-//        if (_currentPlaylist.value)
     }
 
     override fun updateCurrentSongOfPlaylist(index: Int) {
@@ -177,6 +187,18 @@ class MusicService : Service(), CoroutineScope, MusicController {
 
     override fun updatePosition(process: Int) {
         exoPlayer.seekTo((exoPlayer.duration * (process.toFloat() /100)).toLong())
+    }
+
+    override fun toggleShuffle() {
+        exoPlayer.shuffleModeEnabled = !exoPlayer.shuffleModeEnabled
+    }
+
+    override fun toggleRepeat() {
+        exoPlayer.repeatMode = when(exoPlayer.repeatMode) {
+            Player.REPEAT_MODE_OFF -> Player.REPEAT_MODE_ALL
+            Player.REPEAT_MODE_ALL -> Player.REPEAT_MODE_ONE
+            else -> Player.REPEAT_MODE_OFF
+        }
     }
 
 

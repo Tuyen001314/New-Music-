@@ -9,7 +9,6 @@ import android.util.Log
 import com.example.baseprojectandroid.model.Playlist
 import com.example.baseprojectandroid.model.Position
 import com.example.baseprojectandroid.model.Song
-import com.example.baseprojectandroid.model.SongState
 import kotlinx.coroutines.flow.StateFlow
 
 class MusicServiceConnector constructor(
@@ -18,7 +17,8 @@ class MusicServiceConnector constructor(
     private var service: MusicService? = null
     private var isBound = false
 
-    val currentSongState: StateFlow<SongState>? get() = service?.currentState
+    val currentPlayerState: StateFlow<PlayerState>? get() = service?.currentPlayerState
+    val currentSongState: StateFlow<Song>? get() = service?.currentSongFlow
     val currentSongPosition: StateFlow<Position>? get() = service?.currentSongPosition
     val currentPlaylist: StateFlow<Playlist>? get() = service?.currentPlaylist
 
@@ -111,6 +111,15 @@ class MusicServiceConnector constructor(
     override fun updatePosition(process: Int) {
         service!!.updatePosition(process)
     }
+
+    override fun toggleShuffle() {
+        service!!.toggleShuffle()
+    }
+
+    override fun toggleRepeat() {
+        service!!.toggleRepeat()
+    }
+
     interface OnServiceConnected {
         fun onConnected()
     }

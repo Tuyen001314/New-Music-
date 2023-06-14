@@ -14,7 +14,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.baseprojectandroid.R
 import com.example.baseprojectandroid.databinding.NowPlayingLiteFragmentBinding
 import com.example.baseprojectandroid.model.Position
-import com.example.baseprojectandroid.model.SongState
+import com.example.baseprojectandroid.model.Song
 import com.example.baseprojectandroid.ui.base.BaseFragmentBinding
 import com.example.baseprojectandroid.ui.base.BaseViewModel
 import com.example.baseprojectandroid.viewmodel.NowPlayingViewModel
@@ -45,8 +45,8 @@ class NowPlayingLiteFragment : BaseFragmentBinding<NowPlayingLiteFragmentBinding
                 launch {
                     nowPlayingViewModel.uiState.collect { uiState ->
                         launch(Dispatchers.Main) {
-                            uiState.songState.getValueIfNotHandle(viewLifecycleOwner) { songState ->
-                                updateNowPlayingSong(songState)
+                            uiState.song.getValueIfNotHandle(viewLifecycleOwner) { song ->
+                                updateNowPlayingSong(song)
                                 dataBinding.vp2CurrentSong.currentItem =
                                     uiState.currentSongIndexInPlayingPlaylist
                             }
@@ -57,6 +57,10 @@ class NowPlayingLiteFragment : BaseFragmentBinding<NowPlayingLiteFragmentBinding
                                         SongInNowPlayingViewPagerItem(it.copy())
                                     }
                                 )
+                            }
+
+                            uiState.currentState.getValueIfNotHandle(viewLifecycleOwner) {
+                                changePlayPauseSmooth(it.isPlaying)
                             }
 
                             updatePosition(uiState.currentPosition)
@@ -100,12 +104,10 @@ class NowPlayingLiteFragment : BaseFragmentBinding<NowPlayingLiteFragmentBinding
         })
     }
 
-    private fun updateNowPlayingSong(songState: SongState) {
-        changePlayPauseSmooth(songState.state)
-
+    private fun updateNowPlayingSong(song: Song) {
         dataBinding.ivThumb.apply {
             Glide.with(this)
-                .load(songState.song.thumbnailUrl)
+                .load(song.thumbnailUrl)
                 .override(100, 100)
                 .transform(CenterCrop(), RoundedCorners(20))
                 .into(this)
@@ -117,7 +119,7 @@ class NowPlayingLiteFragment : BaseFragmentBinding<NowPlayingLiteFragmentBinding
             ((position.currentIndex.toFloat() / position.duration) * 100).toInt()
     }
 
-    private fun changePlayPauseSmooth(state: Int) {
+    private fun changePlayPauseSmooth(isPlaying: Boolean) {
         ViewAnimator.animate(dataBinding.btPauseResume)
             .rotation(0f, 90f)
             .alpha(1f, 0.5f)
@@ -128,10 +130,7 @@ class NowPlayingLiteFragment : BaseFragmentBinding<NowPlayingLiteFragmentBinding
                     alpha = 1f
                     rotation = 0f
                     setImageResource(
-                        when (state) {
-                            SongState.STATE_PLAYING -> R.drawable.ic_pause
-                            else -> R.drawable.ic_triangle
-                        }
+                        if (isPlaying) R.drawable.ic_pause else R.drawable.ic_triangle
                     )
                 }
             }

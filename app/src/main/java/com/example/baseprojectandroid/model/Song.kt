@@ -33,8 +33,6 @@ data class Song(
         val EMPTY = Song(creator = User.DEFAULT)
     }
 
-    fun defaultState() = SongState(this, SongState.STATE_PAUSE)
-
     fun toMediaItem() = MediaItem.fromUri(url)
         .buildUpon()
         .setMediaId(id.toString())

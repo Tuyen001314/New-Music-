@@ -5,7 +5,6 @@ import com.example.baseprojectandroid.R
 import com.example.baseprojectandroid.databinding.FragmentPlaylistSampleBinding
 import com.example.baseprojectandroid.ui.base.BaseFragmentBinding
 import com.example.baseprojectandroid.ui.base.BaseViewModel
-import com.example.baseprojectandroid.ui.common.SongStateItem
 import com.example.baseprojectandroid.viewmodel.NowPlayingViewModel
 import com.xwray.groupie.GroupieAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -34,18 +33,18 @@ class PlaylistSampleFragment : BaseFragmentBinding<FragmentPlaylistSampleBinding
 
     override fun registerListeners() {
         super.registerListeners()
-        songAdapter.setOnItemClickListener { item, v ->
-            nowPlayingViewModel.play(
-                (item as SongStateItem).songState.song
-            )
-        }
+//        songAdapter.setOnItemClickListener { item, v ->
+//            nowPlayingViewModel.play(
+//                (item as SongStateItem).songState.song
+//            )
+//        }
     }
 
     override fun registerObservers() {
         super.registerObservers()
-        playlistSampleViewModel.allSongs.observe(viewLifecycleOwner) {
-            songAdapter.update(it.map { SongStateItem(it.copy()) })
-        }
+//        playlistSampleViewModel.allSongs.observe(viewLifecycleOwner) {
+//            songAdapter.update(it.map { SongStateItem(it.copy()) })
+//        }
     }
 
 }

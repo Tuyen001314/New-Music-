@@ -21,4 +21,8 @@ interface MusicController {
     fun updateCurrentPlaylist()
 
     fun updatePosition(process: Int)
+
+    fun toggleShuffle()
+
+    fun toggleRepeat()
 }
