@@ -29,7 +29,11 @@ class SignInFragment : BaseFragmentBinding<FragmentSignInBinding, SignInViewMode
         }
     }
 
-    private fun checkInfoUserFromServer(username: String, password: String) {
+    override fun onBackPressed(): Boolean {
+        return false
+    }
+
+     private fun checkInfoUserFromServer(username: String, password: String) {
         viewModel.viewModelScope.launch(Dispatchers.IO) {
             /*viewModel.fetchUser(username).collect { state ->
                 when (state) {

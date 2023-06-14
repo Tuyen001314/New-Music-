@@ -40,10 +40,9 @@ class NameViewModel @Inject constructor(
         val response = apiClient.insertUser(nameUser, username = username, password = password, image = imagePart)
 //        val response = apiClient.insertUser(nameUser, username, password, image)
         Log.d("buituyen", response.message + " " + response.status + " " + response.data)
-        if (response.data.isNullOrEmpty()) {
+        if (response.data == null) {
             emit(AccountState.Failed)
         } else {
-            responseModel = Gson().fromJson(response.data.toString(), ResponseModel::class.java)
             emit(AccountState.Finished)
         }
     }

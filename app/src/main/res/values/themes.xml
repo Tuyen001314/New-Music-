@@ -18,4 +18,9 @@
         <item name="backgroundTint">#1ED760</item>
     </style>
 
+    <style name="ThemeOverlay.SearchView" parent="">
+        <item name="android:editTextColor">@color/white</item>
+        <item name="android:textColorHint">@color/white</item>
+    </style>
+
 </resources>

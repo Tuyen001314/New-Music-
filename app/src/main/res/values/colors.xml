@@ -10,5 +10,6 @@
     <color name="colorSecondary">#86929a</color>
 
     <color name="bg_app">#131313</color>
+    <color name="md_gray_search">#EBEBF0</color>
     <color name="spotify_color">#1ED760</color>
 </resources>
