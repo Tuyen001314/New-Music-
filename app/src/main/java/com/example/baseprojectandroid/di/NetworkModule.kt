@@ -5,6 +5,7 @@ import com.example.baseprojectandroid.local.LocalStorage
 import com.example.baseprojectandroid.server.ApiClient
 import com.example.baseprojectandroid.utils.Constants.BASE_URL
 import com.example.baseprojectandroid.utils.Constants.TIME_OUT
+import com.skydoves.sandwich.adapters.ApiResponseCallAdapterFactory
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
@@ -37,6 +38,7 @@ object NetworkModule {
         return Retrofit.Builder().client(httpClient)
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(ApiResponseCallAdapterFactory.create())
             .build()
     }
 

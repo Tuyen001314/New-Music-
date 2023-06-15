@@ -2,7 +2,9 @@ package com.example.baseprojectandroid.server
 
 import com.example.baseprojectandroid.data.api.ResponseModel
 import com.example.baseprojectandroid.model.RegisterBody
+import com.example.baseprojectandroid.model.Song
 import com.example.baseprojectandroid.model.UploadResponse
+import com.skydoves.sandwich.ApiResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -37,4 +39,7 @@ interface ApiClient {
         @Part image: MultipartBody.Part,
         @Part("desc") desc: RequestBody
     ): Call<UploadResponse>
+
+    @GET("/api/Songs/ShowAll")
+    suspend fun getAllSong(): ApiResponse<List<Song>>
 }

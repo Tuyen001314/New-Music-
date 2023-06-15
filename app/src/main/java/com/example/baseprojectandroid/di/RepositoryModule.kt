@@ -1,5 +1,6 @@
 package com.example.baseprojectandroid.di
 
+import com.example.baseprojectandroid.repository.song.FakeSongRepositoryImpl
 import com.example.baseprojectandroid.repository.song.SongRepository
 import com.example.baseprojectandroid.repository.song.SongRepositoryImpl
 import dagger.Binds
@@ -13,6 +14,6 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindSongRepository(
-        impl: SongRepositoryImpl
+        impl: FakeSongRepositoryImpl
     ): SongRepository
 }

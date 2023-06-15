@@ -115,7 +115,7 @@ class DownloadFragment : BaseFragmentBinding<FragmentDownloadBinding, HomeViewMo
         inputStream.copyTo(outputStream)
         val body = UploadRequestBody(file, "image")
         viewModel.viewModelScope.launch(Dispatchers.IO) {
-            viewModel.upload(file, body)
+//            viewModel.upload(file, body)
         }
     }
 

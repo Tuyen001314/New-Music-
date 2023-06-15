@@ -12,10 +12,11 @@ import com.bumptech.glide.request.transition.Transition
 import com.example.baseprojectandroid.model.Playlist
 import com.example.baseprojectandroid.model.Position
 import com.example.baseprojectandroid.model.Song
-import com.example.baseprojectandroid.repository.SongRepository
+import com.example.baseprojectandroid.repository.song.SongRepository
 import com.example.baseprojectandroid.service.MusicServiceConnector
 import com.example.baseprojectandroid.service.PlayerState
 import com.example.baseprojectandroid.ui.base.BaseViewModel
+import com.example.baseprojectandroid.utils.DataState
 import com.example.baseprojectandroid.utils.Event
 import com.example.baseprojectandroid.utils.eventOf
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -103,8 +104,14 @@ class NowPlayingViewModel @Inject constructor(
 
         viewModelScope.launch {
             launch {
-                songRepository.getSongs().collect {
-                    musicServiceConnector.play(Playlist(songs = it), 0)
+                songRepository.getAllSong().collect {
+                    when(it) {
+                        is DataState.Success -> {
+                            musicServiceConnector.play(Playlist(songs = it.data!!), 0)
+                        }
+
+                        else -> Unit
+                    }
                 }
             }
 

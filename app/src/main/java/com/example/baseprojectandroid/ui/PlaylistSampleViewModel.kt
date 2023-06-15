@@ -1,7 +1,7 @@
 package com.example.baseprojectandroid.ui
 
 import androidx.lifecycle.viewModelScope
-import com.example.baseprojectandroid.repository.SongRepository
+import com.example.baseprojectandroid.repository.song.SongRepository
 import com.example.baseprojectandroid.service.MusicServiceConnector
 import com.example.baseprojectandroid.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,9 +18,9 @@ class PlaylistSampleViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.Default) {
-            songRepository.getSongs().collect {
+//            songRepository.getSongs().collect {
 //                _allSongs.postValue(it.map { song -> song.defaultState() })
-            }
+//            }
         }
 
         musicServiceConnector.addOnConnectedListener(this)
