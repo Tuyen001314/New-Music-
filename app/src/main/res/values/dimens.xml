@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="common_0.5dp">0.5dp</dimen>
+    <dimen name="common_1dp">1dp</dimen>
+    <dimen name="common_2dp">2dp</dimen>
+    <dimen name="common_3dp">3dp</dimen>
+    <dimen name="common_4dp">4dp</dimen>
+    <dimen name="common_5dp">5dp</dimen>
+    <dimen name="common_6dp">6dp</dimen>
+    <dimen name="common_8dp">8dp</dimen>
+    <dimen name="common_10dp">10dp</dimen>
+    <dimen name="common_12dp">12dp</dimen>
+    <dimen name="common_14dp">14dp</dimen>
+    <dimen name="common_15dp">15dp</dimen>
+    <dimen name="common_16dp">16dp</dimen>
+    <dimen name="common_18dp">18dp</dimen>
+    <dimen name="common_20dp">20dp</dimen>
+    <dimen name="common_24dp">24dp</dimen>
+    <dimen name="common_26dp">26dp</dimen>
+    <dimen name="common_30dp">30dp</dimen>
+    <dimen name="common_32dp">32dp</dimen>
+    <dimen name="common_36dp">36dp</dimen>
+    <dimen name="common_40dp">40dp</dimen>
+    <dimen name="common_42dp">42dp</dimen>
+    <dimen name="common_46dp">46dp</dimen>
+    <dimen name="common_48dp">48dp</dimen>
+    <dimen name="common_52dp">52dp</dimen>
+    <dimen name="common_54dp">54dp</dimen>
+    <dimen name="common_65dp">65dp</dimen>
+    <dimen name="common_68dp">68dp</dimen>
+    <dimen name="common_70dp">70dp</dimen>
+    <dimen name="common_80dp">80dp</dimen>
+    <dimen name="common_84dp">84dp</dimen>
+    <dimen name="common_98dp">98dp</dimen>
+    <dimen name="common_100dp">100dp</dimen>
+    <dimen name="common_120dp">120dp</dimen>
+    <dimen name="common_126dp">126dp</dimen>
+    <dimen name="common_180dp">180dp</dimen>
+    <dimen name="common_200dp">200dp</dimen>
+    <dimen name="common_240dp">240dp</dimen>
+
+</resources>

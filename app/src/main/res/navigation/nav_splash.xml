@@ -63,10 +63,22 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
     </fragment>
+
     <fragment
         android:id="@+id/nameFragment"
         android:name="com.example.baseprojectandroid.ui.component.splash.getting.signup.name.NameFragment"
         android:label="NameFragment"
-        tools:layout="@layout/fragment_name"/>
+        tools:layout="@layout/fragment_name">
+        <action
+            android:id="@+id/action_nameFragment_to_requestPermissionFragment"
+            app:destination="@id/requestPermissionFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/requestPermissionFragment"
+        tools:layout="@layout/fragment_request_permisson"
+        android:name="com.example.baseprojectandroid.ui.component.splash.RequestPermissionFragment"
+        android:label="RequestPermissionFragment" >
+    </fragment>
 
 </navigation>
