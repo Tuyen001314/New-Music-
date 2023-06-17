@@ -29,10 +29,11 @@
             android:layout_width="19dp"
             android:layout_height="19dp"
             android:layout_marginEnd="20dp"
+            android:id="@+id/add"
             android:src="@drawable/ic_add"
-            app:layout_constraintBottom_toBottomOf="@+id/textView12"
+            app:layout_constraintBottom_toBottomOf="@+id/titleYourLibrary"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textView12">
+            app:layout_constraintTop_toTopOf="@+id/titleYourLibrary">
 
         </androidx.appcompat.widget.AppCompatImageView>
 
@@ -44,15 +45,14 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView12">
+            app:layout_constraintTop_toBottomOf="@+id/titleYourLibrary">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginTop="10dp"
-                android:padding="17dp"
-                >
+                android:padding="17dp">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerViewUpload"
@@ -189,7 +189,7 @@
 
 
         <TextView
-            android:id="@+id/textView12"
+            android:id="@+id/titleYourLibrary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

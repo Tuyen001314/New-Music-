@@ -6,6 +6,7 @@ import androidx.fragment.app.commit
 import com.example.baseprojectandroid.databinding.ActivityMainBinding
 import com.example.baseprojectandroid.extension.gone
 import com.example.baseprojectandroid.ui.base.BaseFragmentPagerAdapter
+import com.example.baseprojectandroid.ui.component.download.DownloadFragment
 import com.example.baseprojectandroid.ui.component.home.HomeFragment
 import com.example.baseprojectandroid.ui.component.library.YourLibraryFragment
 import com.example.baseprojectandroid.ui.component.search.SearchFragment
@@ -31,7 +32,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupViewPager() {
         adapter = BaseFragmentPagerAdapter(supportFragmentManager, lifecycle)
-        adapter.add(HomeFragment::class)
+        adapter.add(DownloadFragment::class)
             .add(SearchFragment::class)
             .add(YourLibraryFragment::class)
         binding.viewPager.isUserInputEnabled = false
