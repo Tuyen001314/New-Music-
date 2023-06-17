@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
+        android:id="@+id/root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/black"
@@ -33,9 +34,9 @@
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/now_playing_lite_fragment"
+            android:name="com.example.baseprojectandroid.ui.nowplaying.NowPlayingLiteFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:name="com.example.baseprojectandroid.ui.nowplaying.NowPlayingLiteFragment"
             tools:layout="@layout/now_playing_lite_fragment" />
 
         <com.example.baseprojectandroid.ui.component.custom.CustomBottomBar

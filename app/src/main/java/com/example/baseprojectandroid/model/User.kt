@@ -8,7 +8,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class User(
     @SerializedName("avatarUrl")
-    var avatarUrl: String = "",
+    var avatarUrl: String? = "",
     @SerializedName("createdAt")
     var createdAt: String = "",
     @SerializedName("followers")

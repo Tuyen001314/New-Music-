@@ -22,7 +22,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/tv_song_name"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_song_name"
-            app:tint="@color/black" />
+            app:tint="@color/white" />
 
         <TextView
             android:id="@+id/tv_song_name"

@@ -1,5 +1,7 @@
 package com.example.baseprojectandroid.viewmodel
 
+import android.animation.ArgbEvaluator
+import android.animation.ValueAnimator
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.Drawable
@@ -23,7 +25,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -97,7 +98,8 @@ class NowPlayingViewModel @Inject constructor(
         musicServiceConnector.toggleRepeat()
     }
 
-    fun updateCurrentSongOfPlaylist(index: Int) = musicServiceConnector.updateCurrentSongOfPlaylist(index)
+    fun updateCurrentSongOfPlaylist(index: Int) =
+        musicServiceConnector.updateCurrentSongOfPlaylist(index)
 
     //Collect all changes of MusicService, and update into uiState
     override fun onConnected() {
@@ -105,7 +107,7 @@ class NowPlayingViewModel @Inject constructor(
         viewModelScope.launch {
             launch {
                 songRepository.getAllSong().collect {
-                    when(it) {
+                    when (it) {
                         is DataState.Success -> {
                             musicServiceConnector.play(Playlist(songs = it.data!!), 0)
                         }
@@ -142,9 +144,23 @@ class NowPlayingViewModel @Inject constructor(
                             ) {
                                 Palette.from(resource).generate {
                                     it?.getVibrantColor(Color.parseColor("#86929A"))?.let {
-                                        launch {
-                                            _thumbVibrantColor.emit(it)
-                                        }
+                                        val nowColor = _thumbVibrantColor.value
+                                        val toColor = it
+                                        val animation = ValueAnimator.ofObject(
+                                            ArgbEvaluator(),
+                                            nowColor,
+                                            toColor
+                                        )
+                                        animation
+                                            .setDuration(250)
+                                            .apply {
+                                                addUpdateListener {
+                                                    launch {
+                                                        _thumbVibrantColor.emit(it.getAnimatedValue() as Int)
+                                                    }
+                                                }
+                                            }
+                                            .start()
                                     }
                                 }
                             }
@@ -190,8 +206,9 @@ data class NowPlayingUiState(
     var currentPosition: Position = Position.NOTHING,
     var currentState: Event<PlayerState> = eventOf(PlayerState.DEFAULT)
 ) {
-    val currentSongIndexInPlayingPlaylist: Int get() =
-        currentPlaylist.getValue().songs.run {
-            indexOf(find { it.url == song.getValue().url })
-        }
+    val currentSongIndexInPlayingPlaylist: Int
+        get() =
+            currentPlaylist.getValue().songs.run {
+                indexOf(find { it.url == song.getValue().url })
+            }
 }

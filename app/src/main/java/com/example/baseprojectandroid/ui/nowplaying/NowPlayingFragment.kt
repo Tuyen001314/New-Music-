@@ -23,12 +23,15 @@ import com.example.baseprojectandroid.model.Song
 import com.example.baseprojectandroid.service.PlayerState
 import com.example.baseprojectandroid.ui.base.BaseFragmentBinding
 import com.example.baseprojectandroid.ui.base.BaseViewModel
+import com.example.baseprojectandroid.ui.event.HideDetailPlayer
+import com.example.baseprojectandroid.utils.Event
 import com.example.baseprojectandroid.utils.timePositionToString
 import com.example.baseprojectandroid.viewmodel.NowPlayingViewModel
 import com.github.florent37.viewanimator.ViewAnimator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.greenrobot.eventbus.EventBus
 import java.util.concurrent.atomic.AtomicBoolean
 
 @AndroidEntryPoint
@@ -129,6 +132,10 @@ class NowPlayingFragment : BaseFragmentBinding<FragmentNowPlayingBinding, BaseVi
     }
 
     override fun registerListeners() {
+        dataBinding.btCollap.setOnClickListener {
+            EventBus.getDefault().post(HideDetailPlayer())
+        }
+
         dataBinding.btPauseResume.setOnClickListener {
             nowPlayingViewModel.pauseOrPlay()
         }
@@ -171,5 +178,8 @@ class NowPlayingFragment : BaseFragmentBinding<FragmentNowPlayingBinding, BaseVi
 
     }
 
+    companion object {
+        const val TAG = "NowPlayingFragment"
+    }
 }
 

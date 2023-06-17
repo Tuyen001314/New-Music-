@@ -7,6 +7,7 @@ import com.example.baseprojectandroid.utils.Constants.BASE_URL
 import com.example.baseprojectandroid.utils.Constants.TIME_OUT
 import com.skydoves.sandwich.adapters.ApiResponseCallAdapterFactory
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -37,7 +38,7 @@ object NetworkModule {
     fun provideRetrofitInterface(httpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder().client(httpClient)
             .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(MoshiConverterFactory.create(getMoshi()))
             .addCallAdapterFactory(ApiResponseCallAdapterFactory.create())
             .build()
     }
@@ -70,6 +71,7 @@ object NetworkModule {
 
     private fun getMoshi(): Moshi {
         return Moshi.Builder()
+            .add(KotlinJsonAdapterFactory())
             .build()
     }
 

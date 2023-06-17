@@ -26,6 +26,7 @@ class SplashActivity : AppCompatActivity() {
 
         if (!storage.isFirstTime) {
             startActivity(Intent(this, MainActivity::class.java))
+            finish()
         }
     }
 }

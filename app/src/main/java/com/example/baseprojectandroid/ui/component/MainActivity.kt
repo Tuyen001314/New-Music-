@@ -2,12 +2,19 @@ package com.example.baseprojectandroid.ui.component
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.commit
 import com.example.baseprojectandroid.databinding.ActivityMainBinding
+import com.example.baseprojectandroid.extension.gone
 import com.example.baseprojectandroid.ui.base.BaseFragmentPagerAdapter
 import com.example.baseprojectandroid.ui.component.home.HomeFragment
 import com.example.baseprojectandroid.ui.component.library.YourLibraryFragment
 import com.example.baseprojectandroid.ui.component.search.SearchFragment
+import com.example.baseprojectandroid.ui.event.HideDetailPlayer
+import com.example.baseprojectandroid.ui.event.ShowDetailPlayer
+import com.example.baseprojectandroid.ui.nowplaying.NowPlayingFragment
 import dagger.hilt.android.AndroidEntryPoint
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -19,6 +26,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupViewPager()
+        EventBus.getDefault().register(this)
     }
 
     private fun setupViewPager() {
@@ -30,4 +38,25 @@ class MainActivity : AppCompatActivity() {
         binding.viewPager.adapter = adapter
         binding.bottomBarView.setWithViewPager(binding.viewPager)
     }
+
+    override fun onStop() {
+        super.onStop()
+        EventBus.getDefault().unregister(this)
+    }
+
+    @Subscribe
+    fun handleShowDetailPlayer(event: ShowDetailPlayer) {
+        supportFragmentManager.commit {
+            add(android.R.id.content, NowPlayingFragment(), NowPlayingFragment.TAG)
+        }
+    }
+
+    @Subscribe
+    fun handleHideDetailPlayer(event: HideDetailPlayer) {
+        supportFragmentManager.commit {
+            val nowPlayingFragment = supportFragmentManager.findFragmentByTag(NowPlayingFragment.TAG)
+            nowPlayingFragment?.let { remove(it) }
+        }
+    }
+
 }

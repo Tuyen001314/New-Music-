@@ -17,12 +17,14 @@ import com.example.baseprojectandroid.model.Position
 import com.example.baseprojectandroid.model.Song
 import com.example.baseprojectandroid.ui.base.BaseFragmentBinding
 import com.example.baseprojectandroid.ui.base.BaseViewModel
+import com.example.baseprojectandroid.ui.event.ShowDetailPlayer
 import com.example.baseprojectandroid.viewmodel.NowPlayingViewModel
 import com.github.florent37.viewanimator.ViewAnimator
 import com.xwray.groupie.GroupieAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.greenrobot.eventbus.EventBus
 
 @AndroidEntryPoint
 class NowPlayingLiteFragment : BaseFragmentBinding<NowPlayingLiteFragmentBinding, BaseViewModel>() {
@@ -102,6 +104,12 @@ class NowPlayingLiteFragment : BaseFragmentBinding<NowPlayingLiteFragmentBinding
                 }
             }
         })
+
+        dataBinding.root.setOnClickListener {
+            EventBus.getDefault().post(ShowDetailPlayer())
+        }
+
+        currentPlaylistAdapter.setOnItemClickListener { item, view ->  EventBus.getDefault().post(ShowDetailPlayer())}
     }
 
     private fun updateNowPlayingSong(song: Song) {

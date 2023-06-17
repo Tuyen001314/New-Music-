@@ -64,7 +64,7 @@ dependencies {
     // retrofit
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-moshi:$retrofitVersion"
-    implementation "com.squareup.moshi:moshi:$moshiVersion"
+    implementation "com.squareup.moshi:moshi-kotlin:$moshiVersion"
     kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttpInterceptorVersion"
     implementation "androidx.activity:activity-ktx:$activityKtxVersion"
@@ -101,7 +101,7 @@ dependencies {
 
     implementation "androidx.core:core-splashscreen:1.0.1"
 
-
+    implementation("org.greenrobot:eventbus:3.3.1")
 }
 kapt {
     correctErrorTypes true

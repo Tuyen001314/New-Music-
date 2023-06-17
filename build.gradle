@@ -24,7 +24,7 @@ ext {
     materialVersion = '1.4.0'
     activityKtxVersion = '1.2.0-rc01'
     retrofitVersion = '2.9.0'
-    moshiVersion = '1.11.0'
+    moshiVersion = '1.14.0'
     hilt_jetpack_version = "1.0.0-alpha02"
     okhttpInterceptorVersion = '4.9.0'
     mockVersion = '1.10.5'

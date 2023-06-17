@@ -26,6 +26,7 @@ class SignInFragment : BaseFragmentBinding<FragmentSignInBinding, SignInViewMode
         dataBinding.btnNextSignIn.setOnClickListener {
             checkInfoUserFromServer(dataBinding.textUserName.text.toString(), dataBinding.textUserPass.text.toString())
             startActivity(Intent(context, MainActivity::class.java))
+            requireActivity().finish()
         }
     }
 
