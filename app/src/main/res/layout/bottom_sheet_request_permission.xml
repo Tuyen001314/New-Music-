@@ -45,7 +45,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="Bạn cần cấp quyền để sử dụng chức năng này. Xin vui lòng cấp quyền để tiếp tục"
-                android:textColor="@color/black_title"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"

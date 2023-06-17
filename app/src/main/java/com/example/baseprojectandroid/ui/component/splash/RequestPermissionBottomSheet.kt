@@ -4,11 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import com.documentviewer.filereader.pro.databinding.BottomSheetRequestPermissionBinding
-import com.documentviewer.filereader.pro.extension.visibleOrGone
-import com.documentviewer.filereader.pro.utils.Logger
+import com.example.baseprojectandroid.databinding.BottomSheetRequestPermissionBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class RequestPermissionBottomSheet(var isSplashScreen: Boolean = false) :
@@ -23,7 +23,6 @@ class RequestPermissionBottomSheet(var isSplashScreen: Boolean = false) :
             ft.add(this, tag)
             ft.commitAllowingStateLoss()
         } catch (e: IllegalStateException) {
-            Logger.e("File Reader", "Exception : $e")
         }
     }
 
@@ -33,9 +32,9 @@ class RequestPermissionBottomSheet(var isSplashScreen: Boolean = false) :
         savedInstanceState: Bundle?
     ): View {
         dataBinding = BottomSheetRequestPermissionBinding.inflate(inflater, container, false)
-        dataBinding.imgRequest.visibleOrGone(isSplashScreen)
-        dataBinding.txtContent.visibleOrGone(isSplashScreen)
-        dataBinding.txtContent2.visibleOrGone(!isSplashScreen)
+        dataBinding.imgRequest.isVisible = isSplashScreen
+        dataBinding.txtContent.isVisible = isSplashScreen
+        dataBinding.txtContent2.isGone = isSplashScreen
 
         dataBinding.btnConfirmYes.setOnClickListener {
             clickConfirmYes.invoke()
