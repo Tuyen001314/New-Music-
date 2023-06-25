@@ -17,7 +17,7 @@
     </ConstraintSet>
 
     <ConstraintSet android:id="@+id/end">
-        <Constraint android:id="@+id/root"
+        <Constraint android:id="@+id/rootMain"
 
             android:layout_width="67dp"
             android:layout_height="67dp"/>

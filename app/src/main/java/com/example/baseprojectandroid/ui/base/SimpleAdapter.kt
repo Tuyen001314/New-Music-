@@ -94,7 +94,6 @@ abstract class SimpleAdapter<T, VH : SimpleAdapter.ViewHolder, VB : ViewDataBind
     fun setList(list: List<T>) {
         originData.clear()
         originData.addAll(list)
-
         data.clear()
         data.addAll(list)
     }

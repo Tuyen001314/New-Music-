@@ -1,10 +1,19 @@
 package com.example.baseprojectandroid.repository.song
 
 import com.example.baseprojectandroid.model.Song
+import com.example.baseprojectandroid.model.SongUpload
+import com.example.baseprojectandroid.model.UploadResponse
 import com.example.baseprojectandroid.model.User
 import com.example.baseprojectandroid.utils.DataState
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.launch
+import okhttp3.MultipartBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import javax.inject.Inject
 
 class FakeSongRepositoryImpl @Inject constructor() : SongRepository {
@@ -45,4 +54,20 @@ class FakeSongRepositoryImpl @Inject constructor() : SongRepository {
             )
         }
     }
+
+    override fun getAllSongLocal(): Flow<DataState<List<Song>>> {
+        TODO("Not yet implemented")
+    }
+
+    override fun uploadSong(
+        name: String,
+        image: MultipartBody.Part,
+        song: MultipartBody.Part,
+        category: Int,
+        creator: Int
+    ): Flow<DataState<Boolean>> {
+        TODO("Not yet implemented")
+
+    }
+
 }

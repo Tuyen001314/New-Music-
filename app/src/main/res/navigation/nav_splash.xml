@@ -26,6 +26,9 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_gettingFragment_to_requestPermissionFragment"
+            app:destination="@id/requestPermissionFragment" />
 
     </fragment>
 
@@ -69,9 +72,6 @@
         android:name="com.example.baseprojectandroid.ui.component.splash.getting.signup.name.NameFragment"
         android:label="NameFragment"
         tools:layout="@layout/fragment_name">
-        <action
-            android:id="@+id/action_nameFragment_to_requestPermissionFragment"
-            app:destination="@id/requestPermissionFragment" />
     </fragment>
 
     <fragment

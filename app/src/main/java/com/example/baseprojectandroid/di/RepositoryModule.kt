@@ -14,6 +14,6 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindSongRepository(
-        impl: FakeSongRepositoryImpl
+        impl: SongRepositoryImpl
     ): SongRepository
 }

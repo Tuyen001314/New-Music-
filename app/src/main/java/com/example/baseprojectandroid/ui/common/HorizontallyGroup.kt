@@ -15,6 +15,7 @@ class HorizontallyGroup(
     private val offsetItem: Int = 8.dp
 ) : BindableItem<ItemCarouselBinding>() {
     private val adapter = GroupieAdapter()
+
     override fun bind(viewBinding: ItemCarouselBinding, position: Int) {
         viewBinding.recyclerView.apply {
             layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.HORIZONTAL, false)

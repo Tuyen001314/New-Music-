@@ -1,15 +1,13 @@
 package com.example.baseprojectandroid.server
 
 import com.example.baseprojectandroid.data.api.ResponseModel
-import com.example.baseprojectandroid.model.RegisterBody
+import com.example.baseprojectandroid.model.ResponseImage
 import com.example.baseprojectandroid.model.Song
 import com.example.baseprojectandroid.model.UploadResponse
 import com.skydoves.sandwich.ApiResponse
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.*
-import java.io.File
 
 interface ApiClient {
 
@@ -32,14 +30,22 @@ interface ApiClient {
     @Multipart
     suspend fun insertUser(@Part("name") name: String, @Part("username") username: String, @Part("password") password: String, @Part image: MultipartBody.Part): ResponseModel
 
-
     @Multipart
-    @POST("")
+    @POST("/api/image/upload")
     suspend fun uploadImage(
-        @Part image: MultipartBody.Part,
-        @Part("desc") desc: RequestBody
-    ): Call<UploadResponse>
+        @Part file: MultipartBody.Part,
+    ): ResponseImage
 
     @GET("/api/Songs/ShowAll")
     suspend fun getAllSong(): ApiResponse<List<Song>>
+
+    @Multipart
+    @POST("/api/Songs/insertbyuser")
+    suspend fun uploadSong(
+        @Part name: String,
+        @Part image: MultipartBody.Part,
+        @Part song: MultipartBody.Part,
+        @Part category: Int,
+        @Part creator: Int
+    ): Call<UploadResponse>
 }

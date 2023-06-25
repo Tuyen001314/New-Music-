@@ -5,6 +5,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:background="@color/bg_app"
+        android:layout_marginTop="@dimen/common_10dp"
         android:layout_height="wrap_content">
 
         <TextView

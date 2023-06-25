@@ -6,6 +6,8 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import com.example.baseprojectandroid.R
 
 abstract class BaseActivity : BaseView, AppCompatActivity() {
 

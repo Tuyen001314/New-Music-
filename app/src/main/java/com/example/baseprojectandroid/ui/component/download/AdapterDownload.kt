@@ -1,11 +1,16 @@
 package com.example.baseprojectandroid.ui.component.download
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.Environment
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import com.example.baseprojectandroid.R
 import com.example.baseprojectandroid.databinding.ItemYourLibraryBinding
 import com.example.baseprojectandroid.extension.saveFile
@@ -59,46 +64,48 @@ class DownloadAdapter(context: Context) :
         override fun bindViews(position: Int) {
             val item = getItem(position)
             dataBinding.nameSong.text = item.name
-
             dataBinding.appCompatImageView.setOnClickListener {
-                CoroutineScope(Dispatchers.IO).launch {
-                    val flow = downloadFile(
-                        "https://firebasestorage.googleapis.com/v0/b/music-8fef0.appspot.com/o/music%2F%C6%AFng%20Qu%C3%A1%20Ch%E1%BB%ABng%20-%20AMEE.mp3?alt=media&token=3201a2c5-fbd4-4924-940e-dbadb6c91bb0",
-                        context,
-                        "ungquachung1${position}.mp3"
-                    )
-                    if (flow != null) {
-                        flow.collect { state ->
-                            when (state) {
-                                is DownloadState.Downloading -> {
-                                    withContext(Dispatchers.Main) {
-                                        bindViewProcess(state.progress)
+                invokeOnItemClicked(position)
+                if(position == 3) {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        val flow = downloadFile(
+                            "http://ec2-3-106-133-27.ap-southeast-2.compute.amazonaws.com:8080/api/Songs/musicFiles/DuaEmVeNhaa-GREYDChillies-9214678.mp3",
+                            context,
+                            "duaemvenha${position}.mp3"
+                        )
+                        if (flow != null) {
+                            flow.collect { state ->
+                                when (state) {
+                                    is DownloadState.Downloading -> {
+                                        withContext(Dispatchers.Main) {
+                                            bindViewProcess(state.progress)
+                                        }
                                     }
-                                }
 
-                                is DownloadState.Failed -> {
-                                    withContext(Dispatchers.Main) {
-                                        Toast.makeText(
-                                            context, "error", Toast.LENGTH_SHORT
-                                        ).show()
+                                    is DownloadState.Failed -> {
+                                        withContext(Dispatchers.Main) {
+                                            Toast.makeText(
+                                                context, "error", Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
                                     }
-                                }
 
-                                is DownloadState.Finished -> {
-                                    withContext(Dispatchers.Main) {
-                                        Toast.makeText(
-                                            context, "done", Toast.LENGTH_SHORT
-                                        ).show()
-                                        dataBinding.processTxt.text = "done"
+                                    is DownloadState.Finished -> {
+                                        withContext(Dispatchers.Main) {
+                                            Toast.makeText(
+                                                context, "done", Toast.LENGTH_SHORT
+                                            ).show()
+                                            dataBinding.processTxt.text = "done"
+                                        }
                                     }
                                 }
                             }
-                        }
-                    } else {
-                        withContext(Dispatchers.Main) {
-                            Toast.makeText(
-                                context, "error", Toast.LENGTH_SHORT
-                            ).show()
+                        } else {
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(
+                                    context, "error", Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         }
                     }
                 }

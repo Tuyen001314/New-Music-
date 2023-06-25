@@ -3,6 +3,8 @@ package com.example.baseprojectandroid.ui.component.library
 import android.util.Log
 import android.widget.LinearLayout
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.fragment.app.commit
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.baseprojectandroid.R
 import com.example.baseprojectandroid.databinding.FragmentGettingBinding
@@ -12,9 +14,13 @@ import com.example.baseprojectandroid.model.Music
 import com.example.baseprojectandroid.model.Song
 import com.example.baseprojectandroid.ui.base.BaseFragment
 import com.example.baseprojectandroid.ui.base.BaseFragmentBinding
+import com.example.baseprojectandroid.ui.component.MainActivity
+import com.example.baseprojectandroid.ui.component.download.DownloadFragment
 import com.example.baseprojectandroid.ui.component.library.adapter.YourLibraryAdapter
 import com.example.baseprojectandroid.ui.component.library.adapter.YourLibraryPlaylistAdapter
+import com.example.baseprojectandroid.ui.component.setting.SettingFragment
 import com.example.baseprojectandroid.ui.component.setting.adapter.SettingAdapter
+import com.example.baseprojectandroid.ui.nowplaying.NowPlayingFragment
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.logging.Logger
 
@@ -49,7 +55,38 @@ class YourLibraryFragment: BaseFragmentBinding<FragmentYourLibraryBinding, YourL
         super.registerListeners()
 
         dataBinding.add.setOnClickListener {
-            CreatePlaylistBottomSheet().show(childFragmentManager, "")
+            val createList = CreatePlaylistBottomSheet()
+            createList.show(childFragmentManager, "")
+            createList.onClickPlaylist {
+                openFragment(AddAPlaylistFragment())
+            }
+            createList.onClickPublishSong {
+                openFragment(UploadTrackFragment())
+            }
+        }
+
+        dataBinding.seeAllDown.setOnClickListener {
+            openFragment(DownloadFragment())
+        }
+
+        dataBinding.seeAllPlaylist.setOnClickListener {
+
+        }
+
+        dataBinding.seeAllRecent.setOnClickListener {
+
+        }
+
+        dataBinding.seeAllUpload.setOnClickListener {
+
+        }
+
+        dataBinding.titleYourLibrary.setOnClickListener {
+            openFragment(SettingFragment())
+        }
+
+        dataBinding.avatarUser.setOnClickListener {
+            openFragment(SettingFragment())
         }
     }
 
