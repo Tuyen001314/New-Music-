@@ -2,9 +2,18 @@ package com.example.baseprojectandroid.utils
 
 import java.lang.ref.WeakReference
 
-class Event<T: Any?>(private val value: T) {
+class Event<T : Any?>(private val value: T) {
     private var consumers = mutableListOf<WeakReference<Any>>()
-    fun getValueIfNotHandle(consumer: Any?): T? {
+    private var isHandled = false
+    fun getValueIfNotHandle(consumer: Any? = null): T? {
+        if (consumer == null) {
+            return if (isHandled) null
+            else {
+                isHandled = true
+                value
+            }
+        }
+        isHandled = true
         var isConsumerExisted = false
         consumers.forEach {
             if (it.get() == consumer) {
@@ -18,11 +27,11 @@ class Event<T: Any?>(private val value: T) {
         }
     }
 
-    fun getValueIfNotHandle(consumer: Any?, resultNotNull: (T) -> Unit) {
+    fun getValueIfNotHandle(consumer: Any? = null, resultNotNull: (T) -> Unit) {
         getValueIfNotHandle(consumer)?.let { resultNotNull(it) }
     }
 
     fun getValue() = value
 }
 
-fun<T> eventOf(value: T) = Event(value)
+fun <T> eventOf(value: T) = Event(value)

@@ -18,6 +18,7 @@ import com.example.baseprojectandroid.repository.song.SongRepository
 import com.example.baseprojectandroid.service.MusicServiceConnector
 import com.example.baseprojectandroid.service.PlayerState
 import com.example.baseprojectandroid.ui.base.BaseViewModel
+import com.example.baseprojectandroid.ui.event.UiEffect
 import com.example.baseprojectandroid.utils.DataState
 import com.example.baseprojectandroid.utils.Event
 import com.example.baseprojectandroid.utils.eventOf
@@ -57,8 +58,10 @@ class NowPlayingViewModel @Inject constructor(
             eventOf(Song.EMPTY.toSinglePlaylist()),
         )
     )
-
     val uiState: StateFlow<NowPlayingUiState> get() = _uiState
+
+    private val _uiEffect: MutableStateFlow<Event<NowPlayingUiEffect?>> = MutableStateFlow(eventOf(null))
+    val uiEffect: StateFlow<Event<NowPlayingUiEffect?>> get() = _uiEffect
 
     private val _thumbVibrantColor = MutableStateFlow(Color.TRANSPARENT)
     val thumbVibrantColor: StateFlow<Int> get() = _thumbVibrantColor
@@ -144,23 +147,9 @@ class NowPlayingViewModel @Inject constructor(
                             ) {
                                 Palette.from(resource).generate {
                                     it?.getVibrantColor(Color.parseColor("#86929A"))?.let {
-                                        val nowColor = _thumbVibrantColor.value
-                                        val toColor = it
-                                        val animation = ValueAnimator.ofObject(
-                                            ArgbEvaluator(),
-                                            nowColor,
-                                            toColor
-                                        )
-                                        animation
-                                            .setDuration(250)
-                                            .apply {
-                                                addUpdateListener {
-                                                    launch {
-                                                        _thumbVibrantColor.emit(it.getAnimatedValue() as Int)
-                                                    }
-                                                }
-                                            }
-                                            .start()
+                                        launch {
+                                            _thumbVibrantColor.emit(it)
+                                        }
                                     }
                                 }
                             }
@@ -198,6 +187,12 @@ class NowPlayingViewModel @Inject constructor(
         needUpdateCurrentSongPosition = false
     }
 
+    fun onClickShowTrackOption() {
+        viewModelScope.launch {
+            _uiEffect.emit(eventOf(NowPlayingUiEffect.ShowTrackOption(currentSong!!.value)))
+        }
+    }
+
 }
 
 data class NowPlayingUiState(
@@ -211,4 +206,8 @@ data class NowPlayingUiState(
             currentPlaylist.getValue().songs.run {
                 indexOf(find { it.url == song.getValue().url })
             }
+}
+
+sealed class NowPlayingUiEffect: UiEffect {
+    class ShowTrackOption(val song: Song): NowPlayingUiEffect()
 }

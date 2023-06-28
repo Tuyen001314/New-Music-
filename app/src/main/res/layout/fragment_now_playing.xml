@@ -163,10 +163,10 @@
             android:id="@+id/tv_track_current_position"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="30:00"
-            android:textSize="10sp"
             android:fontFamily="@font/muli"
+            android:text="30:00"
             android:textColor="#B2B2B2"
+            android:textSize="10sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/song_progress" />
 
@@ -174,12 +174,17 @@
             android:id="@+id/tv_track_total_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="30:00"
-            android:textSize="10sp"
             android:fontFamily="@font/muli"
+            android:text="30:00"
             android:textColor="#B2B2B2"
+            android:textSize="10sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/song_progress" />
+
+        <FrameLayout
+            android:id="@+id/child_fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -8,17 +8,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 
 abstract class BaseFragment : BaseView, Fragment() {
 
     var mView: View? = null
-    private val mHandler = Handler()
+    private lateinit var mHandler: Handler
     protected var durationDelayed: Long = 800
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        mHandler = Handler()
         Log.d(javaClass.name, "onCreate()...")
     }
 
@@ -43,6 +45,12 @@ abstract class BaseFragment : BaseView, Fragment() {
         registerObservers()
         initializeData()
         registerListeners()
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            if (!onBackPressed()) {
+                isEnabled = false
+                requireActivity().onBackPressed()
+            }
+        }
     }
 
     fun showToast(str: String) {

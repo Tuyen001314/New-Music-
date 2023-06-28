@@ -1,16 +1,19 @@
 package com.example.baseprojectandroid.ui.nowplaying
 
+import android.animation.ArgbEvaluator
+import android.animation.ValueAnimator
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Handler
 import android.os.Looper
-import android.view.animation.DecelerateInterpolator
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
+import androidx.core.animation.doOnEnd
 import androidx.core.graphics.ColorUtils
 import androidx.core.widget.ImageViewCompat
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.commit
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -23,11 +26,11 @@ import com.example.baseprojectandroid.model.Song
 import com.example.baseprojectandroid.service.PlayerState
 import com.example.baseprojectandroid.ui.base.BaseFragmentBinding
 import com.example.baseprojectandroid.ui.base.BaseViewModel
+import com.example.baseprojectandroid.ui.component.option.TrackOptionFragment
 import com.example.baseprojectandroid.ui.event.HideDetailPlayer
-import com.example.baseprojectandroid.utils.Event
 import com.example.baseprojectandroid.utils.timePositionToString
+import com.example.baseprojectandroid.viewmodel.NowPlayingUiEffect
 import com.example.baseprojectandroid.viewmodel.NowPlayingViewModel
-import com.github.florent37.viewanimator.ViewAnimator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -38,6 +41,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 class NowPlayingFragment : BaseFragmentBinding<FragmentNowPlayingBinding, BaseViewModel>() {
     private val nowPlayingViewModel by activityViewModels<NowPlayingViewModel>()
     private var isSeekbarTracking = AtomicBoolean(false)
+    private var currentMainColorBackground = Color.BLACK
 
     private var wordHandler = Handler(Looper.getMainLooper())
 
@@ -69,7 +73,26 @@ class NowPlayingFragment : BaseFragmentBinding<FragmentNowPlayingBinding, BaseVi
 
                 launch {
                     nowPlayingViewModel.thumbVibrantColor.collect {
-                        updateGradientBackground(it)
+                        changeSmoothBackground(it)
+                    }
+                }
+
+                launch {
+                    nowPlayingViewModel.uiEffect.collect {
+                        it.getValueIfNotHandle { uiEffect ->
+                            when (uiEffect) {
+                                is NowPlayingUiEffect.ShowTrackOption -> {
+                                    requireActivity().supportFragmentManager.commit {
+                                        add(
+                                            android.R.id.content,
+                                            TrackOptionFragment.newInstance(uiEffect.song),
+                                            "track_option"
+                                        )
+                                    }
+                                }
+                                else -> {}
+                            }
+                        }
                     }
                 }
             }
@@ -98,18 +121,37 @@ class NowPlayingFragment : BaseFragmentBinding<FragmentNowPlayingBinding, BaseVi
         }
     }
 
-    private fun updateGradientBackground(color: Int) {
-        val gradient = GradientDrawable(
-            GradientDrawable.Orientation.TOP_BOTTOM,
-            intArrayOf(color, ColorUtils.blendARGB(color, Color.BLACK, 0.3f))
-        )
-        dataBinding.root.background = gradient
+    private fun changeSmoothBackground(targetColor: Int) {
+        lifecycleScope.launch(Dispatchers.Main) {
+            val animation = ValueAnimator.ofObject(
+                ArgbEvaluator(),
+                currentMainColorBackground,
+                targetColor
+            )
+            animation
+                .setDuration(250)
+                .apply {
+                    addUpdateListener {
+                        val color = it.animatedValue as Int
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            val gradient = GradientDrawable(
+                                GradientDrawable.Orientation.TOP_BOTTOM,
+                                intArrayOf(color, ColorUtils.blendARGB(color, Color.BLACK, 0.3f))
+                            )
+                            dataBinding.root.background = gradient
+                        }
+                    }
+                    doOnEnd {
+                        currentMainColorBackground = targetColor
+                    }
+                }
+                .start()
+        }
     }
 
     private fun updateNowPlayingSong(song: Song) {
         lifecycleScope.launch(Dispatchers.Main) {
             dataBinding.apply {
-//                changePlayPauseSmooth(songState.state)
                 tvSongName.text = song.name
                 tvSongNameMain.text = song.name
                 tvSongCreatorName.text = song.creator.name
@@ -134,6 +176,10 @@ class NowPlayingFragment : BaseFragmentBinding<FragmentNowPlayingBinding, BaseVi
     override fun registerListeners() {
         dataBinding.btCollap.setOnClickListener {
             EventBus.getDefault().post(HideDetailPlayer())
+        }
+
+        dataBinding.btMore.setOnClickListener {
+            nowPlayingViewModel.onClickShowTrackOption()
         }
 
         dataBinding.btPauseResume.setOnClickListener {
@@ -172,6 +218,11 @@ class NowPlayingFragment : BaseFragmentBinding<FragmentNowPlayingBinding, BaseVi
         dataBinding.btRepeat.setOnClickListener {
             nowPlayingViewModel.onClickRepeat()
         }
+    }
+
+    override fun onBackPressed(): Boolean {
+        EventBus.getDefault().post(HideDetailPlayer())
+        return true
     }
 
     override fun initializeData() {
