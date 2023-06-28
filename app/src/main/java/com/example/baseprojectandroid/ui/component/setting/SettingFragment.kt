@@ -13,6 +13,7 @@ import com.example.baseprojectandroid.ui.base.BaseFragment
 import com.example.baseprojectandroid.ui.base.BaseFragmentBinding
 import com.example.baseprojectandroid.ui.component.library.adapter.YourLibraryAdapter
 import com.example.baseprojectandroid.ui.component.library.adapter.YourLibraryPlaylistAdapter
+import com.example.baseprojectandroid.ui.component.library.profile.ProfileFragment
 import com.example.baseprojectandroid.ui.component.setting.adapter.SettingAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.logging.Logger
@@ -42,8 +43,8 @@ class SettingFragment: BaseFragmentBinding<FragmentSettingBinding, SettingViewMo
     override fun registerListeners() {
         super.registerListeners()
 
-        dataBinding.titleYourLibrary.setOnClickListener {
-
+        dataBinding.viewProfile.setOnClickListener {
+            openFragment(ProfileFragment())
         }
     }
 

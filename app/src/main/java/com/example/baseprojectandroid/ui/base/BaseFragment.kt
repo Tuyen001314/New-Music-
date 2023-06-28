@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
+import com.example.baseprojectandroid.R
 
 abstract class BaseFragment : BaseView, Fragment() {
 
@@ -52,6 +53,30 @@ abstract class BaseFragment : BaseView, Fragment() {
             }
         }
     }
+
+    fun openFragment(fragment: Fragment) {
+        val fragmentManager = requireActivity().supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.add(R.id.main_container, fragment)
+            .addToBackStack(null)
+            .commitAllowingStateLoss()
+    }
+
+    fun openFragmentNotFullScreen(idLayout: Int, fragment: Fragment) {
+        val fragmentManager = requireActivity().supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.replace(idLayout, fragment)
+            .addToBackStack(null)
+            .commitAllowingStateLoss()
+    }
+
+    fun removeFragment(fragment: Fragment) {
+        val fragmentManager = requireActivity().supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.remove(fragment)
+            .commitAllowingStateLoss()
+    }
+
 
     fun showToast(str: String) {
         val con = activity ?: return

@@ -9,7 +9,7 @@
         android:background="@color/bg_app">
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/cardView2"
+            android:id="@+id/avatarUser"
             android:layout_width="60dp"
             android:layout_height="60dp"
             app:cardCornerRadius="30dp"
@@ -29,6 +29,7 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="19dp"
             android:layout_height="19dp"
+            android:id="@+id/viewProfile"
             android:layout_marginEnd="20dp"
             android:src="@drawable/ic_chevronleft"
             app:layout_constraintBottom_toBottomOf="@+id/titleYourLibrary"
@@ -42,6 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:fillViewport="true"
+            android:layout_margin="@dimen/common_16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -74,9 +76,9 @@
             android:text="Your Library"
             android:textColor="#FFFFFF"
             android:textSize="24sp"
-            app:layout_constraintBottom_toBottomOf="@+id/cardView2"
-            app:layout_constraintStart_toEndOf="@+id/cardView2"
-            app:layout_constraintTop_toTopOf="@+id/cardView2"
+            app:layout_constraintBottom_toBottomOf="@+id/avatarUser"
+            app:layout_constraintStart_toEndOf="@+id/avatarUser"
+            app:layout_constraintTop_toTopOf="@+id/avatarUser"
             app:layout_constraintVertical_bias="0.285" />
 
         <TextView
@@ -86,7 +88,7 @@
             android:text="View Profile"
             android:layout_marginStart="15dp"
             android:textColor="@color/white"
-            app:layout_constraintStart_toEndOf="@+id/cardView2"
+            app:layout_constraintStart_toEndOf="@+id/avatarUser"
             app:layout_constraintTop_toBottomOf="@+id/titleYourLibrary" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,7 +9,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class CreatePlaylistBottomSheet : BottomSheetDialogFragment() {
     private lateinit var dataBinding: BottomSheetCreatePlaylistBinding
-    private lateinit var clickConfirmDelete: () -> Unit
+    private lateinit var onClickPlaylist: () -> Unit
+    private lateinit var onClickPublishSong: () -> Unit
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -20,10 +21,29 @@ class CreatePlaylistBottomSheet : BottomSheetDialogFragment() {
         return dataBinding.root
     }
 
-    //----------------------------------------------------------------------------------------------
-    fun onClickConfirmDelete(clickConfirmDelete: () -> Unit) {
-        this.clickConfirmDelete = clickConfirmDelete
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        dataBinding.playlist.setOnClickListener {
+            onClickPlaylist.invoke()
+            dismiss()
+        }
+
+        dataBinding.song.setOnClickListener {
+            onClickPublishSong.invoke()
+            dismiss()
+        }
     }
+
+    //----------------------------------------------------------------------------------------------
+    fun onClickPlaylist(onClickPlaylist: () -> Unit) {
+        this.onClickPlaylist = onClickPlaylist
+    }
+
+    fun onClickPublishSong(onClickPublishSong: () -> Unit) {
+        this.onClickPublishSong = onClickPublishSong
+    }
+
 
 
 

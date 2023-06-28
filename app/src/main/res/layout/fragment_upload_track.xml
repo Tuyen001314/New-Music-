@@ -1,85 +1,273 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
-        android:id="@+id/textView25"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.121"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="104dp" />
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:background="@color/bg_app"
+        android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/editTextTextPersonName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView25" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:background="@color/bg_app"
+            android:padding="@dimen/common_16dp"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textView26"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="TextView"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName"
-        tools:layout_editor_absoluteX="55dp" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:visibility="visible"
+                android:id="@+id/layoutUpload"
+                android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/editTextTextPersonName2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="265dp" />
+                <TextView
+                    android:id="@+id/textView25"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/common_20dp"
+                    android:text="File Audio"
+                    android:textColor="@color/white"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/textView27"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        tools:layout_editor_absoluteX="55dp"
-        tools:layout_editor_absoluteY="356dp" />
+                <TextView
+                    android:id="@+id/nameSongUpload"
+                    android:layout_width="0dp"
+                    android:padding="5dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="24dp"
+                    android:gravity="center|start"
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
+                    android:inputType="textPersonName"
+                    android:text="Name"
+                    app:layout_constraintEnd_toStartOf="@+id/chooseAudio"
+                    app:layout_constraintStart_toStartOf="@+id/textView25"
+                    app:layout_constraintTop_toBottomOf="@+id/textView25" />
 
-    <EditText
-        android:id="@+id/editTextTextPersonName3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="406dp" />
+                <TextView
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:id="@+id/filePath"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:text="File Thumbnail (Optional)"
+                    android:textColor="@color/white"
+                    app:layout_constraintStart_toStartOf="@+id/nameSongUpload"
+                    app:layout_constraintTop_toBottomOf="@+id/nameSongUpload" />
 
-    <Button
-        android:id="@+id/button7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button"
-        tools:layout_editor_absoluteX="62dp"
-        tools:layout_editor_absoluteY="531dp" />
+                <TextView
+                    android:id="@+id/imgSongUpload"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="@dimen/common_24dp"
+                    android:textColor="@color/white"
+                    android:text="Name"
+                    android:padding="5dp"
+                    android:gravity="center|start"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toStartOf="@+id/chooseImage"
+                    app:layout_constraintStart_toStartOf="@+id/filePath"
+                    app:layout_constraintTop_toBottomOf="@+id/filePath" />
 
-    <Button
-        android:id="@+id/button8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button"
-        tools:layout_editor_absoluteX="223dp"
-        tools:layout_editor_absoluteY="531dp" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/textView27"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:text="Track name"
+                    android:textSize="20sp"
+                    android:layout_marginTop="@dimen/common_24dp"
+                    app:layout_constraintStart_toStartOf="@+id/imgSongUpload"
+                    app:layout_constraintTop_toBottomOf="@+id/imgSongUpload" />
+
+                <Button
+                    android:id="@+id/btnCancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="32dp"
+                    android:text="Cancel"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView28" />
+
+                <Button
+                    android:id="@+id/btnUpload"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginEnd="50dp"
+                    android:text="Upload"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView28" />
+
+                <Button
+                    android:id="@+id/chooseAudio"
+                    android:layout_width="wrap_content"
+                    android:textAllCaps="false"
+                    android:layout_height="wrap_content"
+                    android:text="Choose file"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/nameSongUpload" />
+
+                <Button
+                    android:id="@+id/chooseImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Choose file"
+                    android:textAllCaps="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/imgSongUpload" />
+
+                <EditText
+                    android:id="@+id/textView28"
+                    android:layout_width="0dp"
+                    android:textColor="@color/white"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/common_24dp"
+                    android:textSize="16sp"
+                    android:text="Chìm sâu - Suit Tie - Va vào giai điệu này - Tối nay ta đi đâu nhờ"
+                    android:layout_marginTop="@dimen/common_24dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/textView27"
+                    app:layout_constraintTop_toBottomOf="@+id/textView27" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_gravity="center"
+                android:visibility="invisible"
+                android:id="@+id/layoutProcess"
+                android:layout_height="wrap_content">
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginTop="@dimen/common_10dp"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="@+id/textView29"
+                    app:layout_constraintTop_toBottomOf="@+id/textView29" />
+
+                <TextView
+                    android:id="@+id/textView29"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Processing..."
+                    android:textColor="@color/white"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:id="@+id/cancelProcess"
+                    android:layout_width="150dp"
+                    android:layout_height="56dp"
+                    android:text="Cancle"
+                    android:textAllCaps="false"
+                    android:layout_marginTop="130dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/progressBar" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="invisible"
+                android:id="@+id/layoutDone"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Done !!"
+                    android:textColor="@color/white"
+                    android:textSize="36sp"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:id="@+id/backToHome"
+                    android:layout_width="200dp"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="125dp"
+                    android:text="Back to Home"
+                    android:textAllCaps="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/state" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="invisible"
+                android:id="@+id/layoutFail"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/stateFail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Failure :(("
+                    android:textColor="@color/white"
+                    android:textSize="36sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/textView31"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="This’s an unknown problems. Try it later"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/stateFail" />
+
+                <Button
+                    android:id="@+id/cancelFail"
+                    android:layout_width="100dp"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="125dp"
+                    android:text="Cancel"
+                    android:textAllCaps="false"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/stateFail" />
+
+                <Button
+                    android:id="@+id/tryagainFail"
+                    android:layout_width="100dp"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="125dp"
+                    android:text="Try again"
+                    android:textAllCaps="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/stateFail" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </FrameLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</layout>

@@ -7,4 +7,5 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class SearchFragment: BaseFragment() {
     override fun getContentViewId(): Int = R.layout.fragment_search
+
 }
