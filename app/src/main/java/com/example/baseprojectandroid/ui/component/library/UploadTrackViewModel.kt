@@ -5,11 +5,13 @@ import com.example.baseprojectandroid.model.AccountState
 import com.example.baseprojectandroid.repository.song.SongRepository
 import com.example.baseprojectandroid.server.ApiClient
 import com.example.baseprojectandroid.ui.base.BaseViewModel
+import com.example.baseprojectandroid.utils.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
@@ -28,12 +30,15 @@ class UploadTrackViewModel
         creator: Int
     ) {
         val handle = CoroutineExceptionHandler { _, e ->
-            e as HttpException
+//            e as HttpException
             e.printStackTrace()
         }
         val exceptionHandler = SupervisorJob() + handle
         viewModelScope.launch(exceptionHandler) {
             songRepository.uploadSong(name, image, song, category, creator)
+                .collect {
+                    Logger.d(it)
+                }
         }
     }
 

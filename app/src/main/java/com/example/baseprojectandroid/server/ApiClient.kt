@@ -42,10 +42,10 @@ interface ApiClient {
     @Multipart
     @POST("/api/Songs/insertbyuser")
     suspend fun uploadSong(
-        @Part name: String,
+        @Part("name") name: String,
         @Part image: MultipartBody.Part,
         @Part song: MultipartBody.Part,
-        @Part category: Int,
-        @Part creator: Int
+        @Part("category") category: Int,
+        @Part("creator") creator: Int
     ): Call<UploadResponse>
 }

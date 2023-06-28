@@ -1,12 +1,10 @@
 package com.example.baseprojectandroid.ui.component.library
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
-import androidx.lifecycle.viewModelScope
 import com.example.baseprojectandroid.R
 import com.example.baseprojectandroid.databinding.FragmentUploadTrackBinding
 import com.example.baseprojectandroid.extension.getFileName
@@ -15,18 +13,11 @@ import com.example.baseprojectandroid.extension.snackbar
 import com.example.baseprojectandroid.extension.visible
 import com.example.baseprojectandroid.model.AccountState
 import com.example.baseprojectandroid.ui.base.BaseFragmentBinding
-import com.example.baseprojectandroid.ui.component.MainActivity
 import com.example.baseprojectandroid.upload.UploadRequestBody
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.HttpException
 import java.io.File
@@ -35,7 +26,8 @@ import java.io.FileOutputStream
 
 
 @AndroidEntryPoint
-class UploadTrackFragment : BaseFragmentBinding<FragmentUploadTrackBinding, UploadTrackViewModel>() {
+class UploadTrackFragment :
+    BaseFragmentBinding<FragmentUploadTrackBinding, UploadTrackViewModel>() {
 
     private var selectedMusicUri: Uri? = null
     private var selectedImageUri: Uri? = null
@@ -56,8 +48,8 @@ class UploadTrackFragment : BaseFragmentBinding<FragmentUploadTrackBinding, Uplo
 
         dataBinding.btnUpload.setOnClickListener {
             //uploadImage()
-            bindViewLoadFile()
-            //uploadSong()
+//            bindViewLoadFile()
+            uploadSong()
         }
 
         dataBinding.backToHome.setOnClickListener {
@@ -104,7 +96,8 @@ class UploadTrackFragment : BaseFragmentBinding<FragmentUploadTrackBinding, Uplo
     private fun uploadImage() {
         val bodyImage = getFileImage()?.let { UploadRequestBody(it, "image") }
 
-        val imagePart = MultipartBody.Part.createFormData("file",getFileImage()!!.name ,
+        val imagePart = MultipartBody.Part.createFormData(
+            "file", getFileImage()!!.name,
             "".toRequestBody(MultipartBody.FORM)
         )
         val handle = CoroutineExceptionHandler { _, e ->
@@ -145,7 +138,10 @@ class UploadTrackFragment : BaseFragmentBinding<FragmentUploadTrackBinding, Uplo
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.type = "audio/mpeg" // Filter for audio files
         intent.addCategory(Intent.CATEGORY_OPENABLE)
-        startActivityForResult(Intent.createChooser(intent, "Select Music"), REQUEST_CODE_PICK_MUSIC)
+        startActivityForResult(
+            Intent.createChooser(intent, "Select Music"),
+            REQUEST_CODE_PICK_MUSIC
+        )
     }
 
     override fun initializeData() {
@@ -196,9 +192,14 @@ class UploadTrackFragment : BaseFragmentBinding<FragmentUploadTrackBinding, Uplo
             return null
         }
 
-        val parcelFileDescriptor = context?.contentResolver?.openFileDescriptor(selectedImageUri!!, "r", null) ?: return null
+        val parcelFileDescriptor =
+            context?.contentResolver?.openFileDescriptor(selectedImageUri!!, "r", null)
+                ?: return null
         val inputStream = FileInputStream(parcelFileDescriptor.fileDescriptor)
-        val file = File(requireContext().cacheDir, requireContext().contentResolver.getFileName(selectedImageUri!!))
+        val file = File(
+            requireContext().cacheDir,
+            requireContext().contentResolver.getFileName(selectedImageUri!!)
+        )
         val outputStream = FileOutputStream(file)
         inputStream.copyTo(outputStream)
         return file
@@ -210,9 +211,14 @@ class UploadTrackFragment : BaseFragmentBinding<FragmentUploadTrackBinding, Uplo
             return null
         }
 
-        val parcelFileDescriptor = context?.contentResolver?.openFileDescriptor(selectedMusicUri!!, "r", null) ?: return null
+        val parcelFileDescriptor =
+            context?.contentResolver?.openFileDescriptor(selectedMusicUri!!, "r", null)
+                ?: return null
         val inputStream = FileInputStream(parcelFileDescriptor.fileDescriptor)
-        val file = File(requireContext().cacheDir, requireContext().contentResolver.getFileName(selectedMusicUri!!))
+        val file = File(
+            requireContext().cacheDir,
+            requireContext().contentResolver.getFileName(selectedMusicUri!!)
+        )
         val outputStream = FileOutputStream(file)
         inputStream.copyTo(outputStream)
         return file
@@ -221,19 +227,45 @@ class UploadTrackFragment : BaseFragmentBinding<FragmentUploadTrackBinding, Uplo
     private fun uploadSong() {
         val bodyImage = getFileImage()?.let { UploadRequestBody(it, "image") }
         val bodyAudio = getFileAudio()?.let { UploadRequestBody(it, "song") }
-        bodyImage?.let {
-            MultipartBody.Part.createFormData("image", getFileImage()?.absolutePath,
-                it
+        val imageMultipart = getFileImage().let {
+            MultipartBody.Part.createFormData(
+                "image", it?.name ?: "",
+                it?.asRequestBody(MultipartBody.FORM) ?: "".toRequestBody(MultipartBody.FORM)
             )
-        }?.let {
-            bodyAudio?.let { it1 ->
-                MultipartBody.Part.createFormData(
-                    "song",
-                    getFileAudio()?.name,
-                    it1
-                )
-            }?.let { it2 -> viewModel.uploadSong(name = "thanhxuan", image = it, song = it2, category = 3, creator = 3) }
         }
+
+        val audioMultipart = getFileAudio().let {
+            MultipartBody.Part.createFormData(
+                "song", it?.name ?: "",
+                it?.asRequestBody(MultipartBody.FORM) ?: "".toRequestBody(MultipartBody.FORM)
+            )
+        }
+
+        viewModel.uploadSong("Haha", imageMultipart, audioMultipart, 1, 1)
+
+
+//        bodyImage?.let {
+//            MultipartBody.Part.createFormData(
+//                "image", getFileImage()?.name,
+//                it
+//            )
+//        }?.let {
+//            bodyAudio?.let { it1 ->
+//                MultipartBody.Part.createFormData(
+//                    "song",
+//                    getFileAudio()?.name,
+//                    it1
+//                )
+//            }?.let { it2 ->
+//                viewModel.uploadSong(
+//                    name = "thanhxuan",
+//                    image = it,
+//                    song = it2,
+//                    category = 3,
+//                    creator = 3
+//                )
+//            }
+//        }
     }
 
     companion object {
