@@ -4,6 +4,7 @@ import com.example.baseprojectandroid.data.response.GetUserByUserNameResponse
 import com.example.baseprojectandroid.data.response.GetUserResponse
 import com.example.baseprojectandroid.data.response.InsertSongResponse
 import com.example.baseprojectandroid.model.ResponseImage
+import com.example.baseprojectandroid.model.ResponseSearch
 import com.example.baseprojectandroid.model.Song
 import com.skydoves.sandwich.ApiResponse
 import okhttp3.MultipartBody
@@ -49,4 +50,11 @@ interface ApiClient {
         @Part("category") category: Int,
         @Part("creator") creator: Int
     ): Call<InsertSongResponse>
+
+
+    @GET("/api/Search")
+    suspend fun search(
+        @Query("searchText") searchText: String ,
+        @Query("userId") userId: Int
+    ):  ApiResponse<List<ResponseSearch>>
 }
