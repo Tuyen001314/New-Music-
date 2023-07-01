@@ -1,6 +1,7 @@
 package com.example.baseprojectandroid.server
 
 import com.example.baseprojectandroid.data.api.ResponseModel
+import com.example.baseprojectandroid.data.response.InsertSongResponse
 import com.example.baseprojectandroid.model.ResponseImage
 import com.example.baseprojectandroid.model.Song
 import com.example.baseprojectandroid.model.UploadResponse
@@ -41,11 +42,11 @@ interface ApiClient {
 
     @Multipart
     @POST("/api/Songs/insertbyuser")
-    suspend fun uploadSong(
+    fun uploadSong(
         @Part("name") name: String,
         @Part image: MultipartBody.Part,
         @Part song: MultipartBody.Part,
         @Part("category") category: Int,
         @Part("creator") creator: Int
-    ): Call<UploadResponse>
+    ): Call<InsertSongResponse>
 }

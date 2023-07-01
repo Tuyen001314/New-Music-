@@ -2,19 +2,17 @@ package com.example.baseprojectandroid.repository.song
 
 import android.os.Environment
 import android.util.Log
-import com.airbnb.lottie.utils.Logger
+import com.example.baseprojectandroid.data.response.InsertSongResponse
 import com.example.baseprojectandroid.model.Song
-import com.example.baseprojectandroid.model.SongUpload
-import com.example.baseprojectandroid.model.UploadResponse
 import com.example.baseprojectandroid.server.ApiClient
 import com.example.baseprojectandroid.utils.DataState
-import com.skydoves.sandwich.ApiResponse
 import com.skydoves.sandwich.message
 import com.skydoves.sandwich.suspendMapSuccess
 import com.skydoves.sandwich.suspendOnError
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
@@ -22,7 +20,6 @@ import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.http.Part
 import java.io.File
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
@@ -30,7 +27,7 @@ import kotlin.coroutines.CoroutineContext
 class SongRepositoryImpl @Inject constructor(
     private val api: ApiClient,
     private val io: CoroutineContext
-): SongRepository {
+) : SongRepository {
     override fun getSongById(id: String) {
         TODO("Not yet implemented")
     }
@@ -67,30 +64,34 @@ class SongRepositoryImpl @Inject constructor(
         song: MultipartBody.Part,
         category: Int,
         creator: Int
-    ): Flow<DataState<Boolean>> =
-        flow<DataState<Boolean>> {
-            api.uploadSong(name, image, song, category, creator).enqueue(object : Callback<UploadResponse> {
+    ): Flow<DataState<InsertSongResponse>> = callbackFlow {
+        api.uploadSong(name, image, song, category, creator)
+            .enqueue(object : Callback<InsertSongResponse> {
                 override fun onResponse(
-                    call: Call<UploadResponse>, response: Response<UploadResponse>
+                    call: Call<InsertSongResponse>, response: Response<InsertSongResponse>
                 ) {
                     if (response.isSuccessful) {
                         CoroutineScope(io).launch {
-                            emit(DataState.Success("ok", true))
+                            trySend(DataState.Success("ok", response.body()))
                             Log.d("buituyen", "acas")
                         }
+                    } else {
+                        CoroutineScope(io).launch {
+                            trySend(DataState.Failure(message = response.message()))
+                        }
                     }
-                    Log.d("buituyen", "aca213123s")
                 }
 
-                override fun onFailure(call: Call<UploadResponse>, t: Throwable) {
+                override fun onFailure(call: Call<InsertSongResponse>, t: Throwable) {
                     CoroutineScope(io).launch {
-                        emit(DataState.Success("fail", false))
+                        trySend(DataState.Failure(message = t.message, error = t))
                     }
                     Log.d("buituyen", "aca34231s")
                 }
             })
 
-    }.flowOn(io)
+        awaitClose { }
+    }
 
 
 }

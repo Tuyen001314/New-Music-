@@ -1,5 +1,6 @@
 package com.example.baseprojectandroid.repository.song
 
+import com.example.baseprojectandroid.data.response.InsertSongResponse
 import com.example.baseprojectandroid.model.Song
 import com.example.baseprojectandroid.model.SongUpload
 import com.example.baseprojectandroid.utils.DataState
@@ -21,6 +22,6 @@ interface SongRepository {
         song: MultipartBody.Part,
         category: Int,
         creator: Int
-    ): Flow<DataState<Boolean>>
+    ): Flow<DataState<InsertSongResponse>>
 
 }

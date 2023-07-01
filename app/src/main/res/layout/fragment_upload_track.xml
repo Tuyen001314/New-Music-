@@ -95,7 +95,7 @@
                     android:text="Cancel"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView28" />
+                    app:layout_constraintTop_toBottomOf="@+id/etTrackName" />
 
                 <Button
                     android:id="@+id/btnUpload"
@@ -106,7 +106,7 @@
                     android:text="Upload"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView28" />
+                    app:layout_constraintTop_toBottomOf="@+id/etTrackName" />
 
                 <Button
                     android:id="@+id/chooseAudio"
@@ -127,7 +127,7 @@
                     app:layout_constraintTop_toTopOf="@+id/imgSongUpload" />
 
                 <EditText
-                    android:id="@+id/textView28"
+                    android:id="@+id/etTrackName"
                     android:layout_width="0dp"
                     android:textColor="@color/white"
                     android:layout_height="wrap_content"

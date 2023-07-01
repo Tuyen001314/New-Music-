@@ -3,23 +3,19 @@ package com.example.baseprojectandroid.ui.component.library
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
-import android.provider.MediaStore
-import android.util.Log
+import android.widget.Toast
 import com.example.baseprojectandroid.R
 import com.example.baseprojectandroid.databinding.FragmentUploadTrackBinding
 import com.example.baseprojectandroid.extension.getFileName
 import com.example.baseprojectandroid.extension.gone
 import com.example.baseprojectandroid.extension.snackbar
 import com.example.baseprojectandroid.extension.visible
-import com.example.baseprojectandroid.model.AccountState
 import com.example.baseprojectandroid.ui.base.BaseFragmentBinding
-import com.example.baseprojectandroid.upload.UploadRequestBody
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.*
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
-import retrofit2.HttpException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -47,8 +43,6 @@ class UploadTrackFragment :
         }
 
         dataBinding.btnUpload.setOnClickListener {
-            //uploadImage()
-//            bindViewLoadFile()
             uploadSong()
         }
 
@@ -93,46 +87,46 @@ class UploadTrackFragment :
         }
     }
 
-    private fun uploadImage() {
-        val bodyImage = getFileImage()?.let { UploadRequestBody(it, "image") }
-
-        val imagePart = MultipartBody.Part.createFormData(
-            "file", getFileImage()!!.name,
-            "".toRequestBody(MultipartBody.FORM)
-        )
-        val handle = CoroutineExceptionHandler { _, e ->
-            e as HttpException
-            Log.d("ditcu", e.response()!!.message())
-            e.printStackTrace()
-        }
-        val exceptionScope = CoroutineScope(SupervisorJob() + handle)
-        exceptionScope.launch(handle) {
-//        viewModel.viewModelScope.launch {
-            viewModel.uploadImage(
-                imagePart
-            ).collect { state ->
-                when (state) {
-                    is AccountState.Loading -> {
-                        withContext(Dispatchers.Main) {
-                            showToast("Đang chờ xử lý. Vui lòng đợi trong giây lát")
-                        }
-                    }
-
-                    is AccountState.Finished -> {
-                        withContext(Dispatchers.Main) {
-                            showToast("Đăng ký thành công")
-                        }
-                    }
-
-                    is AccountState.Failed -> {
-                        withContext(Dispatchers.Main) {
-                            showToast("Đăng ký thất bại")
-                        }
-                    }
-                }
-            }
-        }
-    }
+//    private fun uploadImage() {
+//        val bodyImage = getFileImage()?.let { UploadRequestBody(it, "image") }
+//
+//        val imagePart = MultipartBody.Part.createFormData(
+//            "file", getFileImage()!!.name,
+//            "".toRequestBody(MultipartBody.FORM)
+//        )
+//        val handle = CoroutineExceptionHandler { _, e ->
+//            e as HttpException
+//            Log.d("ditcu", e.response()!!.message())
+//            e.printStackTrace()
+//        }
+//        val exceptionScope = CoroutineScope(SupervisorJob() + handle)
+//        exceptionScope.launch(handle) {
+////        viewModel.viewModelScope.launch {
+//            viewModel.uploadImage(
+//                imagePart
+//            ).collect { state ->
+//                when (state) {
+//                    is AccountState.Loading -> {
+//                        withContext(Dispatchers.Main) {
+//                            showToast("Đang chờ xử lý. Vui lòng đợi trong giây lát")
+//                        }
+//                    }
+//
+//                    is AccountState.Finished -> {
+//                        withContext(Dispatchers.Main) {
+//                            showToast("Đăng ký thành công")
+//                        }
+//                    }
+//
+//                    is AccountState.Failed -> {
+//                        withContext(Dispatchers.Main) {
+//                            showToast("Đăng ký thất bại")
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     private fun openAudioChooser() {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
@@ -144,8 +138,31 @@ class UploadTrackFragment :
         )
     }
 
-    override fun initializeData() {
+    override fun registerObservers() {
+        super.registerObservers()
+        viewModel.currentSongFile.observe(viewLifecycleOwner) {
+            it?.let { song ->
+                dataBinding.nameSongUpload.text = song.name
+            }
+        }
 
+        viewModel.currentImageFile.observe(viewLifecycleOwner) {
+            it?.let { image ->
+                dataBinding.imgSongUpload.text = image.name
+            }
+        }
+
+        viewModel.uploadSongResponse.observe(viewLifecycleOwner) {
+            it?.let { state ->
+                state.whenSuccess {
+                    Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show()
+                }.whenFailure {
+                    Toast.makeText(requireContext(), "Failure. Message = ${state.message}", Toast.LENGTH_SHORT).show()
+                }.whenLoading {
+                    Toast.makeText(requireContext(), "On Going", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 
     private fun openImageChooser() {
@@ -162,29 +179,31 @@ class UploadTrackFragment :
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 REQUEST_CODE_PICK_IMAGE -> {
-                    selectedImageUri = data?.data
-                    dataBinding.imgSongUpload.text = data?.data?.let { getFileNameFromUri(it) }
+                    viewModel.onImageUriSelected(requireContext(), data!!.data!!)
+//                    selectedImageUri = data?.data
+//                    dataBinding.imgSongUpload.text = data?.data?.let { getFileNameFromUri(it) }
                     //image_view.setImageURI(selectedImageUri)
                 }
                 REQUEST_CODE_PICK_MUSIC -> {
-                    selectedMusicUri = data?.data
-                    dataBinding.nameSongUpload.text = data?.data?.let { getFileNameFromUri(it) }
+                    viewModel.onSongUriSelected(requireContext(), data!!.data!!)
+//                    selectedMusicUri = data?.data
+//                    dataBinding.nameSongUpload.text = data?.data?.let { getFileNameFromUri(it) }
                 }
             }
         }
     }
 
-    private fun getFileNameFromUri(uri: Uri): String? {
-        uri.let {
-            val cursor = requireContext().contentResolver?.query(it, null, null, null, null)
-            cursor?.use { cursor ->
-                if (cursor.moveToFirst()) {
-                    return cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DISPLAY_NAME))
-                }
-            }
-        }
-        return null
-    }
+//    private fun getFileNameFromUri(uri: Uri): String? {
+//        uri.let {
+//            val cursor = requireContext().contentResolver?.query(it, null, null, null, null)
+//            cursor?.use { cursor ->
+//                if (cursor.moveToFirst()) {
+//                    return cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DISPLAY_NAME))
+//                }
+//            }
+//        }
+//        return null
+//    }
 
     private fun getFileImage(): File? {
         if (selectedImageUri == null) {
@@ -205,67 +224,27 @@ class UploadTrackFragment :
         return file
     }
 
-    private fun getFileAudio(): File? {
-        if (selectedMusicUri == null) {
-            view?.snackbar("Select an Image First")
-            return null
-        }
-
-        val parcelFileDescriptor =
-            context?.contentResolver?.openFileDescriptor(selectedMusicUri!!, "r", null)
-                ?: return null
-        val inputStream = FileInputStream(parcelFileDescriptor.fileDescriptor)
-        val file = File(
-            requireContext().cacheDir,
-            requireContext().contentResolver.getFileName(selectedMusicUri!!)
-        )
-        val outputStream = FileOutputStream(file)
-        inputStream.copyTo(outputStream)
-        return file
-    }
+//    private fun getFileAudio(): File? {
+//        if (selectedMusicUri == null) {
+//            view?.snackbar("Select an Image First")
+//            return null
+//        }
+//
+//        val parcelFileDescriptor =
+//            context?.contentResolver?.openFileDescriptor(selectedMusicUri!!, "r", null)
+//                ?: return null
+//        val inputStream = FileInputStream(parcelFileDescriptor.fileDescriptor)
+//        val file = File(
+//            requireContext().cacheDir,
+//            requireContext().contentResolver.getFileName(selectedMusicUri!!)
+//        )
+//        val outputStream = FileOutputStream(file)
+//        inputStream.copyTo(outputStream)
+//        return file
+//    }
 
     private fun uploadSong() {
-        val bodyImage = getFileImage()?.let { UploadRequestBody(it, "image") }
-        val bodyAudio = getFileAudio()?.let { UploadRequestBody(it, "song") }
-        val imageMultipart = getFileImage().let {
-            MultipartBody.Part.createFormData(
-                "image", it?.name ?: "",
-                it?.asRequestBody(MultipartBody.FORM) ?: "".toRequestBody(MultipartBody.FORM)
-            )
-        }
-
-        val audioMultipart = getFileAudio().let {
-            MultipartBody.Part.createFormData(
-                "song", it?.name ?: "",
-                it?.asRequestBody(MultipartBody.FORM) ?: "".toRequestBody(MultipartBody.FORM)
-            )
-        }
-
-        viewModel.uploadSong("Haha", imageMultipart, audioMultipart, 1, 1)
-
-
-//        bodyImage?.let {
-//            MultipartBody.Part.createFormData(
-//                "image", getFileImage()?.name,
-//                it
-//            )
-//        }?.let {
-//            bodyAudio?.let { it1 ->
-//                MultipartBody.Part.createFormData(
-//                    "song",
-//                    getFileAudio()?.name,
-//                    it1
-//                )
-//            }?.let { it2 ->
-//                viewModel.uploadSong(
-//                    name = "thanhxuan",
-//                    image = it,
-//                    song = it2,
-//                    category = 3,
-//                    creator = 3
-//                )
-//            }
-//        }
+        viewModel.uploadSong(dataBinding.etTrackName.text.toString(), 1, 1)
     }
 
     companion object {
