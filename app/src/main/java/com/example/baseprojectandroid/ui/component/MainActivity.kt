@@ -6,7 +6,6 @@ import androidx.fragment.app.commit
 import com.example.baseprojectandroid.databinding.ActivityMainBinding
 import com.example.baseprojectandroid.ui.base.BaseFragmentPagerAdapter
 import com.example.baseprojectandroid.ui.component.home.HomeFragment
-import com.example.baseprojectandroid.ui.component.library.UploadTrackFragment
 import com.example.baseprojectandroid.ui.component.library.YourLibraryFragment
 import com.example.baseprojectandroid.ui.component.search.SearchFragment
 import com.example.baseprojectandroid.ui.event.HideDetailPlayer

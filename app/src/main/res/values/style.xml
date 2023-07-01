@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="CommonText" parent="Theme.MaterialComponents.Bridge">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+
+    <style name="CommonOutlineButton" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="strokeColor">#727272</item>
+        <item name="android:padding">@dimen/common_16dp</item>
+        <item name="android:fontFamily">@font/muli_bold</item>
+    </style>
+
+    <style name="CommonFilledButton" parent="Widget.Material3.Button">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:padding">@dimen/common_16dp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:fontFamily">@font/muli_bold</item>
+        <item name="backgroundTint">@color/spotify_color</item>
+    </style>
+
+</resources>

@@ -45,9 +45,13 @@
 
     <fragment
         android:id="@+id/uploadTrackFragment"
-        android:name="com.example.baseprojectandroid.ui.component.library.UploadTrackFragment"
+        android:name="com.example.baseprojectandroid.ui.component.library.upload.UploadTrackFragment"
         android:label="UploadTrackFragment"
-        tools:layout="@layout/fragment_upload_track" />
+        tools:layout="@layout/fragment_upload_track">
+        <action
+            android:id="@+id/action_uploadTrackFragment_to_uploadTrackDetailFragment"
+            app:destination="@id/uploadTrackDetailFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/homeFragment"
@@ -73,4 +77,10 @@
     <action
         android:id="@+id/atcSearch"
         app:destination="@id/searchFragment" />
+
+    <fragment
+        android:id="@+id/uploadTrackDetailFragment"
+        android:name="com.example.baseprojectandroid.ui.component.library.upload.UploadTrackDetailFragment"
+        android:label="UploadTrackDetailFragment"
+        tools:layout="@layout/fragment_upload_detail" />
 </navigation>
