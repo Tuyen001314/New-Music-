@@ -24,7 +24,7 @@ class SplashActivity : AppCompatActivity() {
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        if (!storage.isFirstTime) {
+        if (storage.currentUser != null) {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }

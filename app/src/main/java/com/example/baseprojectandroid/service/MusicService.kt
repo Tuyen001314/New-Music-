@@ -1,5 +1,6 @@
 package com.example.baseprojectandroid.service
 
+import android.annotation.SuppressLint
 import android.app.Service
 import android.content.Intent
 import android.os.Binder
@@ -8,7 +9,11 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.util.Log
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.media3.datasource.DefaultHttpDataSource
+import androidx.media3.datasource.cache.CacheDataSource
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
+import androidx.media3.exoplayer.source.MediaSource
 import com.example.baseprojectandroid.model.Playlist
 import com.example.baseprojectandroid.model.Position
 import com.example.baseprojectandroid.model.Song
@@ -26,7 +31,9 @@ class MusicService : Service(), CoroutineScope, MusicController {
     private var needUpdateCurrentSongPosition = false
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Default
+
     private lateinit var exoPlayer: ExoPlayer
+    private lateinit var mediaSource: MediaSource.Factory
 
     private var currentSong = Song.EMPTY
 
@@ -48,26 +55,37 @@ class MusicService : Service(), CoroutineScope, MusicController {
         fun getService() = this@MusicService
     }
 
+    @SuppressLint("UnsafeOptInUsageError")
     override fun onBind(intent: Intent?): IBinder {
         val mediaSession = MediaSessionCompat(this, "fkdlsaj")
         musicNotificationManager = MusicNotificationManager(this, mediaSession.sessionToken)
 
 
-        exoPlayer = ExoPlayer.Builder(this).build().apply {
-            setMediaItem(MediaItem.fromUri(currentSong.url))
-            prepare()
-        }
+        mediaSource = DefaultMediaSourceFactory(this)
+            .setDataSourceFactory(DefaultHttpDataSource.Factory())
+
+
+        exoPlayer = ExoPlayer.Builder(this)
+            .setMediaSourceFactory(mediaSource)
+            .build().apply {
+                setMediaItem(MediaItem.fromUri(currentSong.url))
+                prepare()
+            }
+
         exoPlayer.addListener(object : Player.Listener {
             override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
                 super.onMediaItemTransition(mediaItem, reason)
-                when(reason) {
+                when (reason) {
                     Player.MEDIA_ITEM_TRANSITION_REASON_AUTO, Player.MEDIA_ITEM_TRANSITION_REASON_SEEK ->
                         launch {
                             val song = mediaItem!!.mediaMetadata.extras!!.get("song") as Song
                             _currentSong.emit(song)
                         }
                 }
-                Log.d(TAG, "onMediaItemTransition: ${mediaItem?.mediaMetadata?.title}  reason = $reason")
+                Log.d(
+                    TAG,
+                    "onMediaItemTransition: ${mediaItem?.mediaMetadata?.title}  reason = $reason"
+                )
             }
 
 
@@ -155,8 +173,8 @@ class MusicService : Service(), CoroutineScope, MusicController {
             _currentPlaylist.emit(playlist)
             _currentSong.emit(playlist.songs[startSongIndex])
         }
-        exoPlayer.clearMediaItems()
-        exoPlayer.addMediaItems(playlist.songs.map { it.toMediaItem() })
+        exoPlayer.setMediaItems(playlist.songs.map { it.toMediaItem() })
+
         exoPlayer.seekTo(startSongIndex, 0)
         exoPlayer.repeatMode = Player.REPEAT_MODE_ALL
         exoPlayer.prepare()
@@ -186,7 +204,7 @@ class MusicService : Service(), CoroutineScope, MusicController {
     }
 
     override fun updatePosition(process: Int) {
-        exoPlayer.seekTo((exoPlayer.duration * (process.toFloat() /100)).toLong())
+        exoPlayer.seekTo((exoPlayer.duration * (process.toFloat() / 100)).toLong())
     }
 
     override fun toggleShuffle() {
@@ -194,7 +212,7 @@ class MusicService : Service(), CoroutineScope, MusicController {
     }
 
     override fun toggleRepeat() {
-        exoPlayer.repeatMode = when(exoPlayer.repeatMode) {
+        exoPlayer.repeatMode = when (exoPlayer.repeatMode) {
             Player.REPEAT_MODE_OFF -> Player.REPEAT_MODE_ALL
             Player.REPEAT_MODE_ALL -> Player.REPEAT_MODE_ONE
             else -> Player.REPEAT_MODE_OFF

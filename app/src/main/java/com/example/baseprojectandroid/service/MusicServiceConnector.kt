@@ -10,6 +10,7 @@ import com.example.baseprojectandroid.model.Playlist
 import com.example.baseprojectandroid.model.Position
 import com.example.baseprojectandroid.model.Song
 import kotlinx.coroutines.flow.StateFlow
+import java.security.spec.ECField
 
 class MusicServiceConnector constructor(
     context: Context
@@ -40,7 +41,11 @@ class MusicServiceConnector constructor(
             // service using a Messenger, so here we get a client-side
             // representation of that from the raw IBinder object.
             this@MusicServiceConnector.service = (service as MusicService.MusicBinder).getService()
-            listOnServiceConnectedCallback.forEach { it.onConnected() }
+            try {
+                listOnServiceConnectedCallback.forEach { it.onConnected() }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
             Log.d("fdsfa", "onServiceConnected: ")
 
             isBound = true

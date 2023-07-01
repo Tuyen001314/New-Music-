@@ -1,6 +1,5 @@
 package com.example.baseprojectandroid.ui.component.home
 
-import android.util.Log
 import android.util.Size
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -24,14 +23,17 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class HomeFragment : BaseFragmentBinding<FragmentHomeBinding, HomeViewModel>() {
     private val recentGroup = HorizontallyGroup()
-    private val fakeDownloadSection = Section()
+    private val downloadSection = Section(HeaderItem("Downloaded Song"))
     private val mainAdapter = GroupieAdapter()
     override fun getContentViewId(): Int = R.layout.fragment_home
 
     override fun initializeViews() {
         super.initializeViews()
-        dataBinding.rvContentMain.adapter = mainAdapter
-        dataBinding.rvContentMain.layoutManager = LinearLayoutManager(requireContext())
+        dataBinding.rvContentMain.apply {
+            adapter = mainAdapter
+            dataBinding.rvContentMain.layoutManager = LinearLayoutManager(requireContext())
+            itemAnimator = null
+        }
         initMainAdapter()
     }
 
@@ -55,12 +57,9 @@ class HomeFragment : BaseFragmentBinding<FragmentHomeBinding, HomeViewModel>() {
 
                 launch {
                     viewModel.downloadSong.collect {
-                        fakeDownloadSection.update(it.map {
-                            CommonVerticalItem(it).also {
-                                Log.d(
-                                    "fkjdshajfka",
-                                    "registerObservers: $it"
-                                )
+                        downloadSection.update(it.map {
+                            CommonVerticalItem(it) {
+                                viewModel.playSong(it.song)
                             }
                         })
                     }
@@ -75,7 +74,6 @@ class HomeFragment : BaseFragmentBinding<FragmentHomeBinding, HomeViewModel>() {
         mainAdapter.add(recentGroup)
 
         //add downloaded list
-        fakeDownloadSection.add(Section(HeaderItem("Downloaded Song")))
-        mainAdapter.add(fakeDownloadSection)
+        mainAdapter.add(downloadSection)
     }
 }

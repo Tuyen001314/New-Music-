@@ -24,4 +24,7 @@ interface SongRepository {
         creator: Int
     ): Flow<DataState<InsertSongResponse>>
 
+    fun cancelCurrentUploading()
+
+    fun likeSong()
 }

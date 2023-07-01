@@ -15,7 +15,7 @@ data class Song(
     @SerializedName("createdAt")
     var createdAt: String = "",
     @SerializedName("creatorId")
-    var creator: User = User.DEFAULT,
+    var creatorId: Int = 0,
     @SerializedName("downloadCount")
     var downloadCount: Int = 0,
     @SerializedName("id")
@@ -27,12 +27,11 @@ data class Song(
     @SerializedName("thumbnailUrl")
     var thumbnailUrl: String = "",
     @SerializedName("url")
-    var url: String = ""
+    var url: String = "",
 ): Parcelable {
-    companion object {
-        val EMPTY = Song(creator = User.DEFAULT)
-    }
+    var creator: User = User.DEFAULT
 
+    fun setCreator(user: User) = apply { creator = user }
     fun toMediaItem() = MediaItem.fromUri(url)
         .buildUpon()
         .setMediaId(id.toString())
@@ -50,4 +49,10 @@ data class Song(
     fun toSinglePlaylist() = Playlist(
         songs = listOf(this)
     )
+
+    companion object {
+        val EMPTY = Song().apply {
+            creator = User.DEFAULT
+        }
+    }
 }

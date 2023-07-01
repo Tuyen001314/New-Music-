@@ -46,33 +46,49 @@ class NameFragment : BaseFragmentBinding<FragmentNameBinding, NameViewModel>() {
         localStorage.nameUser = nameUser
         localStorage.isFirstTime = false
     }
-    private  val   scope = SupervisorJob() + Dispatchers.IO
 
     private fun callApiRegister(nameUser: String, username: String, password: String, image: File? = null) {
-        val handler = CoroutineExceptionHandler { coroutineContext, throwable ->
-            throwable.printStackTrace()
-        }
+//        val handler = CoroutineExceptionHandler { coroutineContext, throwable ->
+//            throwable.printStackTrace()
+//        }
 
-        viewModel.viewModelScope.launch(Dispatchers.IO) {
-            viewModel.callApiRegister(username, password, nameUser, image).collect { state ->
-                when (state) {
-                    is AccountState.Loading -> {
-                        withContext(Dispatchers.Main) {
-                            showToast("Đang chờ xử lý. Vui lòng đợi trong giây lát")
-                        }
-                    }
-                    is AccountState.Finished -> {
-                        withContext(Dispatchers.Main) {
-                            showToast("Đăng ký thành công")
-                        }
-                        saveDataUser(viewModel.username, viewModel.password, dataBinding.edtNameUser.text.toString())
-                        startActivity(Intent(context, MainActivity::class.java))
-                    }
-                    is AccountState.Failed -> {
-                        withContext(Dispatchers.Main) {
-                            showToast("Đăng ký thất bại")
-                        }
-                    }
+//        viewModel.viewModelScope.launch(Dispatchers.IO) {
+            viewModel.signIn(username, password, nameUser, image)
+//            viewModel.callApiRegister(username, password, nameUser, image).collect { state ->
+//                when (state) {
+//                    is AccountState.Loading -> {
+//                        withContext(Dispatchers.Main) {
+//                            showToast("Đang chờ xử lý. Vui lòng đợi trong giây lát")
+//                        }
+//                    }
+//                    is AccountState.Finished -> {
+//                        withContext(Dispatchers.Main) {
+//                            showToast("Đăng ký thành công")
+//                        }
+//                        saveDataUser(viewModel.username, viewModel.password, dataBinding.edtNameUser.text.toString())
+//                        startActivity(Intent(context, MainActivity::class.java))
+//                    }
+//                    is AccountState.Failed -> {
+//                        withContext(Dispatchers.Main) {
+//                            showToast("Đăng ký thất bại")
+//                        }
+//                    }
+//                }
+//            }
+//        }
+    }
+
+    override fun registerObservers() {
+        super.registerObservers()
+        viewModel.signInState.observe(viewLifecycleOwner) {
+            it?.let {
+                it.whenFailure {
+                    showToast("Failure. Message = ${it.message}")
+                }.whenSuccess {
+                    showToast("Đăng ký thành công")
+                    startActivity(Intent(context, MainActivity::class.java))
+                }.whenLoading {
+                    showToast("Đang chờ xử lý. Vui lòng đợi trong giây lát")
                 }
             }
         }

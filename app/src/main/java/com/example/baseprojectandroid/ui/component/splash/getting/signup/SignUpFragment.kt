@@ -8,6 +8,7 @@ import com.example.baseprojectandroid.R
 import com.example.baseprojectandroid.databinding.FragmentSignUpBinding
 import com.example.baseprojectandroid.model.AccountState
 import com.example.baseprojectandroid.ui.base.BaseFragmentBinding
+import com.example.baseprojectandroid.ui.base.launchSafe
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,7 +30,7 @@ class SignUpFragment : BaseFragmentBinding<FragmentSignUpBinding, SignUpViewMode
     }
 
     private fun checkInfoUserFromServer(userName: String) {
-        viewModel.viewModelScope.launch(Dispatchers.IO) {
+        viewModel.viewModelScope.launchSafe(Dispatchers.IO) {
             viewModel.fetchUser(userName).collect { state ->
                 when (state) {
                     is AccountState.Loading -> {

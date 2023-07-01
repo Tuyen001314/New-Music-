@@ -9,8 +9,9 @@
         android:id="@+id/tv_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Header"
+        android:layout_marginVertical="@dimen/common_16dp"
         android:fontFamily="@font/muli_semibold"
+        android:text="Header"
         android:textColor="@color/white"
         android:textSize="24sp" />
 </layout>

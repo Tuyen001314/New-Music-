@@ -13,7 +13,8 @@ import com.xwray.groupie.viewbinding.BindableItem
 import java.util.Objects
 
 class CommonVerticalItem(
-    private val songUiState: SongUiState
+    private val songUiState: SongUiState,
+    private val onClick: () -> Unit
 ) : BindableItem<LayoutCommonVerticalItemBinding>() {
     override fun bind(viewBinding: LayoutCommonVerticalItemBinding, position: Int) {
         Glide.with(viewBinding.root.context)
@@ -27,6 +28,9 @@ class CommonVerticalItem(
         viewBinding.tvSongName.setTextColor(
             if (songUiState.isPlaying) Color.parseColor("#1ED760") else Color.WHITE
         )
+        viewBinding.root.setOnClickListener {
+            onClick()
+        }
     }
 
     override fun hasSameContentAs(other: Item<*>): Boolean {

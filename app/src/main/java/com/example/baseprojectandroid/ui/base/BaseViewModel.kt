@@ -9,7 +9,7 @@ open class BaseViewModel : ViewModel() {
         throwable.printStackTrace()
     }
 
-    protected fun CoroutineScope.launchSafe(
+    fun CoroutineScope.launchSafe(
         coroutineContext: CoroutineContext,
         start: CoroutineStart = CoroutineStart.DEFAULT,
         block: suspend CoroutineScope.() -> Unit
@@ -17,4 +17,17 @@ open class BaseViewModel : ViewModel() {
         val job = SupervisorJob() + coroutineContext
         launch(job + coroutineExceptionHandler, start, block)
     }
+}
+
+val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
+    throwable.printStackTrace()
+}
+
+fun CoroutineScope.launchSafe(
+    coroutineContext: CoroutineContext,
+    start: CoroutineStart = CoroutineStart.DEFAULT,
+    block: suspend CoroutineScope.() -> Unit
+) {
+    val job = SupervisorJob() + coroutineContext
+    launch(job + coroutineExceptionHandler, start, block)
 }

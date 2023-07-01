@@ -2,6 +2,8 @@ package com.example.baseprojectandroid.ui.component.library
 
 import android.content.Context
 import android.net.Uri
+import android.util.AtomicFile
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.baseprojectandroid.data.response.InsertSongResponse
@@ -10,18 +12,21 @@ import com.example.baseprojectandroid.model.AccountState
 import com.example.baseprojectandroid.repository.song.SongRepository
 import com.example.baseprojectandroid.server.ApiClient
 import com.example.baseprojectandroid.ui.base.BaseViewModel
+import com.example.baseprojectandroid.upload.UploadRequestBody
 import com.example.baseprojectandroid.utils.DataState
 import com.example.baseprojectandroid.utils.Logger
+import com.google.common.util.concurrent.AtomicDouble
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,9 +37,6 @@ class UploadTrackViewModel @Inject constructor(
     var currentImageFile = MutableLiveData<File>()
     var currentSongFile = MutableLiveData<File>()
     var uploadSongResponse = MutableLiveData<DataState<InsertSongResponse>>()
-    fun uploadSong(trackName: String) {
-
-    }
 
     fun onImageUriSelected(context: Context, uri: Uri) {
         currentImageFile.postValue(uri.asFileFromDocumentUri(context))
@@ -78,32 +80,86 @@ class UploadTrackViewModel @Inject constructor(
 
 
         //create multipartBody
+        var imageUploadProgress = AtomicDouble(0.0)
+        var songUploadProcess = AtomicDouble(0.0)
+        var trackProcess: Boolean
+
+        fun startTrackProcess() {
+            trackProcess = true
+            val executor = Executors.newSingleThreadScheduledExecutor()
+            var trackTask: Runnable? = null
+            trackTask = Runnable {
+                if (trackProcess) {
+                    synchronized(this) {
+                        val uploadWithImage = currentImageFile.value != null
+                        val realImageUploadProgress = if (uploadWithImage) imageUploadProgress.get() else 1.0
+                        uploadSongResponse.postValue(
+                            DataState.Processing((realImageUploadProgress * songUploadProcess.get()).toFloat() * 100)
+                        )
+                    }
+                    executor.schedule(trackTask, 200, TimeUnit.MILLISECONDS)
+                }
+            }
+            executor.execute(trackTask)
+        }
+
+        fun stopTrackProcess() {
+            trackProcess = false
+        }
+
         val imageMultipart = currentImageFile.value.let {
             MultipartBody.Part.createFormData(
                 "image", it?.name ?: "",
-                it?.asRequestBody(MultipartBody.FORM) ?: "".toRequestBody(MultipartBody.FORM)
+                it?.let {
+                    UploadRequestBody(it) {
+                        imageUploadProgress.set(it.toDouble())
+                    }
+                } ?: "".toRequestBody(MultipartBody.FORM)
             )
         }
 
         val audioMultipart = currentSongFile.value.let {
             MultipartBody.Part.createFormData(
                 "song", it?.name ?: "",
-                it?.asRequestBody(MultipartBody.FORM) ?: "".toRequestBody(MultipartBody.FORM)
-            )
+                it?.let {
+                    UploadRequestBody(it) {
+                        songUploadProcess.set(it.toDouble())
+                    }
+                } ?: "".toRequestBody(MultipartBody.FORM))
         }
 
         //call api
-        uploadSongResponse.postValue(DataState.Loading)
+        startTrackProcess()
         viewModelScope.launchSafe(Dispatchers.Default) {
             songRepository.uploadSong(name, imageMultipart, audioMultipart, category, creator)
                 .collect {
                     it.whenFailure {
-                        uploadSongResponse.postValue(DataState.Failure(it.message))
+                        stopTrackProcess()
+
+                        //post value with synchronized block to prevent conflict when postValue
+                        //many time when we track processing of uploading
+                        synchronized(this@UploadTrackViewModel) {
+                            uploadSongResponse.postValue(DataState.Failure(it.message))
+                        }
                     }.whenSuccess {
-                        uploadSongResponse.postValue(DataState.Success(data = it.data))
+                        stopTrackProcess()
+
+                        //post value with synchronized block to prevent conflict when postValue
+                        //many time when we track processing of uploading
+                        synchronized(this@UploadTrackViewModel) {
+                            uploadSongResponse.postValue(DataState.Success(data = it.data))
+                        }
                     }
                 }
         }
+    }
+
+    fun cancelCurrentUploading() {
+        songRepository.cancelCurrentUploading()
+    }
+
+    fun retryUpload() {
+
     }
 
 

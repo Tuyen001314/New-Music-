@@ -3,12 +3,17 @@ package com.example.baseprojectandroid.repository.song
 import android.os.Environment
 import android.util.Log
 import com.example.baseprojectandroid.data.response.InsertSongResponse
+import com.example.baseprojectandroid.local.LocalData
+import com.example.baseprojectandroid.local.LocalStorage
 import com.example.baseprojectandroid.model.Song
+import com.example.baseprojectandroid.model.User
 import com.example.baseprojectandroid.server.ApiClient
 import com.example.baseprojectandroid.utils.DataState
+import com.example.baseprojectandroid.utils.Logger
 import com.skydoves.sandwich.message
 import com.skydoves.sandwich.suspendMapSuccess
 import com.skydoves.sandwich.suspendOnError
+import com.skydoves.sandwich.suspendOnException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -26,21 +31,46 @@ import kotlin.coroutines.CoroutineContext
 
 class SongRepositoryImpl @Inject constructor(
     private val api: ApiClient,
+    private val localData: LocalStorage,
     private val io: CoroutineContext
 ) : SongRepository {
+    private var currentUploadCall: Call<InsertSongResponse>? = null
     override fun getSongById(id: String) {
         TODO("Not yet implemented")
     }
 
     override fun getAllSong(): Flow<DataState<List<Song>>> = flow {
-        api.getAllSong()
-            .suspendMapSuccess {
-                emit(DataState.Success(data = this))
-            }
-            .suspendOnError {
-                emit(DataState.Failure(message = message()))
-            }
-    }.flowOn(io)
+        emit(
+            DataState.Success(
+                data = listOf(
+                    Song(
+                        id = 1,
+                        name = "Ung qua chung",
+                        url = "https://firebasestorage.googleapis.com/v0/b/music-8fef0.appspot.com/o/music%2F%C6%AFng%20Qu%C3%A1%20Ch%E1%BB%ABng%20-%20AMEE.mp3?alt=media&token=3201a2c5-fbd4-4924-940e-dbadb6c91bb0",
+                        thumbnailUrl = "https://firebasestorage.googleapis.com/v0/b/music-8fef0.appspot.com/o/image%2Fartworks-c50r8eqmm2lxm78x-qpupzg-t500x500_20230328111338.jpg?alt=media&token=c0eff59c-50c1-4ba7-91dd-748a065904ec",
+                    ).setCreator(User(name = "AMEE")),
+                    Song(
+                        id = 2,
+                        name = "Ex's hate me",
+                        url = "https://firebasestorage.googleapis.com/v0/b/music-8fef0.appspot.com/o/music%2FExsHateMe-BRayMasewAMee-5878683.mp3?alt=media&token=03820468-365f-4b5e-9ce4-1b214f766ec9",
+                        thumbnailUrl = "https://firebasestorage.googleapis.com/v0/b/music-8fef0.appspot.com/o/image%2F1550063180850.jpg?alt=media&token=6459e61d-ba60-4643-8c25-31d6114316b9",
+                    ).setCreator(User(name = "AMEE")),
+                    Song(
+                        id = 3,
+                        name = "Đen đá không đường",
+                        url = "https://firebasestorage.googleapis.com/v0/b/music-8fef0.appspot.com/o/music%2FDenDaKhongDuongRapVersion-AMeeDMex-6009199.mp3?alt=media&token=7d64740f-507f-4a8c-8fa5-40d6e08e604d",
+                        thumbnailUrl = "https://firebasestorage.googleapis.com/v0/b/music-8fef0.appspot.com/o/image%2F8c9f583a79f97a92cd585c8c2d526cfc.jpg?alt=media&token=1f96b909-8e6d-42a8-86b4-53c13cc077b4",
+                    ).setCreator(User(name = "AMEE")),
+                    Song(
+                        id = 4,
+                        name = "hai mươi hai",
+                        url = "https://firebasestorage.googleapis.com/v0/b/music-8fef0.appspot.com/o/music%2FHaiMuoiHai22-HuaKimTuyenAMEE-7231237.mp3?alt=media&token=c8f90f24-3d21-442a-acaa-c0565c664dd0",
+                        thumbnailUrl = "https://firebasestorage.googleapis.com/v0/b/music-8fef0.appspot.com/o/image%2F1653363505428_300.jpg?alt=media&token=2c0daa37-e6ee-4c02-9d0e-e0f1c13ce796",
+                    ).setCreator(User(name = "AMEE"))
+                )
+            )
+        )
+    }
 
     override fun getAllSongLocal(): Flow<DataState<List<Song>>> = flow {
         emit(DataState.Loading)
@@ -65,32 +95,40 @@ class SongRepositoryImpl @Inject constructor(
         category: Int,
         creator: Int
     ): Flow<DataState<InsertSongResponse>> = callbackFlow {
-        api.uploadSong(name, image, song, category, creator)
-            .enqueue(object : Callback<InsertSongResponse> {
-                override fun onResponse(
-                    call: Call<InsertSongResponse>, response: Response<InsertSongResponse>
-                ) {
-                    if (response.isSuccessful) {
-                        CoroutineScope(io).launch {
-                            trySend(DataState.Success("ok", response.body()))
-                            Log.d("buituyen", "acas")
-                        }
-                    } else {
-                        CoroutineScope(io).launch {
-                            trySend(DataState.Failure(message = response.message()))
-                        }
-                    }
-                }
-
-                override fun onFailure(call: Call<InsertSongResponse>, t: Throwable) {
+        currentUploadCall = api.uploadSong(name, image, song, category, creator)
+        currentUploadCall!!.enqueue(object : Callback<InsertSongResponse> {
+            override fun onResponse(
+                call: Call<InsertSongResponse>, response: Response<InsertSongResponse>
+            ) {
+                if (response.isSuccessful) {
                     CoroutineScope(io).launch {
-                        trySend(DataState.Failure(message = t.message, error = t))
+                        trySend(DataState.Success("ok", response.body()))
+                        Log.d("buituyen", "acas")
                     }
-                    Log.d("buituyen", "aca34231s")
+                } else {
+                    CoroutineScope(io).launch {
+                        trySend(DataState.Failure(message = response.message()))
+                    }
                 }
-            })
+            }
+
+            override fun onFailure(call: Call<InsertSongResponse>, t: Throwable) {
+                CoroutineScope(io).launch {
+                    trySend(DataState.Failure(message = t.message, error = t))
+                }
+                Log.d("buituyen", "aca34231s")
+            }
+        })
 
         awaitClose { }
+    }
+
+    override fun cancelCurrentUploading() {
+        currentUploadCall?.cancel()
+    }
+
+    override fun likeSong() {
+
     }
 
 

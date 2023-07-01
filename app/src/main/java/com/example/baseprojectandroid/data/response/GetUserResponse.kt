@@ -1,10 +1,9 @@
-package com.example.baseprojectandroid.data.api
+package com.example.baseprojectandroid.data.response
 
 import com.example.baseprojectandroid.model.User
-import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 
-class ResponseModel {
+class GetUserResponse {
 
     @SerializedName("message")
     var message: String? = null

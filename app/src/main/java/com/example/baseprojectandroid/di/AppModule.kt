@@ -1,9 +1,12 @@
 package com.example.baseprojectandroid.di
 
 import android.content.Context
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.bumptech.glide.Glide
 import com.example.baseprojectandroid.local.LocalData
 import com.example.baseprojectandroid.local.LocalStorage
+import com.example.baseprojectandroid.model.User
 import com.example.baseprojectandroid.service.MusicServiceConnector
 import com.example.baseprojectandroid.utils.Network
 import dagger.Module
@@ -39,4 +42,8 @@ class AppModule {
     @Provides
     @Singleton
     fun provideGlide(@ApplicationContext context: Context) = Glide.with(context)
+
+    @Provides
+    @Singleton
+    fun provideCurrentUserLiveData(localStorage: LocalStorage): LiveData<User> = MutableLiveData(localStorage.currentUser)
 }

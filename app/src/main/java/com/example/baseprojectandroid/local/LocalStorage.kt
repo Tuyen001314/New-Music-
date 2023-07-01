@@ -1,5 +1,6 @@
 package com.example.baseprojectandroid.local
 
+import com.example.baseprojectandroid.model.User
 import kotlin.reflect.KClass
 
 interface LocalStorage {
@@ -16,4 +17,6 @@ interface LocalStorage {
     var password: String
     var nameUser: String
     var isFirstTime: Boolean
+
+    var currentUser: User?
 }

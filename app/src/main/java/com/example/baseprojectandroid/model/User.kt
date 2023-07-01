@@ -11,6 +11,8 @@ data class User(
     var avatarUrl: String? = "",
     @SerializedName("createdAt")
     var createdAt: String = "",
+
+    @Transient
     @SerializedName("followers")
     var followers: List<User> = listOf(),
     @SerializedName("followersCount")
@@ -21,6 +23,8 @@ data class User(
     var name: String = "",
     @SerializedName("password")
     var password: String = "",
+
+    @Transient
     @SerializedName("playlists")
     var playlists: List<Playlist> = listOf(),
     @SerializedName("userName")

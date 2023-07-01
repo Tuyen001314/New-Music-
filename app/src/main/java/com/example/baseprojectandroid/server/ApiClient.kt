@@ -1,10 +1,10 @@
 package com.example.baseprojectandroid.server
 
-import com.example.baseprojectandroid.data.api.ResponseModel
+import com.example.baseprojectandroid.data.response.GetUserByUserNameResponse
+import com.example.baseprojectandroid.data.response.GetUserResponse
 import com.example.baseprojectandroid.data.response.InsertSongResponse
 import com.example.baseprojectandroid.model.ResponseImage
 import com.example.baseprojectandroid.model.Song
-import com.example.baseprojectandroid.model.UploadResponse
 import com.skydoves.sandwich.ApiResponse
 import okhttp3.MultipartBody
 import retrofit2.Call
@@ -16,7 +16,7 @@ interface ApiClient {
     suspend fun login()
 
     @GET("api/Users/checkUserName")
-    suspend fun getUser(@Query("username") userName: String): ResponseModel
+    suspend fun getUser(@Query("username") userName: String): GetUserByUserNameResponse
 
 //    @POST("/api/Users/insert")
 
@@ -29,7 +29,7 @@ interface ApiClient {
 
     @POST("/api/Users/insert")
     @Multipart
-    suspend fun insertUser(@Part("name") name: String, @Part("username") username: String, @Part("password") password: String, @Part image: MultipartBody.Part): ResponseModel
+    suspend fun insertUser(@Part("name") name: String, @Part("username") username: String, @Part("password") password: String, @Part image: MultipartBody.Part): GetUserResponse
 
     @Multipart
     @POST("/api/image/upload")

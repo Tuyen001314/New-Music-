@@ -2,14 +2,11 @@ package com.example.baseprojectandroid.ui.component.library.upload
 
 import android.app.Activity
 import android.content.Intent
-import android.net.Uri
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.example.baseprojectandroid.R
 import com.example.baseprojectandroid.databinding.FragmentUploadTrackBinding
-import com.example.baseprojectandroid.extension.getFileName
 import com.example.baseprojectandroid.extension.gone
-import com.example.baseprojectandroid.extension.snackbar
 import com.example.baseprojectandroid.extension.visible
 import com.example.baseprojectandroid.ui.base.BaseFragmentBinding
 import com.example.baseprojectandroid.ui.base.BaseViewModel
@@ -19,9 +16,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
 
 
 @AndroidEntryPoint
@@ -157,6 +151,11 @@ class UploadTrackFragment :
     private fun uploadSong() {
         uploadTrackViewModel.uploadSong(dataBinding.etTrackName.text.toString(), 1, 1)
         openFragment(UploadTrackDetailFragment())
+    }
+
+    override fun onBackPressed(): Boolean {
+        removeFragment(this)
+        return true
     }
 
     companion object {

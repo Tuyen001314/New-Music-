@@ -1,6 +1,7 @@
 package com.example.baseprojectandroid.local
 
 import android.content.Context
+import com.example.baseprojectandroid.model.User
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -74,6 +75,11 @@ class LocalData @Inject constructor(
         get() = getData("IS_FIRST_TIME", Boolean::class) ?: true
         set(value) {
             putData("IS_FIRST_TIME", value)
+        }
+    override var currentUser: User?
+        get() = getData("current_user", User::class)
+        set(value) {
+            putData("current_user", value)
         }
 
     override var password: String

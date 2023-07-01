@@ -1,8 +1,6 @@
 package com.example.baseprojectandroid.ui.component.library.upload
 
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import com.example.baseprojectandroid.R
 import com.example.baseprojectandroid.databinding.FragmentUploadDetailBinding
 import com.example.baseprojectandroid.extension.gone
@@ -35,11 +33,13 @@ class UploadTrackDetailFragment :
                     groupSuccess.visible()
                     groupProcessing.gone()
                 }
-            }.whenLoading {
+            }.whenProcessing {
                 dataBinding.apply {
                     groupFailure.gone()
                     groupSuccess.gone()
                     groupProcessing.visible()
+                    progressUpload.progress = it.process.toInt()
+                    tvProgress.text = "${it.process.toInt()}%"
                 }
             }
         }
@@ -50,6 +50,14 @@ class UploadTrackDetailFragment :
         super.registerListeners()
         dataBinding.btBack.setOnClickListener {
             onBackPressed()
+        }
+
+        dataBinding.btCancel.setOnClickListener {
+            uploadTrackViewModel.cancelCurrentUploading()
+        }
+
+        dataBinding.btTryAgain.setOnClickListener {
+            showToast("Coming soon")
         }
     }
 

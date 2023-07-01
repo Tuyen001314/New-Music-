@@ -1,19 +1,11 @@
 package com.example.baseprojectandroid.ui.component.splash.getting.signup
 
-import androidx.lifecycle.viewModelScope
-import com.example.baseprojectandroid.data.api.ResponseModel
 import com.example.baseprojectandroid.model.AccountState
 import com.example.baseprojectandroid.server.ApiClient
 import com.example.baseprojectandroid.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
-import okhttp3.ResponseBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
