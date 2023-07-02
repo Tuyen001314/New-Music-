@@ -51,10 +51,15 @@ interface ApiClient {
         @Part("creator") creator: Int
     ): Call<InsertSongResponse>
 
-
     @GET("/api/Search")
     suspend fun search(
         @Query("searchText") searchText: String ,
         @Query("userId") userId: Int
     ):  ApiResponse<List<ResponseSearch>>
+
+    @POST("/api/Users/changeAvatar")
+    suspend fun changeAvatar(
+        @Part("userId") userId: Int,
+        @Part("image") image: MultipartBody.Part
+    ): Call<InsertSongResponse>
 }

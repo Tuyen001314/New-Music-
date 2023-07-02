@@ -5,6 +5,7 @@ import android.os.Parcelable
 import androidx.core.os.bundleOf
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
+import androidx.room.Ignore
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
@@ -49,6 +50,16 @@ data class Song(
     fun toSinglePlaylist() = Playlist(
         songs = listOf(this)
     )
+
+    fun toFavorite(): FavoriteEntity {
+        val song = this
+        return FavoriteEntity().apply {
+            id = song.id
+            path = song.url
+            isLocal = false
+            isFavorite = true
+        }
+    }
 
     companion object {
         val EMPTY = Song().apply {

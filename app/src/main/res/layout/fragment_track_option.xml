@@ -61,7 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"
             android:background="?attr/selectableItemBackground"
-            android:padding="@dimen/common_10dp">
+            android:padding="@dimen/common_16dp">
 
             <ImageView
                 android:id="@+id/iv_like"
@@ -86,19 +86,32 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
-            android:padding="@dimen/common_10dp">
+            android:padding="@dimen/common_16dp">
 
             <ImageView
                 android:id="@+id/iv_download"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="34dp"
+                android:layout_marginEnd="16dp"
+                android:visibility="visible"
                 android:src="@drawable/ic_download_outline" />
+
+            <com.airbnb.lottie.LottieAnimationView
+                app:lottie_rawRes="@raw/anim"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                android:visibility="gone"
+                app:lottie_colorFilter="@color/spotify_color"
+                android:id="@+id/animationView"
+                android:layout_width="30dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginStart="30dp"
+                android:layout_height="30dp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="16dp"
                 android:fontFamily="@font/muli_semibold"
                 android:text="Download"
                 android:textColor="@color/white"
@@ -111,7 +124,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
-            android:padding="@dimen/common_10dp">
+            android:padding="@dimen/common_16dp">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -135,7 +148,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
-            android:padding="@dimen/common_10dp">
+            android:padding="@dimen/common_16dp">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -153,7 +166,6 @@
                 android:textSize="16sp" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
-
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 </layout>

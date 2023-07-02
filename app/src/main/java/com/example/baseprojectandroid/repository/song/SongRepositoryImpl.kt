@@ -1,6 +1,7 @@
 package com.example.baseprojectandroid.repository.song
 
 import android.os.Environment
+import android.provider.ContactsContract.Data
 import android.util.Log
 import com.example.baseprojectandroid.data.response.InsertSongResponse
 import com.example.baseprojectandroid.local.LocalData
@@ -121,6 +122,32 @@ class SongRepositoryImpl @Inject constructor(
         })
 
         awaitClose { }
+    }
+
+    override fun uploadAvatar(userId: Int, image: MultipartBody.Part): Flow<DataState<InsertSongResponse>> = callbackFlow {
+        currentUploadCall = api.changeAvatar(userId, image)
+        currentUploadCall!!.enqueue(object : Callback<InsertSongResponse> {
+            override fun onResponse(
+                call: Call<InsertSongResponse>, response: Response<InsertSongResponse>
+            ) {
+                if (response.isSuccessful) {
+                    CoroutineScope(io).launch {
+                        trySend(DataState.Success("ok", response.body()))
+                    }
+                } else {
+                    CoroutineScope(io).launch {
+                        trySend(DataState.Failure(message = response.message()))
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<InsertSongResponse>, t: Throwable) {
+                CoroutineScope(io).launch {
+                    trySend(DataState.Failure(message = t.message, error = t))
+                }
+                Log.d("buituyen", "aca34231s")
+            }
+        })
     }
 
     override fun cancelCurrentUploading() {

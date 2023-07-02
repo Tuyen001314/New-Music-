@@ -24,6 +24,11 @@ interface SongRepository {
         creator: Int
     ): Flow<DataState<InsertSongResponse>>
 
+    fun uploadAvatar(
+        userId: Int,
+        image: MultipartBody.Part
+    ): Flow<DataState<InsertSongResponse>>
+
     fun cancelCurrentUploading()
 
     fun likeSong()

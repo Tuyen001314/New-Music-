@@ -22,7 +22,7 @@ class SearchViewModel @Inject constructor(private val api: ApiClient) : BaseView
         api.search(textSearch, userId).suspendMapSuccess {
             listResultSearch = this
         }.suspendOnError {
-
+            
         }
     }
 }

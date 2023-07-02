@@ -59,6 +59,13 @@ class FakeSongRepositoryImpl @Inject constructor() : SongRepository {
 
     }
 
+    override fun uploadAvatar(
+        userId: Int,
+        image: MultipartBody.Part
+    ): Flow<DataState<InsertSongResponse>> {
+        TODO("Not yet implemented")
+    }
+
     override fun cancelCurrentUploading() {
 
     }

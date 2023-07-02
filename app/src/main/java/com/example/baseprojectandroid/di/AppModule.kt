@@ -3,7 +3,10 @@ package com.example.baseprojectandroid.di
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.room.Room
 import com.bumptech.glide.Glide
+import com.example.baseprojectandroid.data.AppDatabase
+import com.example.baseprojectandroid.data.DatabaseInfo
 import com.example.baseprojectandroid.local.LocalData
 import com.example.baseprojectandroid.local.LocalStorage
 import com.example.baseprojectandroid.model.User
@@ -46,4 +49,14 @@ class AppModule {
     @Provides
     @Singleton
     fun provideCurrentUserLiveData(localStorage: LocalStorage): LiveData<User> = MutableLiveData(localStorage.currentUser)
+
+    @Singleton
+    @Provides
+    fun appDatabase(
+        @ApplicationContext context: Context,
+        @DatabaseInfo dbName: String
+    ): AppDatabase {
+        return Room.databaseBuilder(context, AppDatabase::class.java, dbName)
+            .build()
+    }
 }
