@@ -1,26 +1,19 @@
 package com.example.baseprojectandroid.ui.component.setting
 
+import android.content.Intent
 import android.util.Log
-import android.widget.LinearLayout
-import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.baseprojectandroid.R
 import com.example.baseprojectandroid.databinding.FragmentSettingBinding
-import com.example.baseprojectandroid.databinding.FragmentYourLibraryBinding
 import com.example.baseprojectandroid.model.Music
-import com.example.baseprojectandroid.model.Song
-import com.example.baseprojectandroid.ui.base.BaseFragment
 import com.example.baseprojectandroid.ui.base.BaseFragmentBinding
-import com.example.baseprojectandroid.ui.component.library.adapter.YourLibraryAdapter
-import com.example.baseprojectandroid.ui.component.library.adapter.YourLibraryPlaylistAdapter
 import com.example.baseprojectandroid.ui.component.library.profile.ProfileFragment
 import com.example.baseprojectandroid.ui.component.setting.adapter.SettingAdapter
+import com.example.baseprojectandroid.ui.component.splash.SplashActivity
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.logging.Logger
 
 
 @AndroidEntryPoint
-class SettingFragment: BaseFragmentBinding<FragmentSettingBinding, SettingViewModel>() {
+class SettingFragment : BaseFragmentBinding<FragmentSettingBinding, SettingViewModel>() {
 
     override fun getContentViewId(): Int = R.layout.fragment_setting
     private lateinit var adapter: SettingAdapter
@@ -35,7 +28,7 @@ class SettingFragment: BaseFragmentBinding<FragmentSettingBinding, SettingViewMo
         list.add(Music("Lần cuối"))
         Log.d("buituyen", list.size.toString())
 
-        adapter.submitList(list,true)
+        adapter.submitList(list, true)
 
         dataBinding.recyclerViewUpload.adapter = adapter
     }
@@ -45,6 +38,12 @@ class SettingFragment: BaseFragmentBinding<FragmentSettingBinding, SettingViewMo
 
         dataBinding.viewProfile.setOnClickListener {
             openFragment(ProfileFragment())
+        }
+
+        dataBinding.tvLogOut.setOnClickListener {
+            viewModel.logout()
+            startActivity(Intent(requireContext(), SplashActivity::class.java))
+            requireActivity().finish()
         }
     }
 

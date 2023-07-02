@@ -10,7 +10,6 @@ import android.util.Log
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.datasource.DefaultHttpDataSource
-import androidx.media3.datasource.cache.CacheDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.exoplayer.source.MediaSource
@@ -169,6 +168,7 @@ class MusicService : Service(), CoroutineScope, MusicController {
     private var currentSongIndexInPlayingPlaylist = 0
 
     override fun play(playlist: Playlist, startSongIndex: Int) {
+        if (playlist.songs.isNullOrEmpty()) return
         launch {
             _currentPlaylist.emit(playlist)
             _currentSong.emit(playlist.songs[startSongIndex])

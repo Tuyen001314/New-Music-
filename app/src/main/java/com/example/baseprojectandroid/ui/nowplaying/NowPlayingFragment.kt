@@ -156,7 +156,9 @@ class NowPlayingFragment : BaseFragmentBinding<FragmentNowPlayingBinding, BaseVi
                 tvSongNameMain.text = song.name
                 tvSongCreatorName.text = song.creator.name
                 Glide.with(ivTrackThumb)
+                    .asBitmap()
                     .load(song.thumbnailUrl)
+                    .error(R.drawable.ic_thumbnail_default)
                     .into(ivTrackThumb)
             }
         }

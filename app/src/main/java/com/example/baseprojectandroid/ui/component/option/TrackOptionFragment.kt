@@ -44,6 +44,7 @@ class TrackOptionFragment :
         Glide.with(this)
             .asBitmap()
             .load(song.thumbnailUrl)
+            .error(R.drawable.ic_thumbnail_default)
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(object : CustomTarget<Bitmap>() {
                 override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {

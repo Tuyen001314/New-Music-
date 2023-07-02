@@ -35,6 +35,7 @@ class LocalData @Inject constructor(
         try {
             return Gson().fromJson(string, object : TypeToken<T>() {}.type)
         } catch (e: Exception) {
+            e.printStackTrace()
         }
         return null
     }
@@ -80,6 +81,15 @@ class LocalData @Inject constructor(
         get() = getData("current_user", User::class)
         set(value) {
             putData("current_user", value)
+        }
+    override var allUsers: List<User>
+        get() {
+           val string =  getString("all_user")
+            return if (string.isEmpty()) emptyList()
+            else Gson().fromJson(string, object : TypeToken<List<User>>(){}.type)
+        }
+        set(value) {
+            putData("all_user", value)
         }
 
     override var password: String

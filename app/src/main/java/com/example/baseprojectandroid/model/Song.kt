@@ -7,6 +7,7 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.IgnoredOnParcel
 
 @Parcelize
 data class Song(
@@ -25,10 +26,11 @@ data class Song(
     @SerializedName("name")
     var name: String = "",
     @SerializedName("thumbnailUrl")
-    var thumbnailUrl: String = "",
+    var thumbnailUrl: String? = "",
     @SerializedName("url")
     var url: String = "",
 ): Parcelable {
+    @IgnoredOnParcel
     var creator: User = User.DEFAULT
 
     fun setCreator(user: User) = apply { creator = user }

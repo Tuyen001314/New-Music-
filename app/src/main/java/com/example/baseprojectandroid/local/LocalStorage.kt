@@ -19,4 +19,5 @@ interface LocalStorage {
     var isFirstTime: Boolean
 
     var currentUser: User?
+    var allUsers: List<User>
 }

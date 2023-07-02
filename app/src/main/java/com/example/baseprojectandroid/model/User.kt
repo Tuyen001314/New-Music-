@@ -25,7 +25,6 @@ data class User(
     var password: String = "",
 
     @Transient
-    @SerializedName("playlists")
     var playlists: List<Playlist> = listOf(),
     @SerializedName("userName")
     var userName: String = ""

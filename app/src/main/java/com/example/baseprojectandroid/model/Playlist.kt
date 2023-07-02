@@ -2,6 +2,7 @@ package com.example.baseprojectandroid.model
 
 
 import android.os.Parcelable
+import com.example.baseprojectandroid.data.SongRemote
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
@@ -9,7 +10,7 @@ import kotlinx.android.parcel.Parcelize
 data class Playlist(
     @SerializedName("createdAt")
     var createdAt: String = "",
-    @SerializedName("creatorId")
+    @SerializedName("creator")
     var creatorId: Int = 0,
     @SerializedName("favorite")
     var isFavorite: Boolean = false,

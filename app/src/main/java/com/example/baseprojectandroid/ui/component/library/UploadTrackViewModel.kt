@@ -2,19 +2,17 @@ package com.example.baseprojectandroid.ui.component.library
 
 import android.content.Context
 import android.net.Uri
-import android.util.AtomicFile
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.baseprojectandroid.data.response.InsertSongResponse
 import com.example.baseprojectandroid.extension.getFileName
 import com.example.baseprojectandroid.model.AccountState
 import com.example.baseprojectandroid.repository.song.SongRepository
+import com.example.baseprojectandroid.repository.user.UserRepository
 import com.example.baseprojectandroid.server.ApiClient
 import com.example.baseprojectandroid.ui.base.BaseViewModel
 import com.example.baseprojectandroid.upload.UploadRequestBody
 import com.example.baseprojectandroid.utils.DataState
-import com.example.baseprojectandroid.utils.Logger
 import com.google.common.util.concurrent.AtomicDouble
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -32,6 +30,7 @@ import javax.inject.Inject
 @HiltViewModel
 class UploadTrackViewModel @Inject constructor(
     private val songRepository: SongRepository,
+    private val userRepository: UserRepository,
     private val apiClient: ApiClient
 ) : BaseViewModel() {
     var currentImageFile = MutableLiveData<File>()
@@ -58,11 +57,7 @@ class UploadTrackViewModel @Inject constructor(
         return file
     }
 
-    fun uploadSong(
-        name: String,
-        category: Int,
-        creator: Int
-    ) {
+    fun uploadSong(name: String) {
         //Invalid input
         if (name.isEmpty()) {
             uploadSongResponse.postValue(
@@ -92,7 +87,8 @@ class UploadTrackViewModel @Inject constructor(
                 if (trackProcess) {
                     synchronized(this) {
                         val uploadWithImage = currentImageFile.value != null
-                        val realImageUploadProgress = if (uploadWithImage) imageUploadProgress.get() else 1.0
+                        val realImageUploadProgress =
+                            if (uploadWithImage) imageUploadProgress.get() else 1.0
                         uploadSongResponse.postValue(
                             DataState.Processing((realImageUploadProgress * songUploadProcess.get()).toFloat() * 100)
                         )
@@ -131,7 +127,13 @@ class UploadTrackViewModel @Inject constructor(
         //call api
         startTrackProcess()
         viewModelScope.launchSafe(Dispatchers.Default) {
-            songRepository.uploadSong(name, imageMultipart, audioMultipart, category, creator)
+            songRepository.uploadSong(
+                name,
+                imageMultipart,
+                audioMultipart,
+                1,
+                userRepository.getCurrentUser()!!.id
+            )
                 .collect {
                     it.whenFailure {
                         stopTrackProcess()

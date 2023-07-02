@@ -11,6 +11,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.example.baseprojectandroid.R
 import com.example.baseprojectandroid.databinding.NowPlayingLiteFragmentBinding
 import com.example.baseprojectandroid.model.Position
@@ -109,15 +110,23 @@ class NowPlayingLiteFragment : BaseFragmentBinding<NowPlayingLiteFragmentBinding
             EventBus.getDefault().post(ShowDetailPlayer())
         }
 
-        currentPlaylistAdapter.setOnItemClickListener { item, view ->  EventBus.getDefault().post(ShowDetailPlayer())}
+        currentPlaylistAdapter.setOnItemClickListener { item, view ->
+            EventBus.getDefault().post(ShowDetailPlayer())
+        }
     }
 
     private fun updateNowPlayingSong(song: Song) {
         dataBinding.ivThumb.apply {
             Glide.with(this)
+                .asBitmap()
                 .load(song.thumbnailUrl)
-                .override(100, 100)
-                .transform(CenterCrop(), RoundedCorners(20))
+                .thumbnail(Glide.with(this).asBitmap().load(R.drawable.ic_thumbnail_default))
+                .apply(
+                    RequestOptions()
+                        .override(100, 100)
+                        .placeholder(R.drawable.ic_thumbnail_default)
+                        .fallback(R.drawable.ic_thumbnail_default)
+                )
                 .into(this)
         }
     }

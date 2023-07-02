@@ -18,6 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
 import java.io.File
+import java.util.logging.Logger
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -34,8 +35,9 @@ class NameFragment : BaseFragmentBinding<FragmentNameBinding, NameViewModel>() {
 
     override fun registerListeners() {
         dataBinding.btnCreateAccount.setOnClickListener {
+            com.example.baseprojectandroid.utils.Logger.d("username = ${viewModel.username}, password = ${viewModel.password}")
             if (dataBinding.edtNameUser.text.isNotEmpty()) {
-                callApiRegister(dataBinding.edtNameUser.text.toString(), viewModel.username, viewModel.password)
+                callApiRegister(dataBinding.edtNameUser.text.toString().trim(), viewModel.username, viewModel.password)
             }
         }
     }

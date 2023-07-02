@@ -41,7 +41,7 @@ class SignUpFragment : BaseFragmentBinding<FragmentSignUpBinding, SignUpViewMode
 
                     is AccountState.Finished -> {
                         val bundle = Bundle().apply {
-                            putString("username", dataBinding.textUserName.text.toString())
+                            putString("username", dataBinding.textUserName.text.toString().trim())
                         }
                         withContext(Dispatchers.Main) {
                             Toast.makeText(context, "success", Toast.LENGTH_SHORT).show()

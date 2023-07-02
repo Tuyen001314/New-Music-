@@ -24,7 +24,7 @@ class PasswordFragment : BaseFragmentBinding<FragmentPasswordBinding, PasswordVi
                 val bundle = Bundle().apply {
                     putString(
                         "password",
-                        dataBinding.edtPass.text.toString()
+                        dataBinding.edtPass.text.toString().trim()
                     )
                     putString(
                         "username",

@@ -8,9 +8,11 @@ import android.graphics.drawable.Drawable
 import android.os.Handler
 import androidx.lifecycle.viewModelScope
 import androidx.palette.graphics.Palette
+import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import com.example.baseprojectandroid.R
 import com.example.baseprojectandroid.model.Playlist
 import com.example.baseprojectandroid.model.Position
 import com.example.baseprojectandroid.model.Song
@@ -139,7 +141,9 @@ class NowPlayingViewModel @Inject constructor(
                     }
                     glide.asBitmap()
                         .load(song.thumbnailUrl)
+                        .thumbnail(glide.asBitmap().load(R.drawable.ic_thumbnail_default))
                         .override(100, 100)
+                        .error(R.drawable.ic_thumbnail_default)
                         .into(object : CustomTarget<Bitmap>() {
                             override fun onResourceReady(
                                 resource: Bitmap,

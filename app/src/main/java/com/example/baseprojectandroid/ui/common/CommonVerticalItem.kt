@@ -19,7 +19,11 @@ class CommonVerticalItem(
     override fun bind(viewBinding: LayoutCommonVerticalItemBinding, position: Int) {
         Glide.with(viewBinding.root.context)
             .load(songUiState.song.thumbnailUrl)
+            .apply {
+                thumbnail(this.clone().load(R.drawable.ic_thumbnail_default))
+            }
             .override(100, 100)
+            .error(R.drawable.ic_thumbnail_default)
             .transform(CenterCrop(), RoundedCorners(20))
             .into(viewBinding.ivThumb)
 

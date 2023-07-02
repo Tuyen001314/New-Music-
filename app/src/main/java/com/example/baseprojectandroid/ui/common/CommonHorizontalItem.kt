@@ -3,6 +3,10 @@ package com.example.baseprojectandroid.ui.common
 import android.util.Size
 import android.view.View
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.example.baseprojectandroid.R
 import com.example.baseprojectandroid.databinding.LayoutCommonHorizontalItemBinding
 import com.example.baseprojectandroid.extension.dp
@@ -23,10 +27,11 @@ class CommonHorizontalItem(
 
             Glide.with(viewBinding.root)
                 .load(song?.thumbnailUrl ?: playlist?.songs?.getOrNull(0))
-                .override(modifier.imageSize.width, modifier.imageSize.height)
-                .apply {
-                    if (modifier.imageShape == ImageShape.CIRCLE) circleCrop()
-                }
+                .apply(RequestOptions()
+                    .override(modifier.imageSize.width, modifier.imageSize.height)
+                    .error(R.drawable.ic_thumbnail_default)
+                    .circleCrop()
+                )
                 .into(viewBinding.ivThumb)
 
             viewBinding.root.setOnClickListener {

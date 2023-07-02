@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -43,8 +42,8 @@
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_marginStart="32dp"
-            android:text="Password"
             android:layout_marginTop="36dp"
+            android:text="Password"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -66,28 +65,30 @@
 
         <Button
             android:id="@+id/btnNextSignIn"
+            style="@style/CommonFilledButton"
             android:layout_width="wrap_content"
-            android:layout_height="42dp"
-            android:background="@drawable/shape_bg_app_button"
-            android:backgroundTint="#535353"
+            android:layout_height="wrap_content"
             android:text="Next"
             android:textAllCaps="false"
-            android:textSize="15sp"
+            android:textColor="@color/white"
+            android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView4" />
+            app:layout_constraintTop_toBottomOf="@+id/textView4"
+            app:layout_constraintVertical_bias="0.886" />
 
         <TextView
             android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
             android:text="Username or password invalid. Please try again"
             android:textColor="#FC3434"
             android:textSize="10sp"
             android:visibility="invisible"
-            android:layout_marginTop="8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textUserPass" />
 

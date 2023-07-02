@@ -149,7 +149,7 @@ class UploadTrackFragment :
 
 
     private fun uploadSong() {
-        uploadTrackViewModel.uploadSong(dataBinding.etTrackName.text.toString(), 1, 1)
+        uploadTrackViewModel.uploadSong(dataBinding.etTrackName.text.toString().trim())
         openFragment(UploadTrackDetailFragment())
     }
 

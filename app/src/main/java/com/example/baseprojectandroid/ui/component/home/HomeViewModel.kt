@@ -1,6 +1,7 @@
 package com.example.baseprojectandroid.ui.component.home
 
 import androidx.lifecycle.viewModelScope
+import com.example.baseprojectandroid.model.Playlist
 import com.example.baseprojectandroid.model.Song
 import com.example.baseprojectandroid.repository.song.SongRepository
 import com.example.baseprojectandroid.service.MusicServiceConnector
@@ -68,8 +69,17 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    private fun buildRelatedPlaylist(song: Song): Playlist {
+        val relatedSong = recentSong.value
+        val first = relatedSong.subList(0, relatedSong.indexOf(song))
+        val second = relatedSong.subList(relatedSong.indexOf(song), relatedSong.size)
+        return Playlist(songs = second + first)
+    }
+
     fun playSong(song: Song) {
-        musicServiceConnector.play(song)
+        val relatedPlaylist = buildRelatedPlaylist(song)
+        val index = relatedPlaylist.songs.indexOf(song)
+        musicServiceConnector.play(relatedPlaylist, index)
     }
 
     sealed class HomeUiEffect {

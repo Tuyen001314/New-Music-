@@ -1,10 +1,12 @@
 package com.example.baseprojectandroid.server
 
+import com.example.baseprojectandroid.data.SongRemote
 import com.example.baseprojectandroid.data.response.GetUserByUserNameResponse
 import com.example.baseprojectandroid.data.response.GetUserResponse
 import com.example.baseprojectandroid.data.response.InsertSongResponse
 import com.example.baseprojectandroid.model.ResponseImage
 import com.example.baseprojectandroid.model.Song
+import com.example.baseprojectandroid.model.User
 import com.skydoves.sandwich.ApiResponse
 import okhttp3.MultipartBody
 import retrofit2.Call
@@ -18,14 +20,14 @@ interface ApiClient {
     @GET("api/Users/checkUserName")
     suspend fun getUser(@Query("username") userName: String): GetUserByUserNameResponse
 
-//    @POST("/api/Users/insert")
+    @GET("/api/Users/show/{id}")
+    suspend fun getUserById(@Path("id") id: Int): GetUserResponse
 
-//    @FormUrlEncoded
-//    suspend fun insertUser(
-//        @Header("Content-Type: multipart/form-data") @Body registerBody: RegisterBody,
-////        @Query("name") name: String
-//    ): ResponseModel
+    @GET("/api/Users/ShowAll")
+    suspend fun getAllUser(): List<User>
 
+    @GET("/api/Users/login")
+    suspend fun signIn(@Query("username") userName: String, @Query("password") password: String): ApiResponse<GetUserByUserNameResponse>
 
     @POST("/api/Users/insert")
     @Multipart
@@ -38,7 +40,7 @@ interface ApiClient {
     ): ResponseImage
 
     @GET("/api/Songs/ShowAll")
-    suspend fun getAllSong(): ApiResponse<List<Song>>
+    suspend fun getAllSong(): ApiResponse<List<SongRemote>>
 
     @Multipart
     @POST("/api/Songs/insertbyuser")
