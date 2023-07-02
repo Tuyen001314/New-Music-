@@ -6,5 +6,4 @@ data class InsertSongResponse(
     val status: String,
     val message: String,
     val data: User
-
 )

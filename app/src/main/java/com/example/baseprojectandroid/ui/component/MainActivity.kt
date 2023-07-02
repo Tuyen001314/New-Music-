@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
 import com.example.baseprojectandroid.databinding.ActivityMainBinding
+import com.example.baseprojectandroid.evenbus.GoneBottomLayoutEvent
+import com.example.baseprojectandroid.extension.visibleOrGone
 import com.example.baseprojectandroid.ui.base.BaseFragmentPagerAdapter
 import com.example.baseprojectandroid.ui.component.home.HomeFragment
 import com.example.baseprojectandroid.ui.component.library.YourLibraryFragment
@@ -61,6 +63,12 @@ class MainActivity : AppCompatActivity() {
                 supportFragmentManager.findFragmentByTag(NowPlayingFragment.TAG)
             nowPlayingFragment?.let { remove(it) }
         }
+    }
+
+
+    @Subscribe
+    fun onDownloadSuccess(event: GoneBottomLayoutEvent) {
+        binding.bottomBarView.visibleOrGone(!event.isGone)
     }
 
 }

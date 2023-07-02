@@ -5,6 +5,7 @@ import com.example.baseprojectandroid.data.response.GetUserByUserNameResponse
 import com.example.baseprojectandroid.data.response.GetUserResponse
 import com.example.baseprojectandroid.data.response.InsertSongResponse
 import com.example.baseprojectandroid.model.ResponseImage
+import com.example.baseprojectandroid.model.ResponseSearch
 import com.example.baseprojectandroid.model.Song
 import com.example.baseprojectandroid.model.User
 import com.skydoves.sandwich.ApiResponse
@@ -50,5 +51,17 @@ interface ApiClient {
         @Part song: MultipartBody.Part,
         @Part("category") category: Int,
         @Part("creator") creator: Int
+    ): Call<InsertSongResponse>
+
+    @GET("/api/Search")
+    suspend fun search(
+        @Query("searchText") searchText: String ,
+        @Query("userId") userId: Int
+    ):  ApiResponse<List<ResponseSearch>>
+
+    @POST("/api/Users/changeAvatar")
+    suspend fun changeAvatar(
+        @Part("userId") userId: Int,
+        @Part("image") image: MultipartBody.Part
     ): Call<InsertSongResponse>
 }

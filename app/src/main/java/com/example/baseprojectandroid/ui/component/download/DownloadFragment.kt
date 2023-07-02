@@ -1,7 +1,9 @@
 package com.example.baseprojectandroid.ui.component.download
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
@@ -11,12 +13,21 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.example.baseprojectandroid.R
 import com.example.baseprojectandroid.databinding.FragmentDownloadBinding
+import com.example.baseprojectandroid.extension.downloadFile
+import com.example.baseprojectandroid.model.DownloadState
 import com.example.baseprojectandroid.model.Music
 import com.example.baseprojectandroid.ui.base.BaseFragmentBinding
+import com.example.baseprojectandroid.ui.component.splash.RequestPermissionBottomSheet
 import com.example.baseprojectandroid.utils.Constants
+import com.example.baseprojectandroid.utils.MusicUtils
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class DownloadFragment : BaseFragmentBinding<FragmentDownloadBinding, DownloadViewModel>() {
@@ -38,11 +49,12 @@ class DownloadFragment : BaseFragmentBinding<FragmentDownloadBinding, DownloadVi
         adapter.submitList(list,true)
 
         dataBinding.recyclerView.adapter = adapter
-
     }
 
     override fun registerListeners() {
-
+        adapter.setOnItemClickListener { position ->
+            handleClickButtonDownload()
+        }
     }
 
     override fun initializeData() {
@@ -50,9 +62,73 @@ class DownloadFragment : BaseFragmentBinding<FragmentDownloadBinding, DownloadVi
     }
 
     override fun registerObservers() {
-        adapter.setOnItemClickListener {
 
+    }
+
+    private fun bindViewProcess(progress: Int) {
+        /*dataBinding.progressBar3.progress = progress
+        dataBinding.processTxt.text = "$progress %"*/
+    }
+
+    private fun handleClickButtonDownload() {
+        if (!MusicUtils.checkPermission(requireContext())) {
+            requestPermission()
+            return
         }
+        CoroutineScope(Dispatchers.IO).launch {
+            val flow = context?.let {
+                downloadFile(
+                    "http://ec2-3-106-133-27.ap-southeast-2.compute.amazonaws.com:8080/api/Songs/musicFiles/DuaEmVeNhaa-GREYDChillies-9214678.mp3",
+                    it,
+                    "duaemvenha$.mp3"
+                )
+            }
+            if (flow != null) {
+                flow.collect { state ->
+                    when (state) {
+                        is DownloadState.Downloading -> {
+                            withContext(Dispatchers.Main) {
+                                bindViewProcess(state.progress)
+                            }
+                        }
+
+                        is DownloadState.Failed -> {
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(
+                                    context, "error", Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+
+                        is DownloadState.Finished -> {
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(
+                                    context, "done", Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                    }
+                }
+            } else {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        context, "error", Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+    }
+
+    private fun requestPermission() {
+        val bottomSheet = RequestPermissionBottomSheet(false)
+        bottomSheet.onClickConfirmYes {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                requestManageStoragePermission()
+            } else {
+                requestStoragePermission()
+            }
+        }
+        bottomSheet.show(childFragmentManager, "RequestPermissionBottomSheet")
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -109,7 +185,7 @@ class DownloadFragment : BaseFragmentBinding<FragmentDownloadBinding, DownloadVi
         requestCode: Int, permissions: Array<out String>, grantResults: IntArray
     ) {
         if (requestCode == 1 && grantResults.isNotEmpty() && grantResults[0] == 0) {            return
-
+            return
         } else {
 
         }
