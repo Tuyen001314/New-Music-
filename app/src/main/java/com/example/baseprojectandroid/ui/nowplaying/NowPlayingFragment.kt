@@ -28,6 +28,7 @@ import com.example.baseprojectandroid.ui.base.BaseFragmentBinding
 import com.example.baseprojectandroid.ui.base.BaseViewModel
 import com.example.baseprojectandroid.ui.component.option.TrackOptionFragment
 import com.example.baseprojectandroid.ui.event.HideDetailPlayer
+import com.example.baseprojectandroid.utils.Logger
 import com.example.baseprojectandroid.utils.timePositionToString
 import com.example.baseprojectandroid.viewmodel.NowPlayingUiEffect
 import com.example.baseprojectandroid.viewmodel.NowPlayingViewModel
@@ -155,6 +156,7 @@ class NowPlayingFragment : BaseFragmentBinding<FragmentNowPlayingBinding, BaseVi
                 tvSongName.text = song.name
                 tvSongNameMain.text = song.name
                 tvSongCreatorName.text = song.creator.name
+                Logger.d("trackthumb = ${song.thumbnailUrl}")
                 Glide.with(ivTrackThumb)
                     .asBitmap()
                     .load(song.thumbnailUrl)

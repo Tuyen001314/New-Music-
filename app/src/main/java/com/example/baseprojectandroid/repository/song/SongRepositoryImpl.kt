@@ -46,7 +46,7 @@ class SongRepositoryImpl @Inject constructor(
         }.suspendMapSuccess {
             map {
                 Song(
-                    it.category.toString(),
+//                    it.category.toString(),
                     it.createdAt,
                     it.creatorId,
                     it.downloadCount,

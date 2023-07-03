@@ -151,6 +151,7 @@ class UploadTrackFragment :
     private fun uploadSong() {
         uploadTrackViewModel.uploadSong(dataBinding.etTrackName.text.toString().trim())
         openFragment(UploadTrackDetailFragment())
+        hiddenKeyboard()
     }
 
     override fun onBackPressed(): Boolean {

@@ -12,8 +12,8 @@ import kotlinx.parcelize.IgnoredOnParcel
 
 @Parcelize
 data class Song(
-    @SerializedName("category")
-    var category: String = "",
+//    @SerializedName("category")
+//    var category: String = "",
     @SerializedName("createdAt")
     var createdAt: String = "",
     @SerializedName("creatorId")

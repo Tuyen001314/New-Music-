@@ -21,8 +21,8 @@ interface ApiClient {
     @GET("api/Users/checkUserName")
     suspend fun getUser(@Query("username") userName: String): GetUserByUserNameResponse
 
-    @GET("/api/Users/show/{id}")
-    suspend fun getUserById(@Path("id") id: Int): GetUserResponse
+    @GET("/api/Users/show")
+    suspend fun getUserById(@Query("id") id: Int): GetUserResponse
 
     @GET("/api/Users/ShowAll")
     suspend fun getAllUser(): List<User>

@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class HomeFragment : BaseFragmentBinding<FragmentHomeBinding, HomeViewModel>() {
     private val recentGroup = HorizontallyGroup()
-    private val downloadSection = Section(HeaderItem("Downloaded Song"))
+    private val downloadSection = Section(HeaderItem("All Song"))
     private val mainAdapter = GroupieAdapter()
     override fun getContentViewId(): Int = R.layout.fragment_home
 

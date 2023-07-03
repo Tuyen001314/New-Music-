@@ -10,8 +10,8 @@ import android.os.Parcelable
  */
 @Parcelize
 data class SongRemote(
-    @SerializedName("category")
-    var category: Int? = null,
+//    @SerializedName("category")
+//    var category: Int? = null,
     @SerializedName("createdAt")
     var createdAt: String = "",
     @SerializedName("creator")

@@ -56,6 +56,10 @@ class UploadTrackDetailFragment :
             uploadTrackViewModel.cancelCurrentUploading()
         }
 
+        dataBinding.btBackToHome.setOnClickListener {
+            onBackPressed()
+        }
+
         dataBinding.btTryAgain.setOnClickListener {
             showToast("Coming soon")
         }
