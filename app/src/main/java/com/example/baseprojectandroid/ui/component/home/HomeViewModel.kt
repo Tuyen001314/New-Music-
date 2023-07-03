@@ -33,7 +33,7 @@ class HomeViewModel @Inject constructor(
     private val currentSong get() = musicServiceConnector.currentSongState!!
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launchSafe(Dispatchers.IO) {
             songRepository.getAllSong().collect {
                 when (it) {
                     is DataState.Failure -> _uiEffect.emit(

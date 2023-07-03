@@ -57,7 +57,7 @@ interface ApiClient {
     suspend fun search(
         @Query("searchText") searchText: String ,
         @Query("userId") userId: Int
-    ):  ApiResponse<List<ResponseSearch>>
+    ):  ApiResponse<List<Song>>
 
     @POST("/api/Users/changeAvatar")
     suspend fun changeAvatar(

@@ -109,7 +109,7 @@ class NowPlayingViewModel @Inject constructor(
     //Collect all changes of MusicService, and update into uiState
     override fun onConnected() {
 
-        viewModelScope.launch {
+        viewModelScope.launchSafe(Dispatchers.IO) {
             launch {
                 songRepository.getAllSong().collect {
                     when (it) {

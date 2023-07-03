@@ -1,7 +1,11 @@
 package com.example.baseprojectandroid.ui.component.search
 
 import androidx.appcompat.widget.SearchView
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewModelScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.baseprojectandroid.R
 import com.example.baseprojectandroid.databinding.FragmentSearchBinding
 import com.example.baseprojectandroid.evenbus.GoneBottomLayoutEvent
@@ -10,8 +14,11 @@ import com.example.baseprojectandroid.extension.hideLoadingDialog
 import com.example.baseprojectandroid.extension.showLoadingDialog
 import com.example.baseprojectandroid.extension.visible
 import com.example.baseprojectandroid.extension.visibleOrGone
-import com.example.baseprojectandroid.ui.base.BaseFragment
 import com.example.baseprojectandroid.ui.base.BaseFragmentBinding
+import com.example.baseprojectandroid.ui.common.HeaderItem
+import com.example.baseprojectandroid.ui.common.HorizontallyGroup
+import com.xwray.groupie.GroupieAdapter
+import com.xwray.groupie.Section
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -20,6 +27,9 @@ import org.greenrobot.eventbus.EventBus
 @AndroidEntryPoint
 class SearchFragment: BaseFragmentBinding<FragmentSearchBinding, SearchViewModel>() {
 
+    private val recentGroup = HorizontallyGroup()
+    private val searchSection = Section(HeaderItem("Result Song"))
+    private val searchAdapter = GroupieAdapter()
     private lateinit var adapter: SearchAdapter
     private var searchEditText: SearchView.SearchAutoComplete? = null
 
@@ -32,7 +42,13 @@ class SearchFragment: BaseFragmentBinding<FragmentSearchBinding, SearchViewModel
             dataBinding.searchView.findViewById(androidx.appcompat.R.id.search_src_text) as SearchView.SearchAutoComplete
 
         adapter = SearchAdapter(requireContext())
-        dataBinding.rvSearch.adapter = adapter
+        dataBinding.rvSearch.apply {
+            adapter = searchAdapter
+            dataBinding.rvSearch.layoutManager = LinearLayoutManager(requireContext())
+            itemAnimator = null
+        }
+
+        initSearchAdapter()
 
         dataBinding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
@@ -49,6 +65,10 @@ class SearchFragment: BaseFragmentBinding<FragmentSearchBinding, SearchViewModel
             }
         })
 
+    }
+
+    private fun initSearchAdapter() {
+        searchAdapter.add(searchSection)
     }
 
 
@@ -77,8 +97,19 @@ class SearchFragment: BaseFragmentBinding<FragmentSearchBinding, SearchViewModel
 
         viewModel.viewModelScope.launch(Dispatchers.IO) {
             viewModel.handleSearch("a", 1).collect {
-                /*adapter.submitList(viewModel.listResultSearch, true)*/
+                adapter.submitList(viewModel.listResultSearch, true)
                 requireActivity().hideLoadingDialog()
+            }
+        }
+    }
+
+    override fun registerObservers() {
+        super.registerObservers()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.
+                }
             }
         }
     }
