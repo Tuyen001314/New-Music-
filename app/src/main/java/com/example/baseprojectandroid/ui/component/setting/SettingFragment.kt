@@ -20,16 +20,6 @@ class SettingFragment : BaseFragmentBinding<FragmentSettingBinding, SettingViewM
 
     override fun initializeViews() {
         adapter = SettingAdapter(requireContext())
-        var list = ArrayList<Music>()
-        list.add(Music("bo"))
-        list.add(Music("ung qua chung"))
-        list.add(Music("meo meo meo meo"))
-        list.add(Music("Tha thứ lỗi lầm"))
-        list.add(Music("Lần cuối"))
-        Log.d("buituyen", list.size.toString())
-
-        adapter.submitList(list, true)
-
         dataBinding.recyclerViewUpload.adapter = adapter
     }
 

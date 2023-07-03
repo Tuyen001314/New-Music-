@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.baseprojectandroid.data.AppDatabase
 import com.example.baseprojectandroid.model.FavoriteEntity
 import com.example.baseprojectandroid.model.Song
+import com.example.baseprojectandroid.model.SongEntity
 import com.example.baseprojectandroid.ui.base.BaseViewModel
 import dagger.hilt.android.HiltAndroidApp
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,7 +16,7 @@ import java.util.ArrayList
 import javax.inject.Inject
 
 @HiltViewModel
-class TrackOptionViewModel @Inject constructor(private val appDatabase: AppDatabase) :
+class TrackOptionViewModel @Inject constructor(private val database: AppDatabase) :
     BaseViewModel() {
     private val _uiState = MutableStateFlow(UiState())
     val uiState: StateFlow<UiState> get() = _uiState
@@ -28,8 +29,22 @@ class TrackOptionViewModel @Inject constructor(private val appDatabase: AppDatab
 
     fun handleFavorite(song: Song) {
         viewModelScope.launch(Dispatchers.IO) {
-            appDatabase.favoriteDao().insert(song.toFavorite())
+            database.favoriteDao().insert(song.toFavorite())
         }
+    }
+
+    fun deleteFavorite(id: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            database.favoriteDao().delete(id)
+        }
+    }
+
+    fun getFavorite(id: String) =  database.favoriteDao().getFavoriteById(id)
+
+    fun get(path: String) =  database.musicDao().get(path)
+
+    fun insert(musicEntity: SongEntity) = viewModelScope.launch(Dispatchers.IO) {
+        database.musicDao().insert(musicEntity)
     }
 
     data class UiState(

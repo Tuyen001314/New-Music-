@@ -11,6 +11,7 @@ import com.example.baseprojectandroid.extension.visible
 import com.example.baseprojectandroid.ui.base.BaseFragmentBinding
 import com.example.baseprojectandroid.ui.base.BaseViewModel
 import com.example.baseprojectandroid.ui.component.library.UploadTrackViewModel
+import com.example.baseprojectandroid.utils.Logger
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -110,6 +111,7 @@ class UploadTrackFragment :
         uploadTrackViewModel.uploadSongResponse.observe(viewLifecycleOwner) {
             it?.let { state ->
                 state.whenSuccess {
+                    Logger.d("buituyen upload track", it.data.toString())
                     Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show()
                 }.whenFailure {
                     Toast.makeText(

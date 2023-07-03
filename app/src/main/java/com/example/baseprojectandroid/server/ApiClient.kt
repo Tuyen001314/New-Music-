@@ -53,11 +53,11 @@ interface ApiClient {
         @Part("creator") creator: Int
     ): Call<InsertSongResponse>
 
-    @GET("/api/Search")
+    @GET("/api/Search/searchSong")
     suspend fun search(
         @Query("searchText") searchText: String ,
         @Query("userId") userId: Int
-    ):  ApiResponse<List<ResponseSearch>>
+    ):  ApiResponse<List<SongRemote>>
 
     @POST("/api/Users/changeAvatar")
     suspend fun changeAvatar(

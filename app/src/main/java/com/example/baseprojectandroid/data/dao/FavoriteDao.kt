@@ -10,8 +10,8 @@ interface FavoriteDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(favoriteEntity: FavoriteEntity): Long
 
-    @Query("DELETE FROM favorite_entity WHERE path = :path")
-    fun delete(path: String)
+    @Query("DELETE FROM favorite_entity WHERE id = :id")
+    fun delete(id: String)
 
     @Update
     fun update(cacheModel: FavoriteEntity)
@@ -20,7 +20,7 @@ interface FavoriteDao {
     fun get(path: String): FavoriteEntity?
 
     @Query("SELECT * FROM favorite_entity WHERE id = :id")
-    suspend fun getFavoriteById(id: String): FavoriteEntity?
+    fun getFavoriteById(id: String): FavoriteEntity?
 
     @Query("DELETE FROM favorite_entity WHERE id = :id")
     suspend fun deleteFavoriteById(id: Long)

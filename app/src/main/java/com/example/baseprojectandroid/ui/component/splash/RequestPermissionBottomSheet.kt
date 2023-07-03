@@ -32,8 +32,6 @@ class RequestPermissionBottomSheet(var isSplashScreen: Boolean = false) :
         savedInstanceState: Bundle?
     ): View {
         dataBinding = BottomSheetRequestPermissionBinding.inflate(inflater, container, false)
-        dataBinding.imgRequest.isVisible = isSplashScreen
-        dataBinding.txtContent.isVisible = isSplashScreen
         dataBinding.txtContent2.isGone = isSplashScreen
 
         dataBinding.btnConfirmYes.setOnClickListener {
@@ -41,7 +39,6 @@ class RequestPermissionBottomSheet(var isSplashScreen: Boolean = false) :
             dismiss()
         }
         dataBinding.btnCancel.setOnClickListener {
-            clickConfirmNo.invoke()
             dismiss()
         }
         return dataBinding.root

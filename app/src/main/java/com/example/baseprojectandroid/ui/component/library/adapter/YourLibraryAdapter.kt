@@ -1,15 +1,19 @@
 package com.example.baseprojectandroid.ui.component.library.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.bumptech.glide.Glide
 import com.example.baseprojectandroid.R
 import com.example.baseprojectandroid.databinding.ItemYourLibraryBinding
 import com.example.baseprojectandroid.model.Music
+import com.example.baseprojectandroid.model.SongEntity
 import com.example.baseprojectandroid.ui.base.SimpleAdapter
+import java.io.File
 
 class YourLibraryAdapter(context: Context) :
-    SimpleAdapter<Music, YourLibraryAdapter.ViewHolder, ItemYourLibraryBinding>(context) {
+    SimpleAdapter<SongEntity, YourLibraryAdapter.ViewHolder, ItemYourLibraryBinding>(context) {
 
     override fun getItemViewId(viewType: Int): Int = R.layout.item_your_library
 
@@ -39,9 +43,16 @@ class YourLibraryAdapter(context: Context) :
 
         }
 
+        @SuppressLint("CheckResult")
         override fun bindViews(position: Int) {
             val item = getItem(position)
             dataBinding.nameSong.text = item.name
+            Glide.with(dataBinding.root)
+                .asBitmap()
+                .load(item.thumbnailUrl)
+                .error(R.drawable.ic_thumbnail_default)
+                .into(dataBinding.appCompatImageView)
+            dataBinding.author.text = item.creatorName
         }
     }
 

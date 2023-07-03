@@ -21,6 +21,8 @@ import androidx.media3.common.Player
 import com.bumptech.glide.Glide
 import com.example.baseprojectandroid.R
 import com.example.baseprojectandroid.databinding.FragmentNowPlayingBinding
+import com.example.baseprojectandroid.extension.gone
+import com.example.baseprojectandroid.extension.visible
 import com.example.baseprojectandroid.model.Position
 import com.example.baseprojectandroid.model.Song
 import com.example.baseprojectandroid.service.PlayerState
@@ -35,6 +37,7 @@ import com.example.baseprojectandroid.viewmodel.NowPlayingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -51,8 +54,16 @@ class NowPlayingFragment : BaseFragmentBinding<FragmentNowPlayingBinding, BaseVi
     }
 
     override fun initializeViews() {
-
+        lifecycleScope.launch(Dispatchers.IO) {
+            if (checkFavoriteFromRoom(nowPlayingViewModel.currentSong?.value?.id.toString())) {
+                withContext(Dispatchers.Main) {
+                    dataBinding.btLiked.background = resources.getDrawable(R.drawable.favorited)
+                }
+            }
+        }
     }
+
+    private fun checkFavoriteFromRoom(id: String) = nowPlayingViewModel.getFavorite(id) != null
 
     override fun registerObservers() {
         super.registerObservers()
@@ -221,6 +232,26 @@ class NowPlayingFragment : BaseFragmentBinding<FragmentNowPlayingBinding, BaseVi
 
         dataBinding.btRepeat.setOnClickListener {
             nowPlayingViewModel.onClickRepeat()
+        }
+
+        dataBinding.btLiked.setOnClickListener {
+            lifecycleScope.launch(Dispatchers.IO) {
+                if (checkFavoriteFromRoom(nowPlayingViewModel.currentSong?.value?.id.toString())) {
+                    nowPlayingViewModel.deleteFavorite(nowPlayingViewModel.currentSong?.value?.id.toString())
+                    withContext(Dispatchers.Main) {
+                        dataBinding.btLiked.background = resources.getDrawable(R.drawable.ic_like_stroke)
+                    }
+                } else {
+                    nowPlayingViewModel.currentSong?.value?.let { it1 ->
+                        nowPlayingViewModel.handleFavorite(
+                            it1
+                        )
+                    }
+                    withContext(Dispatchers.Main) {
+                        dataBinding.btLiked.background = resources.getDrawable(R.drawable.favorited)
+                    }
+                }
+            }
         }
     }
 

@@ -13,6 +13,7 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.example.baseprojectandroid.R
+import com.example.baseprojectandroid.data.AppDatabase
 import com.example.baseprojectandroid.model.Playlist
 import com.example.baseprojectandroid.model.Position
 import com.example.baseprojectandroid.model.Song
@@ -36,7 +37,8 @@ import javax.inject.Inject
 class NowPlayingViewModel @Inject constructor(
     private val musicServiceConnector: MusicServiceConnector,
     private val songRepository: SongRepository,
-    private val glide: RequestManager
+    private val glide: RequestManager,
+    private val database: AppDatabase
 ) : BaseViewModel(), MusicServiceConnector.OnServiceConnected {
     private var isBound = false
     private var needUpdateCurrentSongPosition = true
@@ -74,6 +76,20 @@ class NowPlayingViewModel @Inject constructor(
             workHandler = Handler()
         }
     }
+
+    fun handleFavorite(song: Song) {
+        viewModelScope.launch(Dispatchers.IO) {
+            database.favoriteDao().insert(song.toFavorite())
+        }
+    }
+
+    fun deleteFavorite(id: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            database.favoriteDao().delete(id)
+        }
+    }
+
+    fun getFavorite(id: String) =  database.favoriteDao().getFavoriteById(id)
 
     fun pauseOrPlay() {
         musicServiceConnector.pauseOrPlay()

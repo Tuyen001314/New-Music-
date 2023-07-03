@@ -16,7 +16,8 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class YourLibraryFragment: BaseFragmentBinding<FragmentYourLibraryBinding, YourLibraryViewModel>() {
+class YourLibraryFragment :
+    BaseFragmentBinding<FragmentYourLibraryBinding, YourLibraryViewModel>() {
 
     override fun getContentViewId(): Int = R.layout.fragment_your_library
     private lateinit var adapter: YourLibraryAdapter
@@ -26,19 +27,19 @@ class YourLibraryFragment: BaseFragmentBinding<FragmentYourLibraryBinding, YourL
         adapter = YourLibraryAdapter(requireContext())
         adapterPlaylist = YourLibraryPlaylistAdapter(requireContext())
         var list = ArrayList<Music>()
-        list.add(Music("bo"))
         list.add(Music("ung qua chung"))
         list.add(Music("meo meo meo meo"))
         list.add(Music("Tha thứ lỗi lầm"))
         list.add(Music("Lần cuối"))
         Log.d("buituyen", list.size.toString())
-        adapter.submitList(list,true)
+        //adapter.submitList(list, true)
         adapterPlaylist.submitList(list, true)
-        dataBinding.recyclerViewUpload.adapter = adapter
+        //dataBinding.recyclerViewUpload.adapter = adapter
         dataBinding.recyclerViewDownload.adapter = adapter
-        dataBinding.recyclerRecentPlay.adapter = adapter
+        //dataBinding.recyclerRecentPlay.adapter = adapter
         dataBinding.recyclerPlaylist.adapter = adapterPlaylist
-        dataBinding.recyclerPlaylist.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        dataBinding.recyclerPlaylist.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
     }
 
     override fun registerListeners() {
@@ -81,7 +82,9 @@ class YourLibraryFragment: BaseFragmentBinding<FragmentYourLibraryBinding, YourL
     }
 
     override fun initializeData() {
-        super.initializeData()
+        viewModel.getAllSongDownload().observe(this) {
+            adapter.submitListWithoutAnim(it, true)
+        }
     }
 
     override fun registerObservers() {

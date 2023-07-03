@@ -113,7 +113,7 @@ abstract class BaseFragment : BaseView, Fragment() {
 
     open fun onBackPressed() = false
 
-    fun hiddenKeyboard() {
+    open fun hiddenKeyboard() {
         (activity as? BaseActivity)?.hiddenKeyboard()
     }
 

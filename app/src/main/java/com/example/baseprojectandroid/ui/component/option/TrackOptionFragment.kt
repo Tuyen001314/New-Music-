@@ -35,6 +35,7 @@ import com.example.baseprojectandroid.extension.gone
 import com.example.baseprojectandroid.extension.visible
 import com.example.baseprojectandroid.model.DownloadState
 import com.example.baseprojectandroid.model.Song
+import com.example.baseprojectandroid.model.SongEntity
 import com.example.baseprojectandroid.ui.base.BaseFragmentBinding
 import com.example.baseprojectandroid.ui.base.BaseViewModel
 import com.example.baseprojectandroid.ui.component.splash.RequestPermissionBottomSheet
@@ -98,7 +99,29 @@ class TrackOptionFragment : BaseFragmentBinding<FragmentTrackOptionBinding, Base
 
         dataBinding.tvSongNameMain.text = song.name
         dataBinding.tvSongCreatorName.text = song.name
+
+
+        val path = getDirFile().path + "/" + song.name
+        lifecycleScope.launch(Dispatchers.IO) {
+            if (checkMusicDownFromRoom(path)) {
+                withContext(Dispatchers.Main) {
+                    dataBinding.ivDownload.visible()
+                    dataBinding.animationView.gone()
+                    dataBinding.ivDownload.setImageDrawable(resources.getDrawable(R.drawable.downloaded))
+                }
+            }
+
+            if (checkFavoriteFromRoom(song.id.toString())) {
+                withContext(Dispatchers.Main) {
+                    dataBinding.ivLike.background = resources.getDrawable(R.drawable.favorited)
+                }
+            }
+        }
     }
+
+    private fun checkFavoriteFromRoom(id: String) = trackOptionViewModel.getFavorite(id) != null
+
+    private fun checkMusicDownFromRoom(path: String) = trackOptionViewModel.get(path) != null
 
     override fun onBackPressed(): Boolean {
         parentFragmentManager.commit {
@@ -110,13 +133,21 @@ class TrackOptionFragment : BaseFragmentBinding<FragmentTrackOptionBinding, Base
     override fun registerListeners() {
         super.registerListeners()
         dataBinding.btLiked.setOnClickListener {
-            showToast("Coming")
-            trackOptionViewModel.handleFavorite(song)
-            dataBinding.ivLike.background = resources.getDrawable(R.drawable.favorited)
+            lifecycleScope.launch(Dispatchers.IO) {
+                if (checkFavoriteFromRoom(song.id.toString())) {
+                    trackOptionViewModel.deleteFavorite(song.id.toString())
+                    withContext(Dispatchers.Main) {
+                        dataBinding.ivLike.background = resources.getDrawable(R.drawable.ic_like_stroke)
+                    }
+                } else {
+                    trackOptionViewModel.handleFavorite(song)
+                    withContext(Dispatchers.Main) {
+                        dataBinding.ivLike.background = resources.getDrawable(R.drawable.favorited)
+                    }
+                }
+            }
         }
         dataBinding.btDownload.setOnClickListener {
-            dataBinding.animationView.visible()
-            dataBinding.ivDownload.gone()
             handleClickButtonDownload(song.url, song.name)
         }
         dataBinding.btAddToPlaylist.setOnClickListener {
@@ -148,6 +179,11 @@ class TrackOptionFragment : BaseFragmentBinding<FragmentTrackOptionBinding, Base
             requestPermission()
             return
         }
+        Toast.makeText(
+            context, "doing download, please wait time", Toast.LENGTH_LONG
+        ).show()
+        dataBinding.animationView.visible()
+        dataBinding.ivDownload.gone()
         CoroutineScope(Dispatchers.IO).launch {
             val flow = context?.let {
                 downloadFile(
@@ -177,11 +213,13 @@ class TrackOptionFragment : BaseFragmentBinding<FragmentTrackOptionBinding, Base
                                     context, "done", Toast.LENGTH_SHORT
                                 ).show()
 
+                                val path = getDirFile().path + "/" + song.name
+                                trackOptionViewModel.insert(musicEntity = SongEntity(id = song.id.toString(), path, song.thumbnailUrl, song.creator.name, song.name))
+
                                 dataBinding.ivDownload.visible()
                                 dataBinding.animationView.gone()
                                 dataBinding.ivDownload.setImageDrawable(resources.getDrawable(R.drawable.downloaded))
                             }
-
                         }
                     }
                 }
