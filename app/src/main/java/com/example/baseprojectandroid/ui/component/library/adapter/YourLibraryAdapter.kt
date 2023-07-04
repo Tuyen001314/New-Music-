@@ -53,6 +53,9 @@ class YourLibraryAdapter(context: Context) :
                 .error(R.drawable.ic_thumbnail_default)
                 .into(dataBinding.appCompatImageView)
             dataBinding.author.text = item.creatorName
+            dataBinding.root.setOnClickListener {
+                invokeOnItemClicked(position)
+            }
         }
     }
 

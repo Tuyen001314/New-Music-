@@ -23,4 +23,10 @@ data class SongEntity(
 
     @SerializedName("name")
     var name: String = "",
-)
+) {
+    fun asSong() = Song(
+    name = this.name,
+    thumbnailUrl = this.thumbnailUrl,
+    url = this.filePath
+    )
+}

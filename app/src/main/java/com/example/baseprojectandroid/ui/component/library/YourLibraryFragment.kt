@@ -1,6 +1,7 @@
 package com.example.baseprojectandroid.ui.component.library
 
 import android.util.Log
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.baseprojectandroid.R
 import com.example.baseprojectandroid.databinding.FragmentYourLibraryBinding
@@ -12,6 +13,7 @@ import com.example.baseprojectandroid.ui.component.library.adapter.YourLibraryAd
 import com.example.baseprojectandroid.ui.component.library.adapter.YourLibraryPlaylistAdapter
 import com.example.baseprojectandroid.ui.component.library.upload.UploadTrackFragment
 import com.example.baseprojectandroid.ui.component.setting.SettingFragment
+import com.example.baseprojectandroid.viewmodel.NowPlayingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -22,6 +24,8 @@ class YourLibraryFragment :
     override fun getContentViewId(): Int = R.layout.fragment_your_library
     private lateinit var adapter: YourLibraryAdapter
     private lateinit var adapterPlaylist: YourLibraryPlaylistAdapter
+
+    private val nowPlayingViewModel by activityViewModels<NowPlayingViewModel>()
 
     override fun initializeViews() {
         adapter = YourLibraryAdapter(requireContext())
@@ -44,6 +48,9 @@ class YourLibraryFragment :
 
     override fun registerListeners() {
         super.registerListeners()
+        adapter.setOnIemClickListener {
+            nowPlayingViewModel.play(it.asSong())
+        }
 
         dataBinding.add.setOnClickListener {
             val createList = CreatePlaylistBottomSheet()

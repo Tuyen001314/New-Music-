@@ -18,6 +18,9 @@ interface MusicDao {
     @Query("SELECT * FROM song_entity WHERE filePath = :path")
     fun get(path: String): SongEntity?
 
+    @Query("SELECT * FROM song_entity WHERE id = :id")
+    fun getById(id: String): SongEntity?
+
     @Query("SELECT * FROM song_entity")
     fun getAllSongDownload(): LiveData<List<SongEntity>>
 }

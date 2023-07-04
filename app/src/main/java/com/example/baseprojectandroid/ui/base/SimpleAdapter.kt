@@ -31,6 +31,7 @@ abstract class SimpleAdapter<T, VH : SimpleAdapter.ViewHolder, VB : ViewDataBind
     lateinit var dataBinding: VB
 
     private lateinit var onItemClicked: (position: Int) -> Unit
+    private var onItemClick: (item: T) -> Unit = {}
     private lateinit var onDataFiltered: () -> Unit
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
@@ -104,6 +105,10 @@ abstract class SimpleAdapter<T, VH : SimpleAdapter.ViewHolder, VB : ViewDataBind
         this.onItemClicked = onItemClicked
     }
 
+    fun setOnIemClickListener(onItemClicked: (item: T) -> Unit) {
+        this.onItemClick = onItemClicked
+    }
+
     fun setOnDataFilterListener(onDataFiltered: () -> Unit) {
         this.onDataFiltered = onDataFiltered
     }
@@ -111,6 +116,8 @@ abstract class SimpleAdapter<T, VH : SimpleAdapter.ViewHolder, VB : ViewDataBind
     fun invokeOnItemClicked(position: Int) {
         if (::onItemClicked.isInitialized) {
             onItemClicked.invoke(position)
+        } else {
+            onItemClick.invoke(getItem(position))
         }
     }
 

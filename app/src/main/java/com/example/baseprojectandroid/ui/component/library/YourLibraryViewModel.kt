@@ -1,7 +1,10 @@
 package com.example.baseprojectandroid.ui.component.library
 
 import com.example.baseprojectandroid.data.AppDatabase
+import com.example.baseprojectandroid.model.Song
 import com.example.baseprojectandroid.model.SongEntity
+import com.example.baseprojectandroid.repository.song.SongRepository
+import com.example.baseprojectandroid.repository.user.UserRepository
 import com.example.baseprojectandroid.server.ApiClient
 import com.example.baseprojectandroid.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

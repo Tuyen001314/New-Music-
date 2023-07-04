@@ -13,6 +13,7 @@ import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.exoplayer.source.MediaSource
+import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import com.example.baseprojectandroid.model.Playlist
 import com.example.baseprojectandroid.model.Position
 import com.example.baseprojectandroid.model.Song
@@ -60,12 +61,12 @@ class MusicService : Service(), CoroutineScope, MusicController {
         musicNotificationManager = MusicNotificationManager(this, mediaSession.sessionToken)
 
 
-        mediaSource = DefaultMediaSourceFactory(this)
-            .setDataSourceFactory(DefaultHttpDataSource.Factory())
-
+        mediaSource = ProgressiveMediaSource.Factory(
+            DefaultHttpDataSource.Factory()
+        )
 
         exoPlayer = ExoPlayer.Builder(this)
-            .setMediaSourceFactory(mediaSource)
+//            .setMediaSourceFactory(mediaSource)
             .build().apply {
                 setMediaItem(MediaItem.fromUri(currentSong.url))
                 prepare()

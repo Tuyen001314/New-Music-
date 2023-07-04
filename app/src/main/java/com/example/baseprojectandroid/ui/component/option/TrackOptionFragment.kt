@@ -21,7 +21,9 @@ import androidx.core.content.FileProvider
 import androidx.core.graphics.ColorUtils
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.palette.graphics.Palette
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -119,6 +121,22 @@ class TrackOptionFragment : BaseFragmentBinding<FragmentTrackOptionBinding, Base
         }
     }
 
+    override fun registerObservers() {
+        super.registerObservers()
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                trackOptionViewModel.uiState.collect {
+                    launch(Dispatchers.Main) {
+                        dataBinding.ivLike.setImageResource(if (it.isLike) R.drawable.favorited else R.drawable.ic_like_stroke)
+
+                    }
+                }
+            }
+        }
+
+    }
+
     private fun checkFavoriteFromRoom(id: String) = trackOptionViewModel.getFavorite(id) != null
 
     private fun checkMusicDownFromRoom(path: String) = trackOptionViewModel.get(path) != null
@@ -136,14 +154,14 @@ class TrackOptionFragment : BaseFragmentBinding<FragmentTrackOptionBinding, Base
             lifecycleScope.launch(Dispatchers.IO) {
                 if (checkFavoriteFromRoom(song.id.toString())) {
                     trackOptionViewModel.deleteFavorite(song.id.toString())
-                    withContext(Dispatchers.Main) {
-                        dataBinding.ivLike.background = resources.getDrawable(R.drawable.ic_like_stroke)
-                    }
+//                    withContext(Dispatchers.Main) {
+//                        dataBinding.ivLike.background = resources.getDrawable(R.drawable.ic_like_stroke)
+//                    }
                 } else {
                     trackOptionViewModel.handleFavorite(song)
-                    withContext(Dispatchers.Main) {
-                        dataBinding.ivLike.background = resources.getDrawable(R.drawable.favorited)
-                    }
+//                    withContext(Dispatchers.Main) {
+//                        dataBinding.ivLike.background = resources.getDrawable(R.drawable.favorited)
+//                    }
                 }
             }
         }
@@ -213,7 +231,7 @@ class TrackOptionFragment : BaseFragmentBinding<FragmentTrackOptionBinding, Base
                                     context, "done", Toast.LENGTH_SHORT
                                 ).show()
 
-                                val path = getDirFile().path + "/" + song.name
+                                val path = getDirFile().path + "/" + song.name + ".mp3"
                                 trackOptionViewModel.insert(musicEntity = SongEntity(id = song.id.toString(), path, song.thumbnailUrl, song.creator.name, song.name))
 
                                 dataBinding.ivDownload.visible()
